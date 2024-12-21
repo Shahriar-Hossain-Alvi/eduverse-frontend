@@ -31,7 +31,8 @@ const SignIn = () => {
 
         try {
             const loggedInUser = await login(email, password);
-
+            console.log(loggedInUser);
+            
             if (loggedInUser) {
                 reset();
                 toast.success('Login Successful!', {
@@ -47,7 +48,7 @@ const SignIn = () => {
             }
         }
         catch (error) {
-            toast.error('An error occurred during login.', {
+            toast.error(`${error}`, {
                 duration: 1500,
                 position: 'top-center',
             });

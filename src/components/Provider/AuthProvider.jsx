@@ -32,7 +32,7 @@ const AuthProvider = ({ children }) => {
         } catch (error) {
             console.log("Login failed ", error);
             setLoading(false);
-            throw new Error("Login Failed")
+            throw new Error(error?.response?.data?.message)
         }
         finally {
             setLoading(false);

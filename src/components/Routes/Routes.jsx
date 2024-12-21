@@ -5,6 +5,8 @@ import SignIn from "../Pages/Auth/SignIn";
 import RoleBasedRedirect from "./RoleBasedRedirect";
 import PrivateRoute from "./PrivateRoute";
 import AdminDashboard from "../Pages/Dashboard/AdminDashboard";
+import FacultyDashboard from "../Pages/Dashboard/FacultyDashboard";
+import StudentDashboard from "../Pages/Dashboard/StudentDashboard";
 
 
 
@@ -36,22 +38,22 @@ const router = createBrowserRouter(
                     </PrivateRoute>
                 }
             />
-            {/* <Route
+            <Route
                 path="faculty/dashboard"
                 element={
                     <PrivateRoute role="faculty">
                         <FacultyDashboard />
                     </PrivateRoute>
                 }
-            /> */}
-            {/* <Route
+            />
+            <Route
                 path="student/dashboard"
                 element={
                     <PrivateRoute role="student">
                         <StudentDashboard />
                     </PrivateRoute>
                 }
-            /> */}
+            />
 
 
         </Route>

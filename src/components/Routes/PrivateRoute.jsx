@@ -12,7 +12,6 @@ const PrivateRoute = ({ children, role }) => {
 
     if (!user) return <Navigate to="/signin" state={{ from: location }}></Navigate>
 
-
     if (role && user.user_role !== role) return <Navigate to={`/${user.role}/dashboard`} />
 
 
