@@ -1,8 +1,30 @@
 
+import { Link } from "react-router";
+import ErrorAnimation from "../../assets/animation/errorAnimation.json"
+import Lottie from "react-lottie";
+
+
 const ErrorPage = () => {
+
+    const defaultOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: ErrorAnimation,
+        rendererSettings: {
+            preserveAspectRatio: 'xMidYMid slice'
+        }
+    };
+
     return (
-        <div>
-            <h1>Error page</h1>
+        <div className="min-h-screen flex flex-col items-center justify-center">
+            <Lottie
+                options={defaultOptions}
+                height={400}
+                width={400}
+            />
+
+            <p className="text-error text-3xl font-bold uppercase">Error!</p>
+            <Link to="/" className="btn btn-success mt-3">Back to Home</Link>
         </div>
     );
 };
