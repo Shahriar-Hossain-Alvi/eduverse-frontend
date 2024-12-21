@@ -1,21 +1,58 @@
-import { useContext } from "react";
-import { Link } from "react-router";
-import { ThemeContext } from "../../Provider/ThemeContext";
+import { Link, useLocation, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
-
+import useAuth from "../../Hooks/useAuth";
+import useTheme from "../../Hooks/useTheme"
+import { TbFidgetSpinner } from "react-icons/tb";
+import toast, { Toaster } from 'react-hot-toast';
 
 const SignIn = () => {
-    const { theme } = useContext(ThemeContext);
+    const { theme } = useTheme();
+    const { user, login, loading } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const currentPathname = location?.state?.from?.pathname || "/";
 
-    const { register, handleSubmit, formState: { errors } } = useForm();
-
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
     // login function
-    const handleLogin = (data) => {
+    const handleLogin = async (data) => {
         const email = data.email;
-        const password = data.password
+        const password = data.password;
 
-        console.log({ email, password })
+        if (user) {
+            toast.error('Already logged in.', {
+                duration: 1500,
+                position: 'top-center',
+            });
+            return setTimeout(() => {
+                navigate(currentPathname, { replace: true })
+            }, 1600)
+        }
+
+        try {
+            const loggedInUser = await login(email, password);
+
+            if (loggedInUser) {
+                reset();
+                toast.success('Login Successful!', {
+                    duration: 1500,
+                    position: 'top-center',
+                });
+
+                // Redirect after the toast duration
+                setTimeout(() => {
+                    navigate(currentPathname, { replace: true });
+                }, 1600);
+
+            }
+        }
+        catch (error) {
+            toast.error('An error occurred during login.', {
+                duration: 1500,
+                position: 'top-center',
+            });
+            console.error(error);
+        }
     };
 
 
@@ -23,6 +60,7 @@ const SignIn = () => {
         <div className="bg-base-200 min-h-screen py-20 px-20 md:px-28 lg:px-44">
             <div className="flex-col">
                 <div className="text-center">
+                    <Toaster />
                     <h1 className="text-5xl font-bold">Login</h1>
                     <p className={`py-6 font-medium ${theme === "dark" ? "text-secondary" : "text-light_secondary"}`}>
                         Use you email and password to login.
@@ -52,7 +90,7 @@ const SignIn = () => {
                                 <input type="password" placeholder="Enter your password" className="input  input-bordered w-full"
                                     {...register("password", {
                                         required: "Password is required",
-                                        minLength: { value: 8, message: "Password must be at least 8 character" }, maxLength: { value: 32, message: "Password must be within 32 character" },
+                                        minLength: { value: 6, message: "Password must be at least 6 character" }, maxLength: { value: 32, message: "Password must be within 32 character" },
                                     })}
                                 />
                                 {
@@ -61,7 +99,11 @@ const SignIn = () => {
                             </div>
                         </div>
                         <div className="form-control mt-6">
-                            <button type="submit" className="btn btn-primary">Login</button>
+                            {
+                                loading ?
+                                    <button type="submit" className="btn btn-primary btn-disabled" ><TbFidgetSpinner className="animate-spin text-lg" /></button> :
+                                    <button type="submit" className="btn btn-primary">Login</button>
+                            }
                         </div>
                     </form>
 
