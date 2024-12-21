@@ -2,6 +2,9 @@ import { createBrowserRouter, createRoutesFromElements, Route } from "react-rout
 import ErrorPage from "../Layout/ErrorPage";
 import Main from "../Layout/Main";
 import SignIn from "../Pages/Auth/SignIn";
+import RoleBasedRedirect from "./RoleBasedRedirect";
+import PrivateRoute from "./PrivateRoute";
+import AdminDashboard from "../Pages/Dashboard/AdminDashboard";
 
 
 
@@ -16,23 +19,23 @@ const router = createBrowserRouter(
             <Route path="signin" element={<SignIn />} />
 
             {/* Conditional Redirect Route */}
-            {/* <Route
+            <Route
                 index
                 element={
                     <RoleBasedRedirect />
                 }
-            /> */}
+            />
 
 
             {/* Role-Based Protected Routes */}
-            {/* <Route
+            <Route
                 path="admin/dashboard"
                 element={
                     <PrivateRoute role="admin">
                         <AdminDashboard />
                     </PrivateRoute>
                 }
-            /> */}
+            />
             {/* <Route
                 path="faculty/dashboard"
                 element={
