@@ -14,6 +14,7 @@ const AuthProvider = ({ children }) => {
         user,
         loading,
         setLoading,
+        setUser
     }
 
     return (
