@@ -1,16 +1,17 @@
 import { useContext } from "react";
 import { NavLink } from "react-router";
 import { ThemeContext } from "../Provider/ThemeProvider";
+import useAuth from "../Hooks/useAuth";
 
 
 const Navbar = () => {
 
     const { setTheme } = useContext(ThemeContext);
-
+    const { user, logout } = useAuth();
 
     // Function to toggle between dark and light mode
     const changeTheme = (event) => {
-        // If the checkbox is checked, set the theme to dark, otherwise light
+        // If the checkbox is checked, set the theme to light, otherwise dark
         setTheme(event.target.checked ? "light" : "dark");
     };
 
@@ -28,8 +29,11 @@ const Navbar = () => {
 
 
             <div className="flex-none">
-                <ul className="menu menu-horizontal px-1">
+                <ul className="menu menu-horizontal px-1  items-center gap-2">
                     <li><NavLink>Contacts</NavLink></li>
+                    {
+                        user && <button onClick={logout} className="btn btn-error btn-sm text-white">Logout</button>
+                    }
                 </ul>
             </div>
         </div>

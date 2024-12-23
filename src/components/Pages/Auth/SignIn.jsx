@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import useAuth from "../../Hooks/useAuth";
 import useTheme from "../../Hooks/useTheme"
@@ -9,8 +9,6 @@ const SignIn = () => {
     const { theme } = useTheme();
     const { user, login, loading } = useAuth();
     const navigate = useNavigate();
-    const location = useLocation();
-    const currentPathname = location?.state?.from?.pathname || "/";
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
@@ -25,14 +23,13 @@ const SignIn = () => {
                 position: 'top-center',
             });
             return setTimeout(() => {
-                navigate(currentPathname, { replace: true })
+                navigate("/", { replace: true })
             }, 1600)
         }
 
         try {
             const loggedInUser = await login(email, password);
-            console.log(loggedInUser);
-            
+
             if (loggedInUser) {
                 reset();
                 toast.success('Login Successful!', {
@@ -42,7 +39,7 @@ const SignIn = () => {
 
                 // Redirect after the toast duration
                 setTimeout(() => {
-                    navigate(currentPathname, { replace: true });
+                    navigate("/", { replace: true });
                 }, 1600);
 
             }

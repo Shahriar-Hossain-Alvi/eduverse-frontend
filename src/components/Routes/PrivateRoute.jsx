@@ -6,6 +6,7 @@ import LoadingSpinner from "../Utilities/LoadingSpinner";
 const PrivateRoute = ({ children, role }) => {
     const { loading, user } = useAuth();
     const location = useLocation()
+    console.log(role);
 
 
     if (loading) return <LoadingSpinner />

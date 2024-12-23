@@ -11,7 +11,7 @@ const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const axiosPublic = useAxiosPublic();
 
-    // login user
+    // login user and save in LS
     const login = async (email, password) => {
         try {
             const logInData = { email, password }
@@ -40,19 +40,27 @@ const AuthProvider = ({ children }) => {
     }
 
 
+    // Auto-login if user data exists in localStorage
     useEffect(() => {
-        // Auto-login if user data exists in localStorage
         const savedUser = localStorage.getItem("user");
         if (savedUser) setUser(JSON.parse(savedUser));
         setLoading(false);
     }, []);
 
 
+    // logout user remover from LS and set user to null in the state
+    const logout = () => {
+        setUser(null);
+        localStorage.removeItem("user");
+      };
+
+
     const authInfo = {
         user,
         loading,
         setLoading,
-        login
+        login,
+        logout
     }
 
     return (
