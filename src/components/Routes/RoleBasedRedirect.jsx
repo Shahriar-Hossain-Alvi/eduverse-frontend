@@ -1,16 +1,26 @@
 import LoadingSpinner from "../Utilities/LoadingSpinner";
 import useAuth from "../Hooks/useAuth"
 import { Navigate } from "react-router";
+import { useEffect, useState } from "react";
 
 const RoleBasedRedirect = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, fetchUserInfo } = useAuth();
+  const [role, setRole] = useState(null);
 
-  if (loading) return <LoadingSpinner />;
+  useEffect(() => {
+    if (user) {
+      fetchUserInfo().then((userData) => {
+        setRole(userData.user_role)
+      }).catch(() => setRole(null));
+    }
+  }, [fetchUserInfo, user]);
+
+  if (loading || (user && !role)) return <LoadingSpinner />;
 
   if (!user) return <Navigate to="/signin" />;
 
   // Redirect based on user role
-  switch (user.user_role) {
+  switch (role) {
     case "admin":
       return <Navigate to="/admin/dashboard" />;
     case "faculty":

@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import useAxiosPublic from "../Hooks/useAxiosPublic";
 
@@ -11,19 +11,19 @@ const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const axiosPublic = useAxiosPublic();
 
-    // login user and save in LS
+    console.log(user);
+
+    // login user and save token in LS
     const login = async (email, password) => {
         try {
-            const logInData = { email, password }
+            const logInData = { email, password };
             const result = await axiosPublic.post("/users/login", logInData);
 
-            // save user data in LS
-            localStorage.setItem("user", JSON.stringify(result?.data.data));
-
-            // save access token in LS
+            // Save access token only
             localStorage.setItem("access-token", result.data.token);
 
-            const userData = result?.data.data;
+            // Fetch user info securely using the fetchUserInfo function
+            const userData = await fetchUserInfo();
 
             setUser(userData);
             setLoading(false);
@@ -39,20 +39,40 @@ const AuthProvider = ({ children }) => {
         }
     }
 
+    // fetch user data securely after successful login
+    const fetchUserInfo = useCallback(async () => {
+        try {
+            const response = await axiosPublic("/users/me");
+            return response.data.data; // Returns the full user object from the backend
+        } catch (error) {
+            console.error("Error fetching user info:", error);
+            logout();
+            throw error;
+        }
+    }, [axiosPublic])
 
-    // Auto-login if user data exists in localStorage
+
+    // Auto-login if token exists in localStorage
     useEffect(() => {
-        const savedUser = localStorage.getItem("user");
-        if (savedUser) setUser(JSON.parse(savedUser));
-        setLoading(false);
-    }, []);
+        const token = localStorage.getItem("access-token");
+        if (token) {
+            fetchUserInfo().then((data) => {
+                setUser(data);
+                setLoading(false);
+            }).catch(() => setLoading(false));
+        } else {
+            setLoading(false);
+        }
+    }, [fetchUserInfo]);
+
 
 
     // logout user remover from LS and set user to null in the state
     const logout = () => {
+        localStorage.removeItem("access-token");
         setUser(null);
-        localStorage.removeItem("user");
-      };
+        setLoading(false);
+    };
 
 
     const authInfo = {
@@ -60,7 +80,8 @@ const AuthProvider = ({ children }) => {
         loading,
         setLoading,
         login,
-        logout
+        logout,
+        fetchUserInfo
     }
 
     return (

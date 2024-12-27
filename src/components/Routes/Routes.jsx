@@ -12,10 +12,7 @@ import StudentDashboard from "../Pages/Dashboard/StudentDashboard";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
-        <Route path="/"
-            element={<Main />}
-            errorElement={<ErrorPage />}
-        >
+        <Route path="/" element={<Main />} errorElement={<ErrorPage />}>
 
             {/* Public Routes */}
             <Route path="signin" element={<SignIn />} />
