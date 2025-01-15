@@ -1,24 +1,78 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import LoadingSpinner from "../../Utilities/LoadingSpinner";
+import AdminSidebar from "../../Shared/AdminSidebar";
 
 
 const AdminDashboard = () => {
     const axiosSecure = useAxiosSecure();
-    const { data: AllStudents, isPending, isError } = useQuery({
-        queryKey: ["AllStudents"],
+    const { data: quickOverview, isPending, isError, error } = useQuery({
+        queryKey: ["quickOverview"],
         queryFn: async () => {
-            const res = await axiosSecure("/users");
+            const res = await axiosSecure("/adminQuickOverview");
             if (res.data.success) return res.data.data
         }
     })
 
+    console.log(quickOverview);
+
     if (isPending) return <LoadingSpinner />
 
     return (
-        <div>
-            admin dashboard
-            <h1>Total Users: {AllStudents.length}</h1>
+        <div className="flex min-h-screen">
+            {/* Sidebar */}
+            <AdminSidebar />
+
+            {/* Main Content */}
+            <main className="flex-1 p-8">
+                <h2 className="text-3xl font-semibold mb-6">Dashboard Overview</h2>
+
+                {/* Quick Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div className="bg-base-300 p-6 rounded-lg shadow-md">
+                        <h3 className="text-xl font-semibold mb-2">Total Students</h3>
+                        <p className="text-3xl font-bold text-indigo-600">{quickOverview.totalStudents}</p>
+                    </div>
+                    <div className="bg-base-300 p-6 rounded-lg shadow-md">
+                        <h3 className="text-xl font-semibold mb-2">Total Courses</h3>
+                        <p className="text-3xl font-bold text-indigo-600">{quickOverview.totalCourses}</p>
+                    </div>
+                    <div className="bg-base-300 p-6 rounded-lg shadow-md">
+                        <h3 className="text-xl font-semibold mb-2">Total Faculty</h3>
+                        <p className="text-3xl font-bold text-indigo-600">{quickOverview.totalFaculty}</p>
+                    </div>
+                    <div className="bg-base-300 p-6 rounded-lg shadow-md">
+                        <h3 className="text-xl font-semibold mb-2">Active Courses</h3>
+                        <p className="text-3xl font-bold text-indigo-600">{quickOverview.activeCourses}</p>
+                    </div>
+                    {
+                        isError && <div className="bg-base-300 p-6 rounded-lg shadow-md">
+                            <h3 className="text-xl font-semibold mb-2">Error Happened</h3>
+                            <p className="text-3xl font-bold text-indigo-600">{error.message}</p>
+                        </div>
+                    }
+
+                </div>
+
+                {/* Recent Activities */}
+                <div className="bg-base-300 p-6 rounded-lg shadow-md">
+                    <h3 className="text-xl font-semibold mb-4">Recent Activities</h3>
+                    <ul className="space-y-4">
+                        <li className="flex items-center justify-between">
+                            <span>New student registered</span>
+                            <span className="text-sm text-gray-500">2 minutes ago</span>
+                        </li>
+                        <li className="flex items-center justify-between">
+                            <span>Course &quot;Introduction to AI&quot; updated</span>
+                            <span className="text-sm text-gray-500">1 hour ago</span>
+                        </li>
+                        <li className="flex items-center justify-between">
+                            <span>New faculty member added</span>
+                            <span className="text-sm text-gray-500">3 hours ago</span>
+                        </li>
+                    </ul>
+                </div>
+            </main>
         </div>
     );
 };
