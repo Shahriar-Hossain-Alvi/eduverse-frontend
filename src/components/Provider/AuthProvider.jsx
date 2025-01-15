@@ -11,7 +11,7 @@ const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const axiosPublic = useAxiosPublic();
 
-    console.log(user);
+    // console.log(user);
 
     // login user and save token in LS
     const login = async (email, password) => {

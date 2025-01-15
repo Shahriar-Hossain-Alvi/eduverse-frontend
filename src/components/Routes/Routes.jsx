@@ -7,6 +7,7 @@ import PrivateRoute from "./PrivateRoute";
 import AdminDashboard from "../Pages/Dashboard/AdminDashboard";
 import FacultyDashboard from "../Pages/Dashboard/FacultyDashboard";
 import StudentDashboard from "../Pages/Dashboard/StudentDashboard";
+import UserProfile from "../Pages/FacultyPages/UserProfile";
 
 
 
@@ -28,6 +29,17 @@ const router = createBrowserRouter(
 
             {/* Role-Based Protected Routes */}
             <Route
+                path="userProfile"
+                element={
+                    <PrivateRoute>
+                        <UserProfile />
+                    </PrivateRoute>
+                }
+            />
+
+
+            {/* admin routes */}
+            <Route
                 path="admin/dashboard"
                 element={
                     <PrivateRoute role="admin">
@@ -35,6 +47,11 @@ const router = createBrowserRouter(
                     </PrivateRoute>
                 }
             />
+
+
+
+
+            {/* faculty routes */}
             <Route
                 path="faculty/dashboard"
                 element={
@@ -43,6 +60,10 @@ const router = createBrowserRouter(
                     </PrivateRoute>
                 }
             />
+
+
+
+            {/* student routes */}
             <Route
                 path="student/dashboard"
                 element={
