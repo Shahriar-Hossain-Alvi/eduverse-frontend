@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import LoadingSpinner from "../../Utilities/LoadingSpinner";
 import AdminSidebar from "../../Shared/AdminSidebar";
+import { formatDistance, formatDistanceToNow } from "date-fns";
 
 
 const AdminDashboard = () => {
@@ -14,7 +15,10 @@ const AdminDashboard = () => {
         }
     })
 
-    console.log(quickOverview);
+    const logTimeInWords = (timestamp) => {
+        return formatDistanceToNow(new Date(timestamp), { addSuffix: true })
+    }
+
 
     if (isPending) return <LoadingSpinner />
 
@@ -58,18 +62,12 @@ const AdminDashboard = () => {
                 <div className="bg-base-300 p-6 rounded-lg shadow-md">
                     <h3 className="text-xl font-semibold mb-4">Recent Activities</h3>
                     <ul className="space-y-4">
-                        <li className="flex items-center justify-between">
-                            <span>New student registered</span>
-                            <span className="text-sm text-gray-500">2 minutes ago</span>
-                        </li>
-                        <li className="flex items-center justify-between">
-                            <span>Course &quot;Introduction to AI&quot; updated</span>
-                            <span className="text-sm text-gray-500">1 hour ago</span>
-                        </li>
-                        <li className="flex items-center justify-between">
-                            <span>New faculty member added</span>
-                            <span className="text-sm text-gray-500">3 hours ago</span>
-                        </li>
+                        {
+                            quickOverview?.activities.map(singleActivity => <li key={singleActivity._id} className="flex items-center justify-between">
+                                <span>{singleActivity?.action}</span>
+                                <span className="text-sm text-gray-500">{logTimeInWords(singleActivity.timestamp)}</span>
+                            </li>)
+                        }
                     </ul>
                 </div>
             </main>

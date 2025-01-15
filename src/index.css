@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* custom css */
+#adminSideBar a.active{
+    background-color: #4f46e5 ;
+}
