@@ -5,5 +5,9 @@
 
 /* custom css */
 #adminSideBar a.active{
-    background-color: #4f46e5 ;
+    background-color: #4f46e5;
+}
+
+#studentSideBar a.active{
+    background-color: #3b82f6;
 }

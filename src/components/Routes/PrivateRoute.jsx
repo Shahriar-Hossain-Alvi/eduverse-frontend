@@ -36,7 +36,9 @@ const PrivateRoute = ({ children, role }) => {
     // Show loading spinner while fetching role or user info
     if (loading || roleVerified === null) return <LoadingSpinner />;
 
-    if (!user && !token) return <Navigate to="/signin" state={{ from: location }} />;
+    if (!user && !token){
+        return <Navigate to="/signin" state={{ from: location }} />;
+    } 
 
     if (role && roleVerified === false) {
         logout();

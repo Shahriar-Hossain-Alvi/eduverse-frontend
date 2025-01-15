@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import LoadingSpinner from "../../Utilities/LoadingSpinner";
 import AdminSidebar from "../../Shared/AdminSidebar";
-import { formatDistance, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 
 
 const AdminDashboard = () => {

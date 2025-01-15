@@ -30,7 +30,7 @@ const Navbar = () => {
 
             <div className="flex-none">
                 <ul className="menu menu-horizontal px-1  items-center gap-2">
-                    <li><NavLink>Contacts</NavLink></li>
+                    <li><NavLink to="/contact">Contact Us</NavLink></li>
                     {
                         user && <button onClick={logout} className="btn btn-error btn-sm text-white">Logout</button>
                     }

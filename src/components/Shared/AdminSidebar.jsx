@@ -1,4 +1,5 @@
 import { FiBook, FiCalendar, FiPieChart, FiSettings, FiUsers } from 'react-icons/fi';
+import { GrOverview } from 'react-icons/gr';
 import { NavLink } from 'react-router';
 
 const AdminSidebar = () => {
@@ -7,7 +8,7 @@ const AdminSidebar = () => {
             <h1 className="text-2xl font-bold mb-8">Admin Panel</h1>
             <nav>
                 <ul id="adminSideBar" className="space-y-4">
-                    <li><NavLink to="/admin/dashboard" className="flex items-center space-x-2 hover:bg-indigo-600 p-2 rounded"><FiUsers className="text-xl" /> <span>Dashboard</span></NavLink></li>
+                    <li><NavLink to="/admin/dashboard" className="flex items-center space-x-2 hover:bg-indigo-600 p-2 rounded"><GrOverview className="text-xl" /> <span>Overview</span></NavLink></li>
 
                     <li><NavLink to="/admin/users" className="flex items-center space-x-2 hover:bg-indigo-600 p-2 rounded"><FiUsers className="text-xl" /> <span>Users</span></NavLink></li>
 
