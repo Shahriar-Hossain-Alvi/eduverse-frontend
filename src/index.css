@@ -11,3 +11,8 @@
 #studentSideBar a.active{
     background-color: #3b82f6;
 }
+
+
+#facultySideBar a.active{
+    background-color: #16a34a;
+}
