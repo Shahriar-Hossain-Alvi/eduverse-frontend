@@ -5,7 +5,7 @@ import useTheme from "../../Hooks/useTheme"
 import { TbFidgetSpinner } from "react-icons/tb";
 import toast, { Toaster } from 'react-hot-toast';
 
-const SignIn = () => {
+const Signup = () => {
     const { theme } = useTheme();
     const { user, login, loading } = useAuth();
     const navigate = useNavigate();
@@ -105,10 +105,8 @@ const SignIn = () => {
                         </div>
                     </form>
 
-                    <div className="px-7 pb-7 justify-between flex">
+                    <div className="px-7 pb-7">
                         <Link to="/passwordReset" className="text-error font-medium hover:underline">Forgot Password?</Link>
-
-                        <Link to="/signup" className="text-error font-medium hover:underline">Signup</Link>
                     </div>
                 </div>
             </div>
@@ -116,4 +114,4 @@ const SignIn = () => {
     );
 };
 
-export default SignIn;
+export default Signup;
