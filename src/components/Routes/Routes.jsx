@@ -8,7 +8,6 @@ import AdminDashboard from "../Pages/Dashboard/AdminDashboard";
 import FacultyDashboard from "../Pages/Dashboard/FacultyDashboard";
 import StudentDashboard from "../Pages/Dashboard/StudentDashboard";
 import UserProfile from "../Pages/Auth/UserProfile";
-import Signup from "../Pages/Auth/Signup";
 
 
 
@@ -18,7 +17,6 @@ const router = createBrowserRouter(
 
             {/* Public Routes */}
             <Route path="signin" element={<SignIn />} />
-            <Route path="signup" element={<Signup />} />
 
             {/* Conditional Redirect Route */}
             <Route
