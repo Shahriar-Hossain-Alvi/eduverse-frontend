@@ -12,6 +12,7 @@ const SignIn = () => {
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
+
     // login function
     const handleLogin = async (data) => {
         const email = data.email;
@@ -37,11 +38,12 @@ const SignIn = () => {
                     position: 'top-center',
                 });
 
+
                 // Redirect after the toast duration
                 setTimeout(() => {
-                    navigate("/", { replace: true });
+                    navigate(
+                        loggedInUser.password_update_required ? `/${loggedInUser.user_role}/profile` : "/", { replace: true });
                 }, 1600);
-
             }
         }
         catch (error) {
