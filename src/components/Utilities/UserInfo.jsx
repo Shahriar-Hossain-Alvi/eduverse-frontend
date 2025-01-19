@@ -5,6 +5,7 @@ import useAuth from "../Hooks/useAuth";
 import { FiMail, FiUser, FiPhone, FiMapPin, FiLock, FiEdit2, FiSave, FiX } from "react-icons/fi";
 import { IoWarningOutline } from "react-icons/io5";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { FaUserCog } from "react-icons/fa";
 
 
 const UserInfo = () => {
@@ -12,10 +13,10 @@ const UserInfo = () => {
     const [isEditing, setIsEditing] = useState(false);
     const { register, handleSubmit, handleSubmit: handlePasswordSubmit, formState: { errors }, reset } = useForm();
     const axiosSecure = useAxiosSecure();
-    // console.log(user._id);
 
 
-    const onUpdateUser = (data) => {
+    // Handle user info update
+    const onUpdateUser = async (data) => {
         const updateInfo = {};
         const first_name = data?.firstName;
         const last_name = data?.lastName;
@@ -27,8 +28,42 @@ const UserInfo = () => {
         if (phone) updateInfo.phone = phone;
         if (address) updateInfo.address = address;
 
+
+        try {
+            if (Object.keys(updateInfo).length === 0) {
+                toast.error("No Changes were made!", {
+                    duration: 1500,
+                    position: "top-center"
+                });
+                setIsEditing(false);
+                return;
+            }
+
+            const res = await axiosSecure.patch(`/users/${user?._id}`, updateInfo);
+
+            if (res.data.success === true) {                
+                setUser(res.data.data);
+
+                toast.success(`${res?.data?.message}`, {
+                    duration: 1500,
+                    position: "top-center"
+                })
+                reset();
+            }
+
+        } catch (error) {
+            console.log(error);
+            const errorMessage =
+                error.response?.data?.message || "Something went wrong! Please try again.";
+
+            toast.error(errorMessage, {
+                duration: 3000,
+                position: "top-center"
+            });
+        }
+
         console.log("Updated user data:", updateInfo);
-        reset();
+        // reset();
         setIsEditing(false);
     };
 
@@ -188,6 +223,16 @@ const UserInfo = () => {
                         <FiMail className="mr-2" /> Email
                     </label>
                     <p className="mt-1 text-sm sm:mt-0 sm:col-span-2">{user?.email}</p>
+                </div>
+
+
+                {/* user name */}
+                <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                    <label className="text-sm font-medium text-gray-500 flex items-center"
+                    >
+                        <FaUserCog className="mr-2" /> Username
+                    </label>
+                    <p className="mt-1 text-sm sm:mt-0 sm:col-span-2">{user?.user_name}</p>
                 </div>
 
 
