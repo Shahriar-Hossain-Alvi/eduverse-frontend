@@ -77,11 +77,12 @@ const AuthProvider = ({ children }) => {
 
     const authInfo = {
         user,
+        setUser,
         loading,
         setLoading,
         login,
         logout,
-        fetchUserInfo
+        fetchUserInfo,
     }
 
     return (

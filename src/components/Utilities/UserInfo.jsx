@@ -3,14 +3,17 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import useAuth from "../Hooks/useAuth";
 import { FiMail, FiUser, FiPhone, FiMapPin, FiLock, FiEdit2, FiSave, FiX } from "react-icons/fi";
+import { IoWarningOutline } from "react-icons/io5";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
 
 
 const UserInfo = () => {
-    const { user } = useAuth();
+    const { user, setUser, fetchUserInfo } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const { register, handleSubmit, handleSubmit: handlePasswordSubmit, formState: { errors }, reset } = useForm();
+    const axiosSecure = useAxiosSecure();
+    // console.log(user._id);
 
-    console.log(user.password_update_required);
 
     const onUpdateUser = (data) => {
         const updateInfo = {};
@@ -31,7 +34,7 @@ const UserInfo = () => {
 
 
     // Handle password update
-    const onUpdatePassword = (data) => {
+    const onUpdatePassword = async (data) => {
         const old_password = data.currentPassword;
         const new_password = data.newPassword;
 
@@ -46,15 +49,42 @@ const UserInfo = () => {
 
         const updatePasswordInfo = { old_password, new_password }
 
-        console.log("Updating password:", updatePasswordInfo);
+        try {
+            const res = await axiosSecure.patch(`/users/updatePassword/${user?._id}`, updatePasswordInfo);
+
+            if (res.data.success === true) {
+                // fetch user data after updating password
+                const updatedUser = await fetchUserInfo();
+                setUser(updatedUser);
+
+                toast.success(`${res.data.message}`, {
+                    duration: 1500,
+                    position: "top-center"
+                })
+                reset();
+            }
+
+        } catch (error) {
+            console.log(error);
+            const errorMessage =
+                error.response?.data?.message || "Something went wrong! Please try again.";
+
+            toast.error(errorMessage, {
+                duration: 3000,
+                position: "top-center"
+            });
+        }
 
         setIsEditing(false);
     };
 
     return (
         <div className="flex-1 p-8">
+
+
+            {/* Button to enable form editing */}
             <div className="flex justify-between items-center mb-6">
-                <h3 className="text-2xl font-bold">User Profile</h3>
+                <h3 className="text-2xl font-bold indicator">User Profile</h3>
                 {!isEditing ? (
                     <button
                         onClick={() => setIsEditing(true)}
@@ -79,6 +109,73 @@ const UserInfo = () => {
                     </div>
                 )}
             </div>
+
+
+            {/* show error is password needs to be updated */}
+
+            {
+                user.password_update_required &&
+                <div role="alert" className="alert alert-warning shadow-lg my-5">
+                    <IoWarningOutline className="text-xl" />
+                    <div>
+                        <h3 className="font-bold">Security Alert!</h3>
+                        <div className="text-sm">  For your account&apos;s security, please update your password immediately.
+                            Using the default password increases the risk of unauthorized access.
+                            Set a strong, unique password to protect your account.</div>
+                    </div>
+                    <button onClick={() => setIsEditing(true)} className="btn btn-sm">Update Now</button>
+                </div>
+            }
+
+
+            {/* Separate Password Update Form */}
+            {isEditing && (
+                <form className="divide-y divide-gray-200 mt-6" onSubmit={handlePasswordSubmit(onUpdatePassword)}>
+                    <h4 className="text-lg font-semibold mb-6">Change Password</h4>
+
+                    <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <label className="text-sm font-medium text-gray-500 flex items-center">
+                            <FiLock className="mr-2" /> Current Password
+                        </label>
+
+                        <div>
+                            <input {...register("currentPassword", {
+                                minLength: {
+                                    value: 6,
+                                    message: "Minimum length is 6 characters"
+                                }, maxLength: {
+                                    value: 30,
+                                    message: "Maximum length is 30 Characters"
+                                }
+                            })} type="password" className="mt-1 block w-full border-gray-300 rounded-md input input-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter current password" />
+                            {errors.currentPassword && <span className="text-red-500 text-sm">{errors.currentPassword.message}</span>}
+                        </div>
+                    </div>
+
+
+                    <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <label className="text-sm font-medium text-gray-500 flex items-center">
+                            <FiLock className="mr-2" /> New Password
+                        </label>
+                        <div>
+                            <input {...register("newPassword", {
+                                minLength: {
+                                    value: 6,
+                                    message: "Minimum length is 6 characters"
+                                }, maxLength: {
+                                    value: 30,
+                                    message: "Maximum length is 30 Characters"
+                                }
+                            })} type="password" className="mt-1 block w-full border-gray-300 rounded-md input input-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter new password" />
+                            {errors.newPassword && <span className="text-red-500 text-sm">{errors.newPassword.message}</span>}
+                        </div>
+                    </div>
+
+                    <button type="submit" className="btn btn-primary mt-4">
+                        <FiSave className="mr-2" /> Update Password
+                    </button>
+                </form>
+            )}
 
 
             {/* show and update user info form */}
@@ -131,57 +228,6 @@ const UserInfo = () => {
                     {isEditing ? <textarea {...register("address")} defaultValue={null} className="mt-1 block w-full border-gray-300 rounded-md textarea focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder={user?.address !== null ? `${user.address}` : "Add your address"}></textarea> : <p>{user?.address || "Add address*"}</p>}
                 </div>
             </form>
-
-
-
-            {/* Separate Password Update Form */}
-            {isEditing && (
-                <form className="divide-y divide-gray-200 mt-6" onSubmit={handlePasswordSubmit(onUpdatePassword)}>
-                    <h4 className="text-lg font-semibold mb-6">Change Password</h4>
-
-                    <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
-                        <label className="text-sm font-medium text-gray-500 flex items-center">
-                            <FiLock className="mr-2" /> Current Password
-                        </label>
-
-                        <div>
-                            <input {...register("currentPassword", {
-                                minLength: {
-                                    value: 6,
-                                    message: "Minimum length is 6 characters"
-                                }, maxLength: {
-                                    value: 30,
-                                    message: "Maximum length is 30 Characters"
-                                }
-                            })} type="password" className="mt-1 block w-full border-gray-300 rounded-md input input-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter current password" />
-                            {errors.currentPassword && <span className="text-red-500 text-sm">{errors.currentPassword.message}</span>}
-                        </div>
-                    </div>
-
-
-                    <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
-                        <label className="text-sm font-medium text-gray-500 flex items-center">
-                            <FiLock className="mr-2" /> New Password
-                        </label>
-                        <div>
-                            <input {...register("newPassword", {
-                                minLength: {
-                                    value: 6,
-                                    message: "Minimum length is 6 characters"
-                                }, maxLength: {
-                                    value: 30,
-                                    message: "Maximum length is 30 Characters"
-                                }
-                            })} type="password" className="mt-1 block w-full border-gray-300 rounded-md input input-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter new password" />
-                            {errors.newPassword && <span className="text-red-500 text-sm">{errors.newPassword.message}</span>}
-                        </div>
-                    </div>
-
-                    <button type="submit" className="btn btn-primary mt-4">
-                        <FiSave className="mr-2" /> Update Password
-                    </button>
-                </form>
-            )}
         </div>
     );
 };
