@@ -4,11 +4,11 @@ import Main from "../Layout/Main";
 import SignIn from "../Pages/Auth/SignIn";
 import RoleBasedRedirect from "./RoleBasedRedirect";
 import PrivateRoute from "./PrivateRoute";
-import AdminDashboard from "../Pages/Dashboard/AdminDashboard";
-import FacultyDashboard from "../Pages/Dashboard/FacultyDashboard";
-import StudentDashboard from "../Pages/Dashboard/StudentDashboard";
-import FacultyProfile from "../Pages/Auth/FacultyProfile";
-import StudentProfile from "../Pages/Auth/StudentProfile";
+import AdminDashboard from "../Pages/AdminPages/AdminDashboard";
+import FacultyDashboard from "../Pages/FacultyPages/FacultyDashboard";
+import StudentDashboard from "../Pages/StudentPages/StudentDashboard";
+import FacultyProfile from "../Pages/FacultyPages/FacultyProfile";
+import StudentProfile from "../Pages/StudentPages/StudentProfile";
 
 
 const router = createBrowserRouter(
