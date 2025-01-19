@@ -7,11 +7,12 @@ import PrivateRoute from "./PrivateRoute";
 import AdminDashboard from "../Pages/Dashboard/AdminDashboard";
 import FacultyDashboard from "../Pages/Dashboard/FacultyDashboard";
 import StudentDashboard from "../Pages/Dashboard/StudentDashboard";
-import UserProfile from "../Pages/Auth/UserProfile";
-
+import FacultyProfile from "../Pages/Auth/FacultyProfile";
+import StudentProfile from "../Pages/Auth/StudentProfile";
 
 
 const router = createBrowserRouter(
+
     createRoutesFromElements(
         <Route path="/" element={<Main />} errorElement={<ErrorPage />}>
 
@@ -27,17 +28,7 @@ const router = createBrowserRouter(
             />
 
 
-           {/* Common Private Route */}
-            <Route
-                path="userProfile"
-                element={
-                    <PrivateRoute>
-                        <UserProfile />
-                    </PrivateRoute>
-                }
-            />
-
-             {/* Role-Based Protected Routes */}
+            {/* Role-Based Protected Routes */}
 
             {/* admin routes */}
             <Route
@@ -62,6 +53,16 @@ const router = createBrowserRouter(
                 }
             />
 
+            <Route
+                path="faculty/profile"
+                element={
+                    <PrivateRoute role="faculty">
+                        <FacultyProfile />
+                    </PrivateRoute>
+                }
+            />
+
+
 
 
             {/* student routes */}
@@ -74,6 +75,15 @@ const router = createBrowserRouter(
                 }
             />
 
+
+            <Route
+                path="student/profile"
+                element={
+                    <PrivateRoute role="student">
+                        <StudentProfile />
+                    </PrivateRoute>
+                }
+            />
 
         </Route>
     )

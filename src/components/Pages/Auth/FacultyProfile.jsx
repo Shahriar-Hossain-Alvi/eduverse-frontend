@@ -5,7 +5,7 @@ import useAuth from "../../Hooks/useAuth";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 
-const UserProfile = () => {
+const FacultyProfile = () => {
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const { register, handleSubmit, handleSubmit: handlePasswordSubmit, formState: { errors }, reset } = useForm();
@@ -56,7 +56,7 @@ const UserProfile = () => {
       <Toaster/>
 
       {/* User Info */}
-      <div className="w-full overflow-hidden px-2 py-5 sm:p-6">
+      <div className="flex-1 p-8">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-2xl font-bold">User Profile</h3>
           {!isEditing ? (
@@ -191,4 +191,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default FacultyProfile;
