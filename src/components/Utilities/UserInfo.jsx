@@ -242,7 +242,7 @@ const UserInfo = () => {
                         <FiUser className="mr-2" /> First Name
                     </label>
 
-                    {isEditing ? <input {...register("firstName")} className="mt-1 block w-full border-gray-300 rounded-md input input-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder={`${user?.first_name}`} /> : <p>{user?.first_name}</p>}
+                    {isEditing ? <input type="text" {...register("firstName")} className="mt-1 block w-full border-gray-300 rounded-md input input-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder={`${user?.first_name}`} /> : <p>{user?.first_name}</p>}
                 </div>
 
 
@@ -251,7 +251,7 @@ const UserInfo = () => {
                     <label className="text-sm font-medium text-gray-500 flex items-center">
                         <FiUser className="mr-2" /> Last Name
                     </label>
-                    {isEditing ? <input {...register("lastName")} className="mt-1 block w-full border-gray-300 rounded-md input input-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder={`${user?.last_name}`} /> : <p>{user?.last_name}</p>}
+                    {isEditing ? <input type="text" {...register("lastName")} className="mt-1 block w-full border-gray-300 rounded-md input input-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder={`${user?.last_name}`} /> : <p>{user?.last_name}</p>}
                 </div>
 
 
@@ -260,7 +260,7 @@ const UserInfo = () => {
                     <label className="text-sm font-medium text-gray-500 flex items-center">
                         <FiPhone className="mr-2" /> Phone
                     </label>
-                    {isEditing ? <input {...register("phone")}
+                    {isEditing ? <input type="text" {...register("phone")}
                         defaultValue={null} className="mt-1 block w-full border-gray-300 rounded-md input input-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder={user?.phone !== null ? `${user.phone}` : "Add your number"} /> : <p>{user?.phone || "Add number*"}</p>}
                 </div>
 

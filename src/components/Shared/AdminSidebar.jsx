@@ -1,5 +1,6 @@
-import { FiBook, FiCalendar, FiPieChart, FiSettings, FiUsers } from 'react-icons/fi';
+import { FiBook, FiCalendar, FiPieChart, FiUsers } from 'react-icons/fi';
 import { GrOverview } from 'react-icons/gr';
+import { IoMdPersonAdd } from 'react-icons/io';
 import { NavLink } from 'react-router';
 
 const AdminSidebar = () => {
@@ -18,7 +19,7 @@ const AdminSidebar = () => {
 
                     <li><NavLink to="/admin/reports" className="flex items-center space-x-2 hover:bg-indigo-600 p-2 rounded"><FiPieChart className="text-xl" /> <span>Reports</span></NavLink></li>
 
-                    <li><NavLink to="/admin/settings" className="flex items-center space-x-2 hover:bg-indigo-600 p-2 rounded"><FiSettings className="text-xl" /> <span>Settings</span></NavLink></li>
+                    <li><NavLink to="/admin/createAccounts" className="flex items-center space-x-2 hover:bg-indigo-600 p-2 rounded"><IoMdPersonAdd className="text-xl" /> <span>Create Accounts</span></NavLink></li>
                 </ul>
             </nav>
         </aside>

@@ -1,14 +1,11 @@
 import { Toaster } from "react-hot-toast";
-import StudentSidebar from "../../Shared/StudentSidebar";
 import UserInfo from "../../Utilities/UserInfo";
 
 const StudentProfile = () => {
 
 
   return (
-    <div className="min-h-screen flex">
-      {/* sidebar */}
-      <StudentSidebar />
+    <div className="min-h-screen">
       <Toaster />
 
       {/* User Info */}

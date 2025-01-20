@@ -9,6 +9,10 @@ import FacultyDashboard from "../Pages/FacultyPages/FacultyDashboard";
 import StudentDashboard from "../Pages/StudentPages/StudentDashboard";
 import FacultyProfile from "../Pages/FacultyPages/FacultyProfile";
 import StudentProfile from "../Pages/StudentPages/StudentProfile";
+import CreateAccounts from "../Pages/AdminPages/CreateAccounts";
+import FacultyLayout from "../Layout/FacultyLayout";
+import StudentLayout from "../Layout/StudentLayout";
+import AdminLayout from "../Layout/AdminLayout";
 
 
 const router = createBrowserRouter(
@@ -31,61 +35,103 @@ const router = createBrowserRouter(
             {/* Role-Based Protected Routes */}
 
             {/* admin routes */}
-            <Route
-                path="admin/dashboard"
-                element={
-                    <PrivateRoute role="admin">
-                        <AdminDashboard />
-                    </PrivateRoute>
-                }
-            />
+            <Route path="admin" element={<AdminLayout />} errorElement={<ErrorPage />}
+            >
+                <Route
+                    index
+                    element={
+                        <RoleBasedRedirect />
+                    }
+                />
+
+                <Route
+                    path="dashboard"
+                    element={
+                        <PrivateRoute role="admin">
+                            <AdminDashboard />
+                        </PrivateRoute>
+                    }
+                />
+
+                <Route
+                    path="createAccounts"
+                    element={
+                        <PrivateRoute role="admin">
+                            <CreateAccounts />
+                        </PrivateRoute>
+                    }
+                />
+            </Route>
 
 
 
 
             {/* faculty routes */}
-            <Route
-                path="faculty/dashboard"
-                element={
-                    <PrivateRoute role="faculty">
-                        <FacultyDashboard />
-                    </PrivateRoute>
-                }
-            />
+            < Route path="faculty" element={< FacultyLayout />} errorElement={< ErrorPage />}>
 
-            <Route
-                path="faculty/profile"
-                element={
-                    <PrivateRoute role="faculty">
-                        <FacultyProfile />
-                    </PrivateRoute>
-                }
-            />
+                {/* for auto redirects */}
+                < Route
+                    index
+                    element={
+                        < RoleBasedRedirect />
+                    }
+                />
+
+                < Route
+                    path="dashboard"
+                    element={
+                        < PrivateRoute role="faculty" >
+                            <FacultyDashboard />
+                        </PrivateRoute >
+                    }
+                />
+
+                < Route
+                    path="profile"
+                    element={
+                        < PrivateRoute role="faculty" >
+                            <FacultyProfile />
+                        </PrivateRoute >
+                    }
+                />
+
+            </Route >
 
 
 
 
             {/* student routes */}
-            <Route
-                path="student/dashboard"
-                element={
-                    <PrivateRoute role="student">
-                        <StudentDashboard />
-                    </PrivateRoute>
-                }
-            />
+            < Route path="student" element={< StudentLayout />} errorElement={< ErrorPage />}>
+                {/* for auto redirects */}
+                < Route
+                    index
+                    element={
+                        < RoleBasedRedirect />
+                    }
+                />
 
 
-            <Route
-                path="student/profile"
-                element={
-                    <PrivateRoute role="student">
-                        <StudentProfile />
-                    </PrivateRoute>
-                }
-            />
+                < Route
+                    path="dashboard"
+                    element={
+                        < PrivateRoute role="student" >
+                            <StudentDashboard />
+                        </PrivateRoute >
+                    }
+                />
 
-        </Route>
+
+                < Route
+                    path="profile"
+                    element={
+                        < PrivateRoute role="student" >
+                            <StudentProfile />
+                        </PrivateRoute >
+                    }
+                />
+            </Route >
+
+        </Route >
     )
 );
 
