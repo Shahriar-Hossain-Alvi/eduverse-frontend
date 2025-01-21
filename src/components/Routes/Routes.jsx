@@ -13,6 +13,7 @@ import CreateAccounts from "../Pages/AdminPages/CreateAccounts";
 import FacultyLayout from "../Layout/FacultyLayout";
 import StudentLayout from "../Layout/StudentLayout";
 import AdminLayout from "../Layout/AdminLayout";
+import ManageUsers from "../Pages/AdminPages/ManageUsers";
 
 
 const router = createBrowserRouter(
@@ -61,6 +62,12 @@ const router = createBrowserRouter(
                         </PrivateRoute>
                     }
                 />
+
+                <Route path="users" element={
+                    <PrivateRoute role="admin">
+                        <ManageUsers />
+                    </PrivateRoute>
+                } />
             </Route>
 
 

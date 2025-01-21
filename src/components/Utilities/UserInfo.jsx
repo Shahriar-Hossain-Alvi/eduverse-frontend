@@ -41,7 +41,7 @@ const UserInfo = () => {
 
             const res = await axiosSecure.patch(`/users/${user?._id}`, updateInfo);
 
-            if (res.data.success === true) {                
+            if (res.data.success === true) {
                 setUser(res.data.data);
 
                 toast.success(`${res?.data?.message}`, {
@@ -82,6 +82,14 @@ const UserInfo = () => {
             return;
         }
 
+        if (old_password === new_password) {
+            toast.error("New password can not be same as the old password", {
+                duration: 2500,
+                position: "top-center"
+            })
+            return;
+        }
+
         const updatePasswordInfo = { old_password, new_password }
 
         try {
@@ -115,8 +123,6 @@ const UserInfo = () => {
 
     return (
         <div className="p-8">
-
-
             {/* Button to enable form editing */}
             <div className="flex justify-between items-center mb-6">
                 <h3 className="text-3xl font-bold indicator">User Profile</h3>

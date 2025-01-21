@@ -1,6 +1,6 @@
 const LoadingSpinner = () => {
     return (
-        <div className="text-center flex items-center justify-center my-20">
+        <div className="mx-auto my-auto">
             <span className="loading loading-spinner text-accent w-10"></span>
         </div>
     );
