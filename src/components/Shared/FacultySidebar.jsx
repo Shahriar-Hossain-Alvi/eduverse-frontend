@@ -5,10 +5,12 @@ import { NavLink } from "react-router";
 
 const FacultySidebar = () => {
     return (
-        <aside className="w-64 bg-green-700 text-white p-6">
-        <h1 className="text-2xl font-bold mb-8">Faculty Portal</h1>
+        <aside className="w-32 md:w-64 bg-green-700 text-white p-3 md:p-6">
+        <h1 className="text-lg md:text-2xl font-bold mb-8">Faculty Portal</h1>
+
+        
         <nav>
-          <ul id="facultySideBar" className="space-y-4">
+          <ul id="facultySideBar" className="space-y-4 text-sm text-center md:text-base">
             <li><NavLink to="/faculty/dashboard" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><GrOverview className="text-xl" /> <span>Overview</span></NavLink></li>
 
             <li><NavLink to="/faculty/myCourses" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><FiBook className="text-xl" /> <span>My Courses</span></NavLink></li>

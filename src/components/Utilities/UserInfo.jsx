@@ -122,14 +122,15 @@ const UserInfo = () => {
     };
 
     return (
-        <div className="p-8">
+        <div className="p-3 md:p-8">
+
             {/* Button to enable form editing */}
-            <div className="flex justify-between items-center mb-6">
-                <h3 className="text-3xl font-bold indicator">User Profile</h3>
+            <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+                <h3 className="text-xl md:text-3xl font-bold indicator">User Profile</h3>
                 {!isEditing ? (
                     <button
                         onClick={() => setIsEditing(true)}
-                        className="btn btn-primary"
+                        className="btn btn-primary btn-xs md:btn-md mt-2 md:mt-0"
                     >
                         <FiEdit2 className="mr-2" /> Edit Profile
                     </button>
@@ -137,13 +138,13 @@ const UserInfo = () => {
                     <div className="flex space-x-2">
                         <button
                             onClick={handleSubmit(onUpdateUser)}
-                            className="btn btn-success"
+                            className="btn btn-success btn-xs md:btn-md mt-2 md:mt-0"
                         >
                             <FiSave className="mr-2" /> Save
                         </button>
                         <button
                             onClick={() => setIsEditing(false)}
-                            className="btn btn-error"
+                            className="btn btn-error btn-xs md:btn-md mt-2 md:mt-0"
                         >
                             <FiX className="mr-2" /> Cancel
                         </button>

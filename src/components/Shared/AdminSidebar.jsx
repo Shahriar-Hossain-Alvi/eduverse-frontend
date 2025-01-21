@@ -5,10 +5,12 @@ import { NavLink } from 'react-router';
 
 const AdminSidebar = () => {
     return (
-        <aside className="w-64 bg-indigo-700 text-white p-6">
-            <h1 className="text-2xl font-bold mb-8">Admin Panel</h1>
+        <aside className="w-32 md:w-64 bg-indigo-700 text-white p-3 md:p-6">
+            <h1 className="text-lg md:text-2xl font-bold mb-8">Admin Panel</h1>
+
+            
             <nav>
-                <ul id="adminSideBar" className="space-y-4">
+                <ul id="adminSideBar" className="space-y-4 text-sm text-center md:text-base">
                     <li><NavLink to="/admin/dashboard" className="flex items-center space-x-2 hover:bg-indigo-600 p-2 rounded"><GrOverview className="text-xl" /> <span>Overview</span></NavLink></li>
 
                     <li><NavLink to="/admin/users" className="flex items-center space-x-2 hover:bg-indigo-600 p-2 rounded"><FiUsers className="text-xl" /> <span>Users</span></NavLink></li>

@@ -16,25 +16,52 @@ const Navbar = () => {
     };
 
     return (
-        <div className="navbar bg-base-100">
-            <div className="flex-1">
+        <div>
+            <div className="md:hidden navbar flex-col bg-base-100">
                 <a className="btn btn-ghost text-xl">EduVerse</a>
+
+
+                <div>
+                    <label className="flex cursor-pointer gap-2 mr-2">
+                        <span className="label-text">Dark</span>
+                        <input onChange={changeTheme} type="checkbox" value="light" className="toggle theme-controller" />
+                        <span className="label-text">Light</span>
+                    </label>
+
+
+                    <ul className="menu menu-horizontal px-1  items-center gap-2">
+                        <li><NavLink to="/contact">Contact Us</NavLink></li>
+                        {
+                            user && <button onClick={logout} className="btn btn-error btn-xs text-white">Logout</button>
+                        }
+                    </ul>
+                </div>
             </div>
 
-            <label className="flex cursor-pointer gap-2 mr-2">
-                <span className="label-text">Dark</span>
-                <input onChange={changeTheme} type="checkbox" value="light" className="toggle theme-controller" />
-                <span className="label-text">Light</span>
-            </label>
 
 
-            <div className="flex-none">
-                <ul className="menu menu-horizontal px-1  items-center gap-2">
-                    <li><NavLink to="/contact">Contact Us</NavLink></li>
-                    {
-                        user && <button onClick={logout} className="btn btn-error btn-sm text-white">Logout</button>
-                    }
-                </ul>
+
+            {/* navbar for medium to large screen */}
+            <div className="hidden md:block navbar bg-base-100">
+                <div className="flex-1">
+                    <a className="btn btn-ghost text-xl">EduVerse</a>
+                </div>
+
+                <label className="flex cursor-pointer gap-2 mr-2">
+                    <span className="label-text">Dark</span>
+                    <input onChange={changeTheme} type="checkbox" value="light" className="toggle theme-controller" />
+                    <span className="label-text">Light</span>
+                </label>
+
+
+                <div className="flex-none">
+                    <ul className="menu menu-horizontal px-1  items-center gap-2">
+                        <li><NavLink to="/contact">Contact Us</NavLink></li>
+                        {
+                            user && <button onClick={logout} className="btn btn-error btn-sm text-white">Logout</button>
+                        }
+                    </ul>
+                </div>
             </div>
         </div>
     );

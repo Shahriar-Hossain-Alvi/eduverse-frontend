@@ -23,38 +23,49 @@ const AdminDashboard = () => {
     if (isPending) return <LoadingSpinner />
 
     return (
-        <div className="flex-1 p-8">
+        <div className="flex-1 p-3 md:p-8">
             <SectionHeading title="Dashboard Overview" />
 
             {/* Quick Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="bg-base-300 p-6 rounded-lg shadow-md">
+
+                {/* total students */}
+                <div className="bg-base-300 p-3 md:p-6 rounded-lg shadow-md">
                     <h3 className="text-xl font-semibold mb-2">Total Students</h3>
                     <p className="text-3xl font-bold text-indigo-600">{quickOverview.totalStudents}</p>
                 </div>
-                <div className="bg-base-300 p-6 rounded-lg shadow-md">
+
+                {/* total courses */}
+                <div className="bg-base-300 p-3 md:p-6 rounded-lg shadow-md">
                     <h3 className="text-xl font-semibold mb-2">Total Courses</h3>
                     <p className="text-3xl font-bold text-indigo-600">{quickOverview.totalCourses}</p>
                 </div>
-                <div className="bg-base-300 p-6 rounded-lg shadow-md">
+
+                {/* total faculty */}
+                <div className="bg-base-300 p-3 md:p-6 rounded-lg shadow-md">
                     <h3 className="text-xl font-semibold mb-2">Total Faculty</h3>
                     <p className="text-3xl font-bold text-indigo-600">{quickOverview.totalFaculty}</p>
                 </div>
-                <div className="bg-base-300 p-6 rounded-lg shadow-md">
+
+                {/* active courses */}
+                <div className="bg-base-300 p-3 md:p-6 rounded-lg shadow-md">
                     <h3 className="text-xl font-semibold mb-2">Active Courses</h3>
                     <p className="text-3xl font-bold text-indigo-600">{quickOverview.activeCourses}</p>
                 </div>
+
+                {/* error message */}
                 {
-                    isError && <div className="bg-base-300 p-6 rounded-lg shadow-md">
+                    isError && <div className="bg-base-300 p-3 md:p-6 rounded-lg shadow-md">
                         <h3 className="text-xl font-semibold mb-2">Error Happened</h3>
                         <p className="text-3xl font-bold text-indigo-600">{error.message}</p>
                     </div>
                 }
-
             </div>
 
+
+
             {/* Recent Activities */}
-            <div className="bg-base-300 p-6 rounded-lg shadow-md">
+            <div className="bg-base-300 p-3 md:p-6 rounded-lg shadow-md">
                 <h3 className="text-xl font-semibold mb-4">Recent Activities</h3>
                 <ul className="space-y-4">
                     {

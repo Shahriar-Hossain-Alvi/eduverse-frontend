@@ -20,7 +20,7 @@ const ManageUsers = () => {
     console.log(getAllUsers);
 
     return (
-        <div className="flex-1 p-8 overflow-hidden">
+        <div className="flex-1 p-3 md:p-8 overflow-hidden">
             <SectionHeading title="Manage Users" />
 
             {/* Table */}

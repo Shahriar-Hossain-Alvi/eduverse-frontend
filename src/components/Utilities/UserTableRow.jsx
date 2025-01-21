@@ -1,6 +1,10 @@
 import PropTypes from 'prop-types';
 
 const UserTableRow = ({ singleUser, serialNo }) => {
+
+    // TODO:
+    // the button will open a new page with userInfo where admin can edit user details, activate/disable/delete a users account
+
     const { _id, user_role, user_name, email, is_active } = singleUser;
 
     return (
