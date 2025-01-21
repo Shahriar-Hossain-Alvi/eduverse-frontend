@@ -3,28 +3,65 @@ import { FaUserCircle } from "react-icons/fa";
 import { FiMail } from "react-icons/fi";
 import { IoIosPersonAdd } from "react-icons/io";
 import { RiLockPasswordFill } from "react-icons/ri";
+import SectionHeading from "../../Utilities/SectionHeading";
+import toast, { Toaster } from "react-hot-toast";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 
 const CreateAccounts = () => {
-
+    const axiosSecure = useAxiosSecure();
     const { register, reset, formState: { errors }, handleSubmit } = useForm();
 
 
-    const handleCreateAccounts = (data) => {
-        console.log(data);
+    const handleCreateAccounts = async (data) => {
+        const first_name = data.firstName;
+        const last_name = data.lastName;
+        const email = data.email;
+        const password = data.password;
+        const user_role = data.role;
+
+        if (user_role === "select a role") {
+            toast.error("Select a role", {
+                duration: 2500,
+                position: "top-center"
+            })
+            return;
+        }
+
+        const newUserInfo = {
+            first_name, last_name, email, password, user_role
+        }
+
+        try {
+            const res = await axiosSecure.post("/users", newUserInfo);
+
+            if (res.data.success === true) {
+                toast.success(`New ${user_role} created successfully.`,{
+                    duration: 1500,
+                    position: "top-center"
+                });
+                reset();
+            }
+
+        } catch (error) {
+            console.log(error);
+            const errorMessage =
+                error.response?.data?.message || "Something went wrong! Please try again.";
+
+            toast.error(errorMessage, {
+                duration: 3000,
+                position: "top-center"
+            });
+        }
     }
 
     return (
         <div className="flex-1 p-8">
+            <SectionHeading title="User Profile" />
+            <Toaster />
 
-            {/* Button to enable form editing */}
-            <div className="flex justify-between items-center mb-6">
-                <h3 className="text-2xl font-bold indicator">User Profile</h3>
-            </div>
-
-            {/* show and update user info form */}
-            <form className="divide-y divide-gray-200">
-
+            {/* Form Starts here */}
+            <form onSubmit={handleSubmit(handleCreateAccounts)} className="divide-y divide-gray-200">
 
                 {/* email */}
                 <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
@@ -32,7 +69,10 @@ const CreateAccounts = () => {
                         <FiMail className="mr-2" /> Email
                     </label>
 
-                    <input type="email" {...register("email")} className="mt-1 w-full border-gray-300 rounded-md input focus:ring-indigo-500 focus:border-indigo-500 col-span-2" placeholder="Add email" />
+                    <div className="col-span-2">
+                        <input type="email" {...register("email", { required: "Email is required" })} className="mt-1 w-full border-gray-300 rounded-md input focus:ring-indigo-500 focus:border-indigo-500" placeholder="Add email" />
+                        {errors.email && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.email.message}</p>}
+                    </div>
                 </div>
 
 
@@ -41,7 +81,10 @@ const CreateAccounts = () => {
                     <label className="font-medium text-gray-500 flex items-center">
                         <IoIosPersonAdd className="mr-2" /> First Name
                     </label>
-                    <input type="text" {...register("firstName")} className="mt-1 w-full border-gray-300 rounded-md input focus:ring-indigo-500 focus:border-indigo-500 col-span-2" placeholder="Add first name" />
+                    <div className="col-span-2">
+                        <input type="text" {...register("firstName", { required: "First name is required" })} className="mt-1 w-full border-gray-300 rounded-md input focus:ring-indigo-500 focus:border-indigo-500" placeholder="Add first name" />
+                        {errors.firstName && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.firstName.message}</p>}
+                    </div>
                 </div>
 
 
@@ -50,7 +93,10 @@ const CreateAccounts = () => {
                     <label className="font-medium text-gray-500 flex items-center">
                         <IoIosPersonAdd className="mr-2" /> Last Name
                     </label>
-                    <input type="text" {...register("lastName")} className="mt-1 w-full border-gray-300 rounded-md input focus:ring-indigo-500 focus:border-indigo-500 col-span-2" placeholder="Add last name" />
+                    <div className="col-span-2">
+                        <input type="text" {...register("lastName", { required: "Last name is required" })} className="mt-1 w-full border-gray-300 rounded-md input focus:ring-indigo-500 focus:border-indigo-500" placeholder="Add last name" />
+                        {errors.lastName && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.lastName.message}</p>}
+                    </div>
                 </div>
 
 
@@ -59,7 +105,11 @@ const CreateAccounts = () => {
                     <label className="text-sm font-medium text-gray-500 flex items-center">
                         <RiLockPasswordFill className="mr-2" /> Password
                     </label>
-                    <input type="password" {...register("password", { required: "Password is required" })} className="mt-1 w-full border-gray-300 rounded-md input focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm col-span-2" placeholder="Add password" />
+
+                    <div className="col-span-2">
+                        <input type="text" defaultValue={"123456"} {...register("password", { required: "Password is required" })} className="mt-1 w-full border-gray-300 rounded-md input focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Add password" />
+                        {errors.password && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.password.message}</p>}
+                    </div>
                 </div>
 
 
@@ -68,11 +118,18 @@ const CreateAccounts = () => {
                     <label className="text-sm font-medium text-gray-500 flex items-center">
                         <FaUserCircle className="mr-2" /> Role
                     </label>
-                    <select {...register("role")} defaultValue="select a role" className="select select-bordered mt-1 w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500  col-span-2">
+                    <select {...register("role", { required: "Role is required" })} defaultValue="select a role" className="select select-bordered mt-1 w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500  col-span-2">
                         <option value="select a role" disabled>Select a ROLE</option>
                         <option value="student">Student</option>
                         <option value="faculty">Faculty</option>
                     </select>
+                    {errors.role && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.role.message}</p>}
+                </div>
+
+
+                {/* submit button */}
+                <div className="py-4 sm:py-5 sm:gap-4">
+                    <button className="btn bg-indigo-700 text-white hover:bg-indigo-600 w-full">Create</button>
                 </div>
             </form>
         </div>

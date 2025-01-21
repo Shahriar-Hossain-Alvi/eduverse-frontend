@@ -1,7 +1,9 @@
+import useAuth from "../../Hooks/useAuth";
+import SectionHeading from "../../Utilities/SectionHeading";
 
 
 const StudentDashboard = () => {
-
+    const {user} = useAuth();
     // todo:
     // show total enrolled courses number
     // show attendance percentage
@@ -12,7 +14,7 @@ const StudentDashboard = () => {
 
     return (
         <div className="min-h-screen flex-1 p-8">
-            <h2 className="text-3xl font-semibold mb-6">Welcome, John Doe</h2>
+           <SectionHeading title={`Welcome, ${user?.first_name}`} />
 
             {/* Quick Links */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

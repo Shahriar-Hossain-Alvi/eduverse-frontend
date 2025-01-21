@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import LoadingSpinner from "../../Utilities/LoadingSpinner";
 import { formatDistanceToNow } from "date-fns";
+import SectionHeading from "../../Utilities/SectionHeading";
 
 
 const AdminDashboard = () => {
@@ -23,7 +24,7 @@ const AdminDashboard = () => {
 
     return (
         <div className="flex-1 p-8">
-            <h2 className="text-3xl font-semibold mb-6">Dashboard Overview</h2>
+            <SectionHeading title="Dashboard Overview" />
 
             {/* Quick Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

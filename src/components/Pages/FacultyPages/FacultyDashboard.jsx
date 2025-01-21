@@ -1,6 +1,9 @@
+import useAuth from "../../Hooks/useAuth";
+import SectionHeading from "../../Utilities/SectionHeading";
 
 
 const FacultyDashboard = () => {
+  const {user} = useAuth();
 
   //todo:
   // show the number of courses teaching
@@ -11,7 +14,7 @@ const FacultyDashboard = () => {
 
   return (
     <div className="min-h-screen flex-1 p-8">
-      <h2 className="text-3xl font-semibold mb-6">Welcome, Prof. Jane Smith</h2>
+      <SectionHeading title={`Welcome, ${user?.first_name}`} />
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

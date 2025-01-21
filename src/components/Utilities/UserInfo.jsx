@@ -114,12 +114,12 @@ const UserInfo = () => {
     };
 
     return (
-        <div className="flex-1 p-8">
+        <div className="p-8">
 
 
             {/* Button to enable form editing */}
             <div className="flex justify-between items-center mb-6">
-                <h3 className="text-2xl font-bold indicator">User Profile</h3>
+                <h3 className="text-3xl font-bold indicator">User Profile</h3>
                 {!isEditing ? (
                     <button
                         onClick={() => setIsEditing(true)}
