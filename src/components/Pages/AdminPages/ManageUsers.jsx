@@ -19,7 +19,7 @@ const ManageUsers = () => {
 
 
     return (
-        <div className="flex-1 p-3 md:p-8 overflow-hidden">
+        <div className="flex-1 p-3 md:p-8 overflow-hidden min-h-screen">
             <SectionHeading title="Manage Users" />
 
             {/* Table */}
