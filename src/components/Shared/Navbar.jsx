@@ -16,11 +16,9 @@ const Navbar = () => {
     };
 
     return (
-        <div>
-            <div className="md:hidden navbar flex-col bg-base-100">
+        <div className="">
+            <div className="hidden md:flex md:justify-between navbar bg-base-100">
                 <a className="btn btn-ghost text-xl">EduVerse</a>
-
-
                 <div>
                     <label className="flex cursor-pointer gap-2 mr-2">
                         <span className="label-text">Dark</span>
@@ -39,10 +37,8 @@ const Navbar = () => {
             </div>
 
 
-
-
-            {/* navbar for medium to large screen */}
-            <div className="hidden md:block navbar bg-base-100">
+            {/* navbar for small screen */}
+            <div className="md:hidden navbar flex-col bg-base-100">
                 <div className="flex-1">
                     <a className="btn btn-ghost text-xl">EduVerse</a>
                 </div>

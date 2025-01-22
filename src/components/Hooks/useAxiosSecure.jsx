@@ -25,6 +25,12 @@ const useAxiosSecure = () => {
 
 
 
+    // List of API routes that should NOT trigger logout on 401
+    const exceptionRoutes = [
+        "/users/updatePassword",
+    ];
+
+
     // after intercepting generate a response or what to do next
     axiosSecure.interceptors.response.use((response) => {
         // if the status code within the range of 2xx
@@ -32,8 +38,28 @@ const useAxiosSecure = () => {
     }, async (error) => {
         // if status code falls outside of range 2xx
         const status = error.response.status;
-        if (status === 401 || status === 403) {
+
+        // get the request url for which the error happened 
+        const requestUrl = error.config?.url;
+
+
+        // Check if the request URL starts with any exception route
+        const isException = exceptionRoutes.some(route => requestUrl.includes(route));
+
+
+
+        // logout user for 401 but not for the exceptionRoutes api errors
+        if (status === 401 && !isException) {
             await logout();
+            console.log("logout user from axiosSecure for 401");
+            setLoading(false);
+            navigate('/signin');
+        }
+
+
+        if (status === 403) {
+            await logout();
+            console.log("logout user from axiosSecure for 403");
             setLoading(false);
             navigate('/signin');
         }

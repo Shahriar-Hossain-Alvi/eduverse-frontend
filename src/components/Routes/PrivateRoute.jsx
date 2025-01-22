@@ -16,7 +16,7 @@ const PrivateRoute = ({ children, role }) => {
             fetchUserInfo()
                 .then((userData) => {
                     // If userData is valid and matches the required role
-                    if (userData && userData.user_role === role) {
+                    if (userData && userData?.user_role === role) {
                         setRoleVerified(true);
                     } else {
                         setRoleVerified(false);
@@ -25,7 +25,6 @@ const PrivateRoute = ({ children, role }) => {
                 .catch(() => {
                     // If the user cannot be fetched (token expired, invalid, etc.)
                     setRoleVerified(false);
-                    logout();
                 });
         }
         else {
@@ -37,6 +36,7 @@ const PrivateRoute = ({ children, role }) => {
     if (loading || roleVerified === null) return <LoadingSpinner />;
 
     if (!user && !token){
+        logout();
         return <Navigate to="/signin" state={{ from: location }} />;
     } 
 

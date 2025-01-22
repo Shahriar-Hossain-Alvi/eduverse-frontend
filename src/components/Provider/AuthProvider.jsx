@@ -23,7 +23,8 @@ const AuthProvider = ({ children }) => {
             localStorage.setItem("access-token", result.data.token);
 
             // Fetch user info securely using the fetchUserInfo function
-            const userData = await fetchUserInfo();
+            // const userData = await fetchUserInfo();
+            const userData = result.data.data;
 
             setUser(userData);
             setLoading(false);
@@ -46,7 +47,7 @@ const AuthProvider = ({ children }) => {
             return response.data.data; // Returns the full user object from the backend
         } catch (error) {
             console.error("Error fetching user info:", error);
-            logout();
+            // logout();
             throw error;
         }
     }, [axiosPublic])

@@ -14,6 +14,7 @@ import FacultyLayout from "../Layout/FacultyLayout";
 import StudentLayout from "../Layout/StudentLayout";
 import AdminLayout from "../Layout/AdminLayout";
 import ManageUsers from "../Pages/AdminPages/ManageUsers";
+import EditUserDetails from "../Pages/AdminPages/EditUserDetails";
 
 
 const router = createBrowserRouter(
@@ -35,7 +36,7 @@ const router = createBrowserRouter(
 
             {/* Role-Based Protected Routes */}
 
-            {/* admin routes */}
+            {/* admin routes start */}
             <Route path="admin" element={<AdminLayout />} errorElement={<ErrorPage />}
             >
                 <Route
@@ -68,8 +69,17 @@ const router = createBrowserRouter(
                         <ManageUsers />
                     </PrivateRoute>
                 } />
-            </Route>
 
+                <Route
+                    path="users/:id"
+                    element={
+                        <PrivateRoute role="admin">
+                            <EditUserDetails />
+                        </PrivateRoute>
+                    }
+                />
+            </Route>
+            {/* admin routes end */}
 
 
 

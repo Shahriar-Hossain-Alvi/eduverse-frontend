@@ -6,7 +6,7 @@ import Footer from "../Shared/Footer";
 const Main = () => {
 
     return (
-        <div className="font-inter bg-red-400">
+        <div className="font-inter">
             <Navbar />
             <div className="container mx-auto">
                 <Outlet></Outlet>
