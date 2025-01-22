@@ -16,7 +16,7 @@ const Navbar = () => {
     };
 
     return (
-        <div className="">
+        <div>
             <div className="hidden md:flex md:justify-between navbar bg-base-100">
                 <a className="btn btn-ghost text-xl">EduVerse</a>
                 <div>

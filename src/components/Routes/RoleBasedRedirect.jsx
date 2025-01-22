@@ -7,12 +7,34 @@ const RoleBasedRedirect = () => {
   const { user, loading, fetchUserInfo } = useAuth();
   const [role, setRole] = useState(null);
 
+  // useEffect(() => {
+  //   if (user) {
+  //     fetchUserInfo().then((userData) => {
+  //       setRole(userData.user_role)
+  //     }).catch(() => setRole(null));
+  //   }
+  // }, [fetchUserInfo, user]);
+
   useEffect(() => {
+    let mounted = true;
+
     if (user) {
-      fetchUserInfo().then((userData) => {
-        setRole(userData.user_role)
-      }).catch(() => setRole(null));
+      fetchUserInfo()
+        .then((userData) => {
+          if (mounted) {
+            setRole(userData.user_role);
+          }
+        })
+        .catch(() => {
+          if (mounted) {
+            setRole(null);
+          }
+        });
     }
+
+    return () => {
+      mounted = false;
+    };
   }, [fetchUserInfo, user]);
 
   if (loading || (user && !role)) return <LoadingSpinner />;

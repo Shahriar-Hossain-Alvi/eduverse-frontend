@@ -10,6 +10,7 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const axiosPublic = useAxiosPublic();
+    const [roleVerified, setRoleVerified] = useState(null);
 
     // console.log(user);
 
@@ -68,12 +69,13 @@ const AuthProvider = ({ children }) => {
 
 
 
-    // logout user remover from LS and set user to null in the state
-    const logout = () => {
-        localStorage.removeItem("access-token");
+    // logout user remove from LS and set user to null in the state
+    const logout = useCallback(() => {
+        setRoleVerified(null);
         setUser(null);
+        localStorage.removeItem("access-token");
         setLoading(false);
-    };
+    }, []);
 
 
     const authInfo = {
@@ -84,6 +86,8 @@ const AuthProvider = ({ children }) => {
         login,
         logout,
         fetchUserInfo,
+        roleVerified,
+        setRoleVerified
     }
 
     return (

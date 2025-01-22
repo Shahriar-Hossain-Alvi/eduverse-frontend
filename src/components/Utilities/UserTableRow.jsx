@@ -16,9 +16,12 @@ const UserTableRow = ({ singleUser, serialNo }) => {
             <td>{user_name}</td>
             <td>{is_active ? <div className="badge badge-success badge-sm text-white">Active</div> : <div className="badge badge-error badge-sm text-white">Disabled</div>}</td>
             <td>
-                <Link  to={`/admin/users/${_id}`} className='btn btn-sm bg-indigo-700 hover:bg-indigo-600 text-white'>View</Link>
-            </td>
-        </tr>
+                {
+                    user_role !== "admin" &&
+                    < Link  to={`/admin/users/${_id}`} className='btn btn-sm bg-indigo-700 hover:bg-indigo-600 text-white'>View</Link>
+                }
+        </td>
+        </tr >
     );
 };
 

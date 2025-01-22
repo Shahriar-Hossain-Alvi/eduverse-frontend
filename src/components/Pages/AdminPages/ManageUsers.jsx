@@ -17,7 +17,6 @@ const ManageUsers = () => {
 
     if (isPending) return <LoadingSpinner />
 
-    console.log(getAllUsers);
 
     return (
         <div className="flex-1 p-3 md:p-8 overflow-hidden">
