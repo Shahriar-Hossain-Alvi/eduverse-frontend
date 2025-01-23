@@ -13,9 +13,9 @@ import CreateAccounts from "../Pages/AdminPages/CreateAccounts";
 import FacultyLayout from "../Layout/FacultyLayout";
 import StudentLayout from "../Layout/StudentLayout";
 import AdminLayout from "../Layout/AdminLayout";
-import ManageUsers from "../Pages/AdminPages/ManageUsers";
-import EditUserDetails from "../Pages/AdminPages/EditUserDetails";
 import AdminProfile from "../Pages/AdminPages/AdminProfile";
+import ManageUsers from "../Pages/AdminPages/ManageUsers/ManageUsers";
+import EditUserDetails from "../Pages/AdminPages/ManageUsers/EditUserDetails";
 
 
 const router = createBrowserRouter(

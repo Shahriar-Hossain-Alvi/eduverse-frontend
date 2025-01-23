@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "../../Hooks/useAxiosSecure";
-import LoadingSpinner from "../../Utilities/LoadingSpinner";
-import SectionHeading from "../../Utilities/SectionHeading";
-import UserTableRow from "../../Utilities/UserTableRow";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import LoadingSpinner from "../../../Utilities/LoadingSpinner";
+import SectionHeading from "../../../Utilities/SectionHeading";
+import UserTableRow from "../../../Utilities/UserTableRow";
 
 const ManageUsers = () => {
     const axiosSecure = useAxiosSecure();

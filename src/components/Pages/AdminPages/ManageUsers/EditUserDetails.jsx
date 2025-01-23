@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router";
-import useAxiosSecure from "../../Hooks/useAxiosSecure";
-import LoadingSpinner from "../../Utilities/LoadingSpinner";
+import { useNavigate, useParams } from "react-router";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import LoadingSpinner from "../../../Utilities/LoadingSpinner";
 import { FiEdit, FiSave, FiX } from "react-icons/fi";
 import { useForm } from "react-hook-form";
-import SectionHeading from "../../Utilities/SectionHeading";
+import SectionHeading from "../../../Utilities/SectionHeading";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -12,6 +12,8 @@ import toast, { Toaster } from "react-hot-toast";
 const EditUserDetails = () => {
     const { id } = useParams();
     const [isEditing, setIsEditing] = useState(false);
+    const [showDeleteButton, setShowDeleteButton] = useState(false);
+    const navigate = useNavigate();
 
     // react hook form
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
@@ -91,6 +93,31 @@ const EditUserDetails = () => {
                 position: "top-center"
             });
         }
+    }
+
+
+    // delete user function
+    const handleDeleteUser = async () => {
+
+        try {
+            const res = await axiosSecure.delete(`/users/${id}`);
+
+            if(res.data.success === true){
+                refetch();
+                navigate("/admin/users", {replace: true})
+            }
+        } catch (error) {
+            console.log(error);
+            const errorMessage =
+                error.response?.data?.message || "Something went wrong! Please try again.";
+
+            toast.error(errorMessage, {
+                duration: 3000,
+                position: "top-center"
+            });
+        }
+
+
     }
 
     return (
@@ -316,6 +343,28 @@ const EditUserDetails = () => {
                     </div>
                 )}
             </form>
+
+
+            <div className="divider divider-error mt-10"></div>
+            <div className="divider divider-error">Danger Zone</div>
+            <div className="divider divider-error mb-10"></div>
+
+            {/* Delete user button */}
+            <div className="mb-10">
+                <div className="flex gap-3">
+                    <h1 className="text-lg font-medium">Do you want to Delete This User?</h1>
+                    <button onClick={() => setShowDeleteButton(!showDeleteButton)} className={`btn btn-sm text-white ${showDeleteButton ? "btn-success " : "btn-error"}`}>{showDeleteButton ? "Cancel" : "Yes"}</button>
+                </div>
+
+                {
+                    showDeleteButton && <div className="mt-5 text-center">
+                        <p className="text-error animate-pulse font-medium text-lg">WARNING: It can&apos;t be undone</p>
+
+                        <button onClick={handleDeleteUser} className="text-white btn-error btn mt-2">Click here to Delete</button>
+                    </div>
+                }
+
+            </div>
         </div>
     );
 };
