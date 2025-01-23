@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import useAuth from "../../Hooks/useAuth";
 import useTheme from "../../Hooks/useTheme"
@@ -8,9 +8,11 @@ import toast, { Toaster } from 'react-hot-toast';
 const SignIn = () => {
     const { theme } = useTheme();
     const { user, login, loading } = useAuth();
+    const location = useLocation();
     const navigate = useNavigate();
-
+    const from = location?.state?.from?.pathname || "/";
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
+
 
 
     // login function
@@ -38,11 +40,16 @@ const SignIn = () => {
                     position: 'top-center',
                 });
 
+                let redirectedPath = from;
+                if (loggedInUser.password_update_required) {
+                    redirectedPath = `/${loggedInUser.user_role}/profile`
+                } else if (!from.includes(loggedInUser.user_role)) {
+                    redirectedPath = "/";
+                }
 
-                // Redirect after the toast duration
+                //Redirect after the toast duration
                 setTimeout(() => {
-                    navigate(
-                        loggedInUser.password_update_required ? `/${loggedInUser.user_role}/profile` : "/", { replace: true });
+                    navigate(redirectedPath, { replace: true });
                 }, 1600);
             }
         }

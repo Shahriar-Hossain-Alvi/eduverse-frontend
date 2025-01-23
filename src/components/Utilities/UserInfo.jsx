@@ -42,7 +42,9 @@ const UserInfo = () => {
             const res = await axiosSecure.patch(`/users/${user?._id}`, updateInfo);
 
             if (res.data.success === true) {
-                setUser(res.data.data);
+                // fetch user data after updating info
+                const updatedUser = await fetchUserInfo();
+                setUser(updatedUser);
 
                 toast.success(`${res?.data?.message}`, {
                     duration: 1500,
@@ -61,9 +63,6 @@ const UserInfo = () => {
                 position: "top-center"
             });
         }
-
-        console.log("Updated user data:", updateInfo);
-        // reset();
         setIsEditing(false);
     };
 

@@ -15,6 +15,7 @@ import StudentLayout from "../Layout/StudentLayout";
 import AdminLayout from "../Layout/AdminLayout";
 import ManageUsers from "../Pages/AdminPages/ManageUsers";
 import EditUserDetails from "../Pages/AdminPages/EditUserDetails";
+import AdminProfile from "../Pages/AdminPages/AdminProfile";
 
 
 const router = createBrowserRouter(
@@ -61,6 +62,15 @@ const router = createBrowserRouter(
                         <PrivateRoute role="admin">
                             <CreateAccounts />
                         </PrivateRoute>
+                    }
+                />
+
+                < Route
+                    path="profile"
+                    element={
+                        < PrivateRoute role="admin" >
+                            <AdminProfile />
+                        </PrivateRoute >
                     }
                 />
 
