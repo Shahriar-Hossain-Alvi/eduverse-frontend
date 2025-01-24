@@ -7,7 +7,7 @@ import UserTableRow from "../../../Utilities/UserTableRow";
 const ManageUsers = () => {
     const axiosSecure = useAxiosSecure();
 
-    const { data: getAllUsers, isPending, isError, error } = useQuery({
+    const { data: getAllUsers=[], isPending, isError, error } = useQuery({
         queryKey: ["getAllUsers"],
         queryFn: async () => {
             const res = await axiosSecure("/users");
@@ -22,10 +22,13 @@ const ManageUsers = () => {
         <div className="flex-1 p-3 md:p-8 overflow-hidden min-h-screen">
             <SectionHeading title="Manage Users" />
 
-            {/* Table */}
 
             {isError && <p className="text-2xl text-error text-center">{error.message}</p>}
 
+
+            {getAllUsers.length === 0 && <p className="text-2xl text-error text-center my-5">User List is empty</p>}
+
+            {/* Table */}
             <div className="overflow-x-auto">
                 <table className="table">
                     {/* head */}
