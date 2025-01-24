@@ -1,5 +1,5 @@
 import { Outlet } from "react-router";
-import StudentSidebar from "../Shared/StudentSidebar";
+import StudentSidebar from "../Shared/StudentShared/StudentSidebar";
 
 
 const StudentLayout = () => {

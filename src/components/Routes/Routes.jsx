@@ -16,7 +16,9 @@ import AdminLayout from "../Layout/AdminLayout";
 import AdminProfile from "../Pages/AdminPages/AdminProfile";
 import ManageUsers from "../Pages/AdminPages/ManageUsers/ManageUsers";
 import EditUserDetails from "../Pages/AdminPages/ManageUsers/EditUserDetails";
-import Courses from "../Pages/AdminPages/Courses/Courses";
+import Courses from "../Shared/CommonShared/Courses/Courses";
+import CourseDetails from "../Shared/CommonShared/Courses/CourseDetails";
+
 
 
 const router = createBrowserRouter(
@@ -98,6 +100,15 @@ const router = createBrowserRouter(
                         </PrivateRoute>
                     }
                 />
+
+                <Route
+                    path="courses/:id"
+                    element={
+                        <PrivateRoute role="admin">
+                            <CourseDetails />
+                        </PrivateRoute>
+                    }
+                />
             </Route>
             {/* admin routes end */}
 
@@ -132,6 +143,24 @@ const router = createBrowserRouter(
                     }
                 />
 
+                <Route
+                    path="courses"
+                    element={
+                        <PrivateRoute role="faculty">
+                            <Courses />
+                        </PrivateRoute>
+                    }
+                />
+
+                <Route
+                    path="courses/:id"
+                    element={
+                        <PrivateRoute role="faculty">
+                            <CourseDetails />
+                        </PrivateRoute>
+                    }
+                />
+
             </Route >
 
 
@@ -154,6 +183,25 @@ const router = createBrowserRouter(
                         < PrivateRoute role="student" >
                             <StudentDashboard />
                         </PrivateRoute >
+                    }
+                />
+
+
+                <Route
+                    path="courses"
+                    element={
+                        <PrivateRoute role="student">
+                            <Courses />
+                        </PrivateRoute>
+                    }
+                />
+
+                <Route
+                    path="courses/:id"
+                    element={
+                        <PrivateRoute role="student">
+                            <CourseDetails />
+                        </PrivateRoute>
                     }
                 />
 

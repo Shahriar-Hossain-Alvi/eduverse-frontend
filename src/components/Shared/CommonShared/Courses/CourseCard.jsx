@@ -13,7 +13,7 @@ const CourseCard = ({ singleCourseDetails }) => {
     const { _id, title, description, cover_url, assigned_faculty, credits, end_date, prerequisites, start_date, total_available_seats
     } = singleCourseDetails;
 
-    console.log(singleCourseDetails);
+    console.log(_id);
 
     // Role-based theme colors
     const themeColors = {
@@ -115,7 +115,7 @@ const CourseCard = ({ singleCourseDetails }) => {
 
                 {/* Action Button */}
                 <Link
-                    to={`/admin/courses/${_id}`}
+                    to={`/${user.user_role}/courses/${_id}`}
                     className={`inline-flex w-full items-center justify-center rounded-lg ${roleTheme.button} px-4 py-2 text-sm font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/20`}
                 >
                     View Details

@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { NavLink } from "react-router";
-import { ThemeContext } from "../Provider/ThemeProvider";
-import useAuth from "../Hooks/useAuth";
+import { ThemeContext } from "../../Provider/ThemeProvider";
+import useAuth from "../../Hooks/useAuth";
 
 
 const Navbar = () => {

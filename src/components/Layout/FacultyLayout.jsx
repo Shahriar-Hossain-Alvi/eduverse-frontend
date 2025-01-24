@@ -1,5 +1,5 @@
 import { Outlet } from "react-router";
-import FacultySidebar from "../Shared/FacultySidebar";
+import FacultySidebar from "../Shared/FacultyShared/FacultySidebar";
 
 
 const FacultyLayout = () => {

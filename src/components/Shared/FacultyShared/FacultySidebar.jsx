@@ -13,6 +13,8 @@ const FacultySidebar = () => {
           <ul id="facultySideBar" className="space-y-4 text-sm text-center md:text-base">
             <li><NavLink to="/faculty/dashboard" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><GrOverview className="text-xl" /> <span>Overview</span></NavLink></li>
 
+            <li><NavLink to="/faculty/courses" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><FiBook className="text-xl" /> <span>Courses</span></NavLink></li>
+
             <li><NavLink to="/faculty/myCourses" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><FiBook className="text-xl" /> <span>My Courses</span></NavLink></li>
 
             <li><NavLink to="/faculty/schedule" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><FiCalendar className="text-xl" /> <span>Schedule</span></NavLink></li>
