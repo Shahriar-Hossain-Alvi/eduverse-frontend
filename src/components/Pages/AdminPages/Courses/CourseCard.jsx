@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
-import { FaCalendarAlt, FaChalkboardTeacher, FaClock, FaTag } from 'react-icons/fa';
+import { FaCalendarAlt, FaChalkboardTeacher, FaMedal } from 'react-icons/fa';
 import { LuBookOpenCheck } from 'react-icons/lu';
 import useAuth from '../../../Hooks/useAuth';
 import { Link } from 'react-router';
+import { MdOutlineAirlineSeatReclineNormal } from 'react-icons/md';
 
 const CourseCard = ({ singleCourseDetails }) => {
 
@@ -14,73 +15,111 @@ const CourseCard = ({ singleCourseDetails }) => {
 
     console.log(singleCourseDetails);
 
+    // Role-based theme colors
+    const themeColors = {
+        admin: {
+            bg: "bg-indigo-600",
+            hover: "hover:bg-indigo-700",
+            button: "bg-indigo-500 hover:bg-indigo-600",
+        },
+        faculty: {
+            bg: "bg-green-600",
+            hover: "hover:bg-green-700",
+            button: "bg-green-500 hover:bg-green-600",
+        },
+        student: {
+            bg: "bg-blue-600",
+            hover: "hover:bg-blue-700",
+            button: "bg-blue-500 hover:bg-blue-600",
+        },
+    }
+
+    const roleTheme = themeColors[user.user_role]
+
     return (
-        <div className={`card ${user.user_role === "admin" && "bg-indigo-700"} ${user.user_role === "student" && "bg-blue-700"} ${user.user_role === "faculty" && "bg-green-700"} shadow-xl overflow-hidden p-2`}>
+        <div className="group relative overflow-hidden rounded-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+
+            <div className={`absolute inset-0 ${roleTheme.bg} opacity-90 transition-opacity group-hover:opacity-95`} />
+
             {/* Cover Image */}
-            {cover_url && (
-                <figure className="w-full h-56 overflow-hidden">
-                    <img
-                        src={cover_url}
-                        alt={title}
-                        className="w-full h-full  object-fill"
-                    />
-                </figure>
-            )}
-
-            <div className="card-body">
-                {/* Course Title */}
-                <h2 className="card-title text-white text-xl font-bold">{title}</h2>
-
-                {/* Description */}
-                <p className="text-sm line-clamp-3 text-white">{description}</p>
-
-                {/* Course Details */}
-                <div className="space-y-2 mt-4 text-white">
-                    {/* Credits */}
-                    <div className="flex items-center space-x-2">
-                        <FaTag className="w-4 h-4 text-success" />
-                        <span>Credits: {credits}</span>
-                    </div>
-
-                    {/* Date Range */}
-                    <div className="flex items-center space-x-2">
-                        <FaCalendarAlt className="w-4 h-4 text-success" />
-                        <span>
-                            Duration: {new Date(start_date).toLocaleDateString()} -
-                            {new Date(end_date).toLocaleDateString()}
-                        </span>
-                    </div>
-
-                    {/* Available Seats */}
-                    <div className="flex items-center space-x-2">
-                        <FaClock className="w-4 h-4 text-success" />
-                        <span>Available Seats: {total_available_seats}</span>
-                    </div>
-
-                    {/* Assigned Faculty */}
-                    <div className="flex items-center space-x-2">
-                        <FaChalkboardTeacher className="w-4 h-4 text-success" />
-                        <span>
-                            Assigned Faculty: {
-                                assigned_faculty.length > 0 ? assigned_faculty.length : "Not Assigned Yet"
-                            }
-                        </span>
-                    </div>
+            <div className="relative aspect-video overflow-hidden">
+                <img
+                    src={cover_url}
+                    alt={title}
+                    className="h-full w-full object-fill transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            </div>
 
 
-                    {/* Prerequisites */}
-                    <div className="flex items-center space-x-2">
-                        <LuBookOpenCheck className="w-4 h-4 text-success" />
-                        <span>
-                            Prerequisites: {
-                                prerequisites.length > 0 ?
-                                    prerequisites.length : "Not Needed"
-                            }
-                        </span>
-                    </div>
-
-                    <Link to={`/admin/courses/${_id}`} className="btn btn-success text-white">View Details</Link>
+            <div className="relative space-y-4 p-6">
+                {/* Title & Description */}
+                <div className="space-y-2">
+                    <h2 className="line-clamp-1 text-xl font-bold text-white">{title}</h2>
+                    <p className="line-clamp-2 text-sm text-white/80">{description}</p>
                 </div>
+
+                {/* Course Details Grid */}
+                <div className="grid grid-cols-2 gap-4">
+
+                    {/* credits */}
+                    <div className="flex items-center gap-2 text-white/90">
+                        <FaMedal className="h-5 w-5" />
+                        <span className="text-sm">
+                            Credits : {credits}
+                        </span>
+                    </div>
+
+
+
+                    {/* seat */}
+                    <div className="flex items-center gap-2 text-white/90">
+                        <MdOutlineAirlineSeatReclineNormal className="h-5 w-5" />
+                        <span className="text-sm">
+                            Available Seat : {total_available_seats}
+                        </span>
+                    </div>
+
+
+
+                    {/* faculty */}
+                    <div className="flex items-center gap-2 text-white/90">
+                        <FaChalkboardTeacher className="h-5 w-5" />
+                        <span className="text-sm">
+                            Faculty : {
+                                assigned_faculty.length > 0 ? assigned_faculty.length : "Not assigned yet"
+                            }
+                        </span>
+                    </div>
+
+
+                    {/* prerequisite */}
+                    <div className="flex items-center gap-2 text-white/90">
+                        <LuBookOpenCheck className="h-5 w-5" />
+                        <span className="text-sm">
+                            Prerequisite : {
+                                prerequisites.length > 0 ? prerequisites.length : "None"
+                            }
+                        </span>
+                    </div>
+                </div>
+
+
+                {/* Date Range */}
+                <div className="flex items-center gap-2 text-white/90">
+                    <FaCalendarAlt className="h-5 w-5" />
+                    <span className="text-sm">
+                        Duration: {new Date(start_date).toLocaleDateString()} -{new Date(end_date).toLocaleDateString()}
+                    </span>
+                </div>
+
+                {/* Action Button */}
+                <Link
+                    to={`/admin/courses/${_id}`}
+                    className={`inline-flex w-full items-center justify-center rounded-lg ${roleTheme.button} px-4 py-2 text-sm font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/20`}
+                >
+                    View Details
+                </Link>
             </div>
         </div>
     );
