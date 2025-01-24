@@ -116,8 +116,6 @@ const EditUserDetails = () => {
                 position: "top-center"
             });
         }
-
-
     }
 
     return (

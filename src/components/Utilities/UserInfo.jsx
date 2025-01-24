@@ -129,7 +129,7 @@ const UserInfo = () => {
                 {!isEditing ? (
                     <button
                         onClick={() => setIsEditing(true)}
-                        className="btn btn-primary btn-xs md:btn-md mt-2 md:mt-0"
+                        className="btn btn-primary btn-xs md:btn-md mt-2 md:mt-0 text-white"
                     >
                         <FiEdit2 className="mr-2" /> Edit Profile
                     </button>
@@ -137,13 +137,13 @@ const UserInfo = () => {
                     <div className="flex space-x-2">
                         <button
                             onClick={handleSubmit(onUpdateUser)}
-                            className="btn btn-success btn-xs md:btn-md mt-2 md:mt-0"
+                            className="btn btn-success btn-xs md:btn-md mt-2 md:mt-0 text-white"
                         >
                             <FiSave className="mr-2" /> Save
                         </button>
                         <button
                             onClick={() => setIsEditing(false)}
-                            className="btn btn-error btn-xs md:btn-md mt-2 md:mt-0"
+                            className="btn btn-error btn-xs md:btn-md mt-2 md:mt-0 text-white"
                         >
                             <FiX className="mr-2" /> Cancel
                         </button>
