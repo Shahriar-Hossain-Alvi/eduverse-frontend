@@ -8,12 +8,9 @@ import { MdOutlineAirlineSeatReclineNormal } from 'react-icons/md';
 const CourseCard = ({ singleCourseDetails }) => {
 
     const { user } = useAuth();
-    console.log(user.user_role);
 
     const { _id, title, description, cover_url, assigned_faculty, credits, end_date, prerequisites, start_date, total_available_seats
     } = singleCourseDetails;
-
-    console.log(_id);
 
     // Role-based theme colors
     const themeColors = {
