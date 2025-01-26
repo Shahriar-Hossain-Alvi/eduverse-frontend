@@ -7,6 +7,8 @@ import { FaCalendarAlt, FaChalkboardTeacher, FaMedal } from "react-icons/fa";
 import { MdOutlineAirlineSeatReclineNormal } from "react-icons/md";
 import useAuth from "../../../Hooks/useAuth";
 import { LuBookOpenCheck } from "react-icons/lu";
+import Marquee from "react-fast-marquee";
+import { IoWarningOutline } from "react-icons/io5";
 
 
 
@@ -25,23 +27,51 @@ const CourseDetails = () => {
 
     const { _id, assigned_faculty, cover_url, credits, description, end_date, is_active, prerequisites, start_date, title, total_available_seats } = getSingleCourseDetails;
 
+
+    const handleCourseEnrollment = () => {
+        console.log(_id);
+    }
+
+
     if (isPending) return <LoadingSpinner />
 
     return (
-        <div className="flex-1 p-3 md:p-8 min-h-screen">
+        <div className="flex-1 p-3 md:p-8 mb-5 min-h-screen">
+
             <SectionHeading title="Course Details" />
 
 
             {isError && <p className="text-2xl text-error text-center">{error.message}</p>}
 
-
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-5">
+            {/* course info */}
+            <div className="grid lg:grid-cols-3 gap-5">
                 {/* cover image */}
-                <figure className="w-full h-64 my-auto">
+                <figure className="w-full h-72 lg:h-64 my-auto relative">
                     <img className="w-full h-full object-fill" src={cover_url} alt={title} />
+
+                    <div className={`absolute -top-2 right-2 badge badge-lg animate-bounce font-medium text-white ${(total_available_seats > 0 && is_active) ? "badge-success" : "badge-error"}`}>
+                        {
+                            (total_available_seats > 0 && is_active) ?
+                                "Enrollment : On Going"
+                                :
+                                "Enrollment : Closed"
+
+                        }
+                    </div>
                 </figure>
 
+
+
                 <div className="lg:col-span-2">
+                    {
+                        (total_available_seats > 0 && is_active) &&
+                        <div className="text-success">
+                            <Marquee autoFill={true} pauseOnHover={true}>
+                                <span className="mx-5">Scroll Down to apply</span>
+                            </Marquee>
+                        </div>
+                    }
+
                     {/* title */}
                     <h2 className="text-2xl my-2"><span className="font-medium">Course Title:</span> {title}</h2>
 
@@ -144,7 +174,6 @@ const CourseDetails = () => {
             <div className="divider divider-info my-4"></div>
 
 
-
             {/* prerequisites information */}
             <div>
                 <SectionHeading title="Prerequisite Courses Information" />
@@ -176,6 +205,25 @@ const CourseDetails = () => {
                         <Link to={`/${user.user_role}/courses/${singlePrerequisiteCourse._id}`} className="btn btn-success text-white">View Details</Link>
                     </div>
                     )}
+            </div>
+
+
+            <div className="divider divider-info my-4"></div>
+
+
+
+
+            {/* apply option */}
+            <div>
+                <SectionHeading title="Course Enrollment" />
+
+
+                <div className="alert alert-warning shadow-lg my-5">
+                    <IoWarningOutline className="text-xl" />
+                    <p>Warning: Check the course details, Faculty Information and Prerequisite courses before enrolling in this course </p>
+                </div>
+
+                <button onClick={handleCourseEnrollment} className="text-white btn btn-success w-full">Apply</button>
             </div>
         </div>
     );
