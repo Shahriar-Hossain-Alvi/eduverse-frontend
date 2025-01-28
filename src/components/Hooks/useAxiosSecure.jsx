@@ -51,6 +51,7 @@ const useAxiosSecure = () => {
         // logout user for 401 but not for the exceptionRoutes api errors
         if (status === 401 && !isException) {
             await logout();
+            localStorage.removeItem("access-token")
             console.log("logout user from axiosSecure for 401");
             setLoading(false);
             navigate('/signin');
@@ -59,6 +60,7 @@ const useAxiosSecure = () => {
 
         if (status === 403) {
             await logout();
+            localStorage.removeItem("access-token");
             console.log("logout user from axiosSecure for 403");
             setLoading(false);
             navigate('/signin');

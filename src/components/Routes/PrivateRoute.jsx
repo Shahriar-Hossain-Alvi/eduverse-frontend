@@ -28,6 +28,7 @@ const PrivateRoute = ({ children, role }) => {
             } catch {
                 setRoleVerified(false);
                 console.log("logging out from Private route line 29");
+                localStorage.removeItem("access-token");
                 logout();
             }finally{
                 setIsVerifying(false);

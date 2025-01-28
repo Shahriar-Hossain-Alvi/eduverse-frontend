@@ -18,6 +18,7 @@ import ManageUsers from "../Pages/AdminPages/ManageUsers/ManageUsers";
 import EditUserDetails from "../Pages/AdminPages/ManageUsers/EditUserDetails";
 import Courses from "../Shared/CommonShared/Courses/Courses";
 import CourseDetails from "../Shared/CommonShared/Courses/CourseDetails";
+import CreateNewCourse from "../Pages/AdminPages/Courses/CreateNewCourse";
 
 
 
@@ -106,6 +107,15 @@ const router = createBrowserRouter(
                     element={
                         <PrivateRoute role="admin">
                             <CourseDetails />
+                        </PrivateRoute>
+                    }
+                />
+
+                <Route
+                    path="addNewCourse"
+                    element={
+                        <PrivateRoute role="admin">
+                            <CreateNewCourse />
                         </PrivateRoute>
                     }
                 />
