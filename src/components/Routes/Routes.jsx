@@ -171,6 +171,15 @@ const router = createBrowserRouter(
                     }
                 />
 
+<Route
+                    path="addNewCourse"
+                    element={
+                        <PrivateRoute role="faculty">
+                            <CreateNewCourse />
+                        </PrivateRoute>
+                    }
+                />
+
             </Route >
 
 

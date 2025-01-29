@@ -4,7 +4,7 @@ import UserInfo from "../../Utilities/UserInfo";
 
 const AdminProfile = () => {
     return (
-        <div className="min-h-screen flex-1 p-3 md:p-8">
+        <div className="flex-1 p-3 md:p-8">
             <Toaster />
 
             <UserInfo />

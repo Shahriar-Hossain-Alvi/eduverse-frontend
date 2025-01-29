@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import SectionHeading from "../../../Utilities/SectionHeading";
 import { FaCalendarAlt, FaMedal } from "react-icons/fa";
-import { MdOutlineAirlineSeatReclineNormal, MdTitle } from "react-icons/md";
+import { MdAddPhotoAlternate, MdOutlineAirlineSeatReclineNormal, MdTitle } from "react-icons/md";
 import { TbFileDescription } from "react-icons/tb";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -10,16 +10,28 @@ import LoadingSpinner from "../../../Utilities/LoadingSpinner";
 import { GiCharacter } from "react-icons/gi";
 import useAuth from "../../../Hooks/useAuth";
 import Select from 'react-select'
-import useTheme from "../../../Hooks/useTheme";
+import { CgSpinnerTwoAlt } from "react-icons/cg";
+import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
 
 const CreateNewCourse = () => {
+    const myCloudName = import.meta.env.VITE_Cloudinary_Cloud_Name;
+    const myUploadPreset = import.meta.env.VITE_Cloudinary_Upload_Preset;
+
+
     const { user } = useAuth();
-    const { user_role } = user;
     const axiosSecure = useAxiosSecure();
-    const { register, reset, formState: { errors }, handleSubmit, setValue } = useForm();
+
+
+    const { register, reset, formState: { errors }, handleSubmit, setValue } = useForm({
+        defaultValues: {
+            assign_faculty: [],
+        }
+    });
+
+    const [formSubmissionLoading, setFormSubmissionLoading] = useState(false);
     const [selectedFaculties, setSelectedFaculties] = useState([]);
     const [selectedPrerequisiteCourses, setSelectedPrerequisiteCourses] = useState([]);
-    const {theme} = useTheme();
 
 
     const { data: facultyAndPrerequisiteData = [], isPending, isError, error } = useQuery({
@@ -29,15 +41,12 @@ const CreateNewCourse = () => {
                 axiosSecure.get("/users/allFacultyNames"),
                 axiosSecure.get("/courses/allCourseTitle")
             ])
-
             return res;
         }
     });
 
     const facultyNamesRes = facultyAndPrerequisiteData[0]?.data;
     const courseNamesRes = facultyAndPrerequisiteData[1]?.data;
-
-    console.log(courseNamesRes);
 
 
     // Transform faculty data to `react-select` format
@@ -68,16 +77,86 @@ const CreateNewCourse = () => {
 
 
 
-
     if (isPending) return <LoadingSpinner />
 
-    const handleAddNewCourse = () => {
-        console.log("clicked");
-    }
+
+
+    // course creating function
+    const handleAddNewCourse = async (data) => {
+        const cover_photo_file = data.photo[0];
+        const formData = new FormData();
+        formData.append("file", cover_photo_file);
+        formData.append("upload_preset", myUploadPreset);
+
+        try {
+            setFormSubmissionLoading(true);
+            const cloudinaryRes = await axios.post(`https://api.cloudinary.com/v1_1/${myCloudName}/image/upload`, formData);
+            console.log(cloudinaryRes);
+
+            if (cloudinaryRes.status === 200) {
+                const uploadedPhotoUrl = cloudinaryRes.data.secure_url;
+
+                const currentDate = new Date().toISOString().slice(0, 16);
+                const title = data.title;
+                const description = data.description;
+                const credits = parseFloat(data.credits);
+                const total_available_seats = parseInt(data.total_available_seat);
+                const start_date = data.start_date;
+                const end_date = data.end_date;
+                const assigned_faculty = data.assign_faculty;
+                const prerequisites = data.prerequisites;
+                const cover_url = uploadedPhotoUrl; // ✅ Use local variable
+
+                if (user.user_role === "admin" && (!assigned_faculty || assigned_faculty.length === 0)) {
+                    toast.error("At least 1 faculty should be assigned", { duration: 1500, position: "top-center" });
+                    setFormSubmissionLoading(false);
+                    return;
+                }
+
+                if (start_date < currentDate || end_date < currentDate) {
+                    setFormSubmissionLoading(false);
+                    return toast.error("A date in the past cannot be selected for start date or end date", { duration: 5500, position: "top-center" });
+                }
+
+                if (end_date < start_date) {
+                    setFormSubmissionLoading(false)
+                    return toast.error("Course ending date cannot be before the course starting date", { duration: 5500, position: "top-center" });
+                }
+
+                const newCourseCreationData = {
+                    title, description, total_available_seats, start_date, end_date, credits, assigned_faculty, prerequisites, cover_url
+                };
+                // function to upload data in the backend
+                const createNewCourse = await axiosSecure.post("/courses", newCourseCreationData);
+                console.log("Form Data:", data);
+                console.log("Assigned Faculty:", data.assign_faculty);
+
+                console.log(createNewCourse);
+                if (createNewCourse.data.success === true) {
+                    toast.success("New course added", {
+                        duration: 1500,
+                        position: "top-center"
+                    });
+                    setSelectedFaculties([]);
+                    setSelectedPrerequisiteCourses([]);
+                    setFormSubmissionLoading(false);
+                    reset();
+                }
+
+            }
+        } catch (error) {
+            console.log(error);
+            const errorMessage = error.response?.data?.message || "Image upload failed.";
+            setFormSubmissionLoading(false);
+            toast.error(errorMessage, { duration: 3000, position: "top-center" });
+        }
+    };
+
 
     return (
         <div className="flex-1 p-3 md:p-8">
             <SectionHeading title="Add a New Course" />
+            <Toaster />
 
             {isError && <p className="text-2xl text-error text-center">{error.message}</p>}
 
@@ -91,7 +170,7 @@ const CreateNewCourse = () => {
                     </label>
 
                     <div className="col-span-2">
-                        <input type="email" {...register("title", { required: "Title is required" })} className="mt-1 w-full border-gray-300 rounded-md input focus:ring-indigo-500 focus:border-indigo-500" placeholder="Add course title" />
+                        <input type="text" {...register("title", { required: "Title is required" })} className="mt-1 w-full border-gray-300 rounded-md input focus:ring-indigo-500 focus:border-indigo-500" placeholder="Add course title" />
                         {errors.title && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.title.message}</p>}
                     </div>
                 </div>
@@ -109,14 +188,29 @@ const CreateNewCourse = () => {
                 </div>
 
 
-                {/* credit */}
+                {/* cover photo */}
+                <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                    <label className="font-medium text-gray-500 flex items-center">
+                        <MdAddPhotoAlternate
+                            className="mr-2" /> Cover Photo
+                    </label>
+                    <div className="col-span-2">
+                        <input type="file" {...register("photo", { required: "Course cover image is required" })} className="mt-1 w-full border-gray-300 rounded-md file-input focus:ring-indigo-500 focus:border-indigo-500" placeholder="Add course credits" />
+                        {errors.photo && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.photo.message}</p>}
+                    </div>
+                </div>
+
+
+
+
+                {/* credits */}
                 <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
                     <label className="font-medium text-gray-500 flex items-center">
                         <FaMedal
                             className="mr-2" /> Credits
                     </label>
                     <div className="col-span-2">
-                        <input type="number" {...register("credits", { required: "Course credit is required" })} className="mt-1 w-full border-gray-300 rounded-md input  focus:ring-indigo-500 focus:border-indigo-500" placeholder="Add course credits" />
+                        <input type="number" step="0.01" {...register("credits", { required: "Course credit is required" })} className="mt-1 w-full border-gray-300 rounded-md input  focus:ring-indigo-500 focus:border-indigo-500" placeholder="Add course credits" />
                         {errors.credits && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.credits.message}</p>}
                     </div>
                 </div>
@@ -164,39 +258,40 @@ const CreateNewCourse = () => {
 
 
                 {/* assign faculty */}
-                <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
-                    <label className="text-sm font-medium text-gray-500 flex items-center">
-                        <GiCharacter className="mr-2" /> Assign a faculty
-                    </label>
-                    <Select
-                        isMulti
-                        options={facultyOptions}
-                        value={selectedFaculties}
-                        onChange={handleSelectedFaculty}
-                        closeMenuOnSelect={false}
-                        placeholder="Select Faculty..."
-                        className={`basic-multi-select mt-1 w-full col-span-2 text-black`}
-                        classNamePrefix="select"
-                        theme={(theme) => ({
-                            ...theme,
-                            borderRadius: 0,
-                            colors: {
-                                ...theme.colors,
-                                neutral80: "black",//selected text color
-                                neutral60: "red", // cross and dropdown button color
-
-                            },
-                        })}
-                    />
-
-                    {errors.assign_faculty && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.assign_faculty.message}</p>}
-                </div>
+                {
+                    user.user_role === "admin" &&
+                    <div className={`hidden py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4`}>
+                        <label className="text-sm font-medium text-gray-500 flex items-center">
+                            <GiCharacter className="mr-2" /> Assign Faculty
+                        </label>
+                        <Select
+                            isMulti
+                            options={facultyOptions}
+                            value={selectedFaculties}
+                            onChange={handleSelectedFaculty}
+                            closeMenuOnSelect={false}
+                            placeholder="Select Faculty..."
+                            className={`basic-multi-select mt-1 w-full col-span-2 text-black`}
+                            classNamePrefix="select"
+                            theme={(theme) => ({
+                                ...theme,
+                                borderRadius: 0,
+                                colors: {
+                                    ...theme.colors,
+                                    neutral80: "black",//selected text color
+                                    neutral60: "red", // cross and dropdown button color
+                                },
+                            })}
+                        />
+                        {errors.assign_faculty && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.assign_faculty.message}</p>}
+                    </div>
+                }
 
 
                 {/* prerequisite courses */}
                 <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
                     <label className="text-sm font-medium text-gray-500 flex items-center">
-                        <GiCharacter className="mr-2" /> Assign a faculty
+                        <GiCharacter className="mr-2" /> Prerequisite
                     </label>
                     <Select
                         isMulti
@@ -226,7 +321,11 @@ const CreateNewCourse = () => {
 
                 {/* submit button */}
                 <div className="py-4 sm:py-5 sm:gap-4">
-                    <button className="btn bg-indigo-700 text-white hover:bg-indigo-600 w-full">Create</button>
+                    {formSubmissionLoading ?
+                        <button className="btn btn-disabled bg-indigo-700 text-white hover:bg-indigo-600 w-full "><CgSpinnerTwoAlt className="animate-spin" /></button>
+                        :
+                        <button className="btn bg-indigo-700 text-white hover:bg-indigo-600 w-full">Create</button>
+                    }
                 </div>
             </form>
         </div>

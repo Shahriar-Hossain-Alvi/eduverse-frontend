@@ -4,7 +4,7 @@ import StudentSidebar from "../Shared/StudentShared/StudentSidebar";
 
 const StudentLayout = () => {
     return (
-        <div className="flex">
+        <div className="flex min-h-screen">
             <StudentSidebar />
             <Outlet></Outlet>
         </div>

@@ -119,7 +119,7 @@ const EditUserDetails = () => {
     }
 
     return (
-        <div className="min-h-screen flex-1 p-3 md:p-8">
+        <div className="flex-1 p-3 md:p-8">
             <div className="flex justify-between items-center mb-6">
                 <SectionHeading title="User Details" />
                 <Toaster />

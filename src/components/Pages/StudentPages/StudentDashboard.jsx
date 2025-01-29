@@ -13,7 +13,7 @@ const StudentDashboard = () => {
     //
 
     return (
-        <div className="min-h-screen flex-1 p-3 md:p-8">
+        <div className="flex-1 p-3 md:p-8">
            <SectionHeading title={`Welcome, ${user?.first_name}`} />
 
             {/* Quick Links */}

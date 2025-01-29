@@ -20,7 +20,7 @@ const Courses = () => {
 
 
     return (
-        <div className="flex-1 p-3 md:p-8 min-h-screen">
+        <div className="flex-1 p-3 md:p-8">
             <SectionHeading title="All Courses" />
 
             {isError && <p className="text-2xl text-error text-center">{error.message}</p>}

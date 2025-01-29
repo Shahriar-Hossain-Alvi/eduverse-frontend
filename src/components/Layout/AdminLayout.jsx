@@ -3,7 +3,7 @@ import AdminSidebar from "../Shared/AdminShared/AdminSidebar";
 
 const AdminLayout = () => {
     return (
-        <div className="flex">
+        <div className="flex min-h-screen">
             <AdminSidebar />
             <Outlet></Outlet>
         </div>

@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@cloudinary/react": "1.13.1",
+    "@cloudinary/url-gen": "1.21.0",
     "@tanstack/react-query": "5.62.8",
     "axios": "1.7.9",
     "date-fns": "4.1.0",

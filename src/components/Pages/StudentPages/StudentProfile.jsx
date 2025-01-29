@@ -5,7 +5,7 @@ const StudentProfile = () => {
 
 
   return (
-    <div className="min-h-screen flex-1">
+    <div className="flex-1">
       <Toaster />
 
       {/* User Info */}
