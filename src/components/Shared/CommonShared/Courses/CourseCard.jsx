@@ -17,17 +17,17 @@ const CourseCard = ({ singleCourseDetails }) => {
         admin: {
             bg: "bg-indigo-600",
             hover: "hover:bg-indigo-700",
-            button: "bg-indigo-500 hover:bg-indigo-600",
+            button: "bg-indigo-500 hover:bg-indigo-600 hover:border",
         },
         faculty: {
             bg: "bg-green-600",
             hover: "hover:bg-green-700",
-            button: "bg-green-500 hover:bg-green-600",
+            button: "bg-green-500 hover:bg-green-600 hover:border",
         },
         student: {
             bg: "bg-blue-600",
             hover: "hover:bg-blue-700",
-            button: "bg-blue-500 hover:bg-blue-600",
+            button: "bg-blue-500 hover:bg-blue-600 hover:border",
         },
     }
 
@@ -106,7 +106,7 @@ const CourseCard = ({ singleCourseDetails }) => {
                 <div className="flex items-center gap-2 text-white/90">
                     <FaCalendarAlt className="h-5 w-5" />
                     <span className="text-sm">
-                        Duration: {new Date(start_date).toLocaleDateString()} -{new Date(end_date).toLocaleDateString()}
+                        Duration: {new Date(start_date).toLocaleDateString()} - {new Date(end_date).toLocaleDateString()}
                     </span>
                 </div>
 

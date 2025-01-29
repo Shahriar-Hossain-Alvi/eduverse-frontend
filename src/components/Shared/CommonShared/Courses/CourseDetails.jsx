@@ -27,6 +27,8 @@ const CourseDetails = () => {
 
     const { _id, assigned_faculty, cover_url, credits, description, end_date, is_active, prerequisites, start_date, title, total_available_seats } = getSingleCourseDetails;
 
+    const currentDate = new Date().toISOString().slice(0, 16);
+
 
     const handleCourseEnrollment = () => {
         console.log(_id);
@@ -49,9 +51,9 @@ const CourseDetails = () => {
                 <figure className="w-full h-72 lg:h-64 my-auto relative">
                     <img className="w-full h-full object-fill" src={cover_url} alt={title} />
 
-                    <div className={`absolute -top-2 right-2 badge badge-lg animate-bounce font-medium text-white ${(total_available_seats > 0 && is_active) ? "badge-success" : "badge-error"}`}>
+                    <div className={`absolute -top-2 right-2 badge badge-lg animate-bounce font-medium text-white ${(total_available_seats > 0 && is_active && start_date > currentDate) ? "badge-success" : "badge-error"}`}>
                         {
-                            (total_available_seats > 0 && is_active) ?
+                            (total_available_seats > 0 && is_active && start_date > currentDate) ?
                                 "Enrollment : On Going"
                                 :
                                 "Enrollment : Closed"
@@ -61,10 +63,10 @@ const CourseDetails = () => {
                 </figure>
 
 
-
+                {/* marquee text */}
                 <div className="lg:col-span-2">
                     {
-                        (total_available_seats > 0 && is_active) &&
+                        (total_available_seats > 0 && is_active && start_date > currentDate) &&
                         <div className="text-success">
                             <Marquee autoFill={true} pauseOnHover={true}>
                                 <span className="mx-5">Scroll Down to apply</span>
@@ -217,13 +219,28 @@ const CourseDetails = () => {
             <div>
                 <SectionHeading title="Course Enrollment" />
 
+                {/* apply button */}
+                {
+                    (is_active && total_available_seats > 0 && start_date > currentDate) &&
+                    <div>
+                        <div className="alert alert-warning shadow-lg my-5">
+                            <IoWarningOutline className="text-xl" />
+                            <p>Warning: Check the course details, Faculty Information and Prerequisite courses before enrolling in this course </p>
+                        </div>
 
-                <div className="alert alert-warning shadow-lg my-5">
-                    <IoWarningOutline className="text-xl" />
-                    <p>Warning: Check the course details, Faculty Information and Prerequisite courses before enrolling in this course </p>
-                </div>
+                        <button onClick={handleCourseEnrollment} className="text-white btn btn-success w-full">Apply</button>
+                    </div>
+                }
 
-                <button onClick={handleCourseEnrollment} className="text-white btn btn-success w-full">Apply</button>
+
+                {/* if course enrollment is off */}
+                {
+                    (is_active && total_available_seats > 0 && start_date < currentDate) &&
+                    <div className="alert alert-error text-white text-xl font-medium shadow-lg my-5">
+                        <IoWarningOutline className="text-xl" />
+                        <p>Note: Even though there are seats available but the classes for this course have already started on {new Date(start_date).toISOString().slice(0,10)}. So the enrollment is closed.  </p>
+                    </div>
+                }
             </div>
         </div>
     );

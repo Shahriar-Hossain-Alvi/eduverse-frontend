@@ -3,24 +3,45 @@ import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import LoadingSpinner from "../../../Utilities/LoadingSpinner";
 import SectionHeading from "../../../Utilities/SectionHeading";
 import UserTableRow from "../../../Utilities/UserTableRow";
+import { useState } from "react";
 
 const ManageUsers = () => {
     const axiosSecure = useAxiosSecure();
+    const [searchedQuery, setSearchedQuery] = useState(() => {
+        return localStorage.getItem("searchedQuery") || "all";
+    });
 
-    const { data: getAllUsers=[], isPending, isError, error } = useQuery({
-        queryKey: ["getAllUsers"],
+    const { data: getAllUsers = [], isPending, isError, error } = useQuery({
+        queryKey: ["getAllUsers", searchedQuery],
         queryFn: async () => {
-            const res = await axiosSecure("/users");
+            const res = await axiosSecure(`/users?role=${searchedQuery}`);
             if (res.data.success) return res.data.data
-        }
+        },
+        enabled: !!searchedQuery,
     });
 
     if (isPending) return <LoadingSpinner />
 
+    const onSelectChange = (e) => {
+        const selectedRole = e.target.value;
+        setSearchedQuery(selectedRole);
+        localStorage.setItem("searchedQuery", selectedRole);
+    }
+
 
     return (
         <div className="flex-1 p-3 md:p-8 overflow-hidden">
-            <SectionHeading title="Manage Users" />
+
+            <div className="flex justify-between">
+                <SectionHeading title="Manage Users" />
+
+                <select value={searchedQuery} onChange={onSelectChange} className="select select-bordered select-primary">
+                    <option value="all">All</option>
+                    <option value="student">Student</option>
+                    <option value="faculty">Faculty</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
 
 
             {isError && <p className="text-2xl text-error text-center">{error.message}</p>}

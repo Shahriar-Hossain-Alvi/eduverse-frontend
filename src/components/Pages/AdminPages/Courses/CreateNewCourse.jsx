@@ -91,7 +91,7 @@ const CreateNewCourse = () => {
         try {
             setFormSubmissionLoading(true);
             const cloudinaryRes = await axios.post(`https://api.cloudinary.com/v1_1/${myCloudName}/image/upload`, formData);
-            console.log(cloudinaryRes);
+
 
             if (cloudinaryRes.status === 200) {
                 const uploadedPhotoUrl = cloudinaryRes.data.secure_url;
@@ -105,7 +105,7 @@ const CreateNewCourse = () => {
                 const end_date = data.end_date;
                 const assigned_faculty = data.assign_faculty;
                 const prerequisites = data.prerequisites;
-                const cover_url = uploadedPhotoUrl; // ✅ Use local variable
+                const cover_url = uploadedPhotoUrl; 
 
                 if (user.user_role === "admin" && (!assigned_faculty || assigned_faculty.length === 0)) {
                     toast.error("At least 1 faculty should be assigned", { duration: 1500, position: "top-center" });
@@ -126,12 +126,11 @@ const CreateNewCourse = () => {
                 const newCourseCreationData = {
                     title, description, total_available_seats, start_date, end_date, credits, assigned_faculty, prerequisites, cover_url
                 };
+
+
                 // function to upload data in the backend
                 const createNewCourse = await axiosSecure.post("/courses", newCourseCreationData);
-                console.log("Form Data:", data);
-                console.log("Assigned Faculty:", data.assign_faculty);
-
-                console.log(createNewCourse);
+                
                 if (createNewCourse.data.success === true) {
                     toast.success("New course added", {
                         duration: 1500,
