@@ -215,13 +215,13 @@ const CourseDetails = () => {
 
 
 
-            {/* apply option */}
+            {/* apply option for students */}
             <div>
                 <SectionHeading title="Course Enrollment" />
 
                 {/* apply button */}
                 {
-                    (is_active && total_available_seats > 0 && start_date > currentDate) &&
+                    (user.user_role === "student" &&is_active && total_available_seats > 0 && start_date > currentDate) &&
                     <div>
                         <div className="alert alert-warning shadow-lg my-5">
                             <IoWarningOutline className="text-xl" />
@@ -235,7 +235,7 @@ const CourseDetails = () => {
 
                 {/* if course enrollment is off */}
                 {
-                    (is_active && total_available_seats > 0 && start_date < currentDate) &&
+                    (user.user_role === "student" && is_active && total_available_seats > 0 && start_date < currentDate) &&
                     <div className="alert alert-error text-white text-xl font-medium shadow-lg my-5">
                         <IoWarningOutline className="text-xl" />
                         <p>Note: Even though there are seats available but the classes for this course have already started on {new Date(start_date).toISOString().slice(0,10)}. So the enrollment is closed.  </p>
