@@ -55,7 +55,7 @@ const CreateNewCourse = () => {
         label: `${faculty.first_name} ${faculty.last_name} - ${faculty.email}`
     }));
 
-    // Handle selection change
+    // Handle faculty selection change
     const handleSelectedFaculty = (selectedOptions) => {
         setSelectedFaculties(selectedOptions);
         setValue("assign_faculty", selectedOptions.map(option => option.value));
@@ -194,7 +194,7 @@ const CreateNewCourse = () => {
                             className="mr-2" /> Cover Photo
                     </label>
                     <div className="col-span-2">
-                        <input type="file" {...register("photo", { required: "Course cover image is required" })} className="mt-1 w-full border-gray-300 rounded-md file-input focus:ring-indigo-500 focus:border-indigo-500" placeholder="Add course credits" />
+                        <input type="file" {...register("photo", { required: "Course cover image is required" })} className="mt-1 w-full border-gray-300 rounded-md file-input focus:ring-indigo-500 focus:border-indigo-500" placeholder="Add course image" />
                         {errors.photo && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.photo.message}</p>}
                     </div>
                 </div>

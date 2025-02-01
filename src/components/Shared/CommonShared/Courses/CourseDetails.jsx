@@ -9,15 +9,20 @@ import useAuth from "../../../Hooks/useAuth";
 import { LuBookOpenCheck } from "react-icons/lu";
 import Marquee from "react-fast-marquee";
 import { IoWarningOutline } from "react-icons/io5";
+import CourseUpdateForm from "../../CourseUpdateForm";
 
 
 
 const CourseDetails = () => {
+
+    // todo: create enrollment button function
+    // todo: create course update form for admin and faculty
+
     const { id } = useParams();
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
 
-    const { data: getSingleCourseDetails = [], isError, error, isPending } = useQuery({
+    const { data: getSingleCourseDetails = [], isError, error, isPending, refetch } = useQuery({
         queryKey: ["getSingleCourseDetails", id],
         queryFn: async () => {
             const res = await axiosSecure.get(`/courses/${id}`);
@@ -57,7 +62,6 @@ const CourseDetails = () => {
                                 "Enrollment : On Going"
                                 :
                                 "Enrollment : Closed"
-
                         }
                     </div>
                 </figure>
@@ -210,19 +214,19 @@ const CourseDetails = () => {
             </div>
 
 
-            <div className="divider divider-info my-4"></div>
-
 
 
 
             {/* apply option for students */}
             <div>
-                <SectionHeading title="Course Enrollment" />
-
                 {/* apply button */}
                 {
-                    (user.user_role === "student" &&is_active && total_available_seats > 0 && start_date > currentDate) &&
+                    (user.user_role === "student" && is_active && total_available_seats > 0 && start_date > currentDate) &&
                     <div>
+                        <div className="divider divider-info my-4"></div>
+
+                        <SectionHeading title="Course Enrollment" />
+
                         <div className="alert alert-warning shadow-lg my-5">
                             <IoWarningOutline className="text-xl" />
                             <p>Warning: Check the course details, Faculty Information and Prerequisite courses before enrolling in this course </p>
@@ -236,12 +240,35 @@ const CourseDetails = () => {
                 {/* if course enrollment is off */}
                 {
                     (user.user_role === "student" && is_active && total_available_seats > 0 && start_date < currentDate) &&
-                    <div className="alert alert-error text-white text-xl font-medium shadow-lg my-5">
-                        <IoWarningOutline className="text-xl" />
-                        <p>Note: Even though there are seats available but the classes for this course have already started on {new Date(start_date).toISOString().slice(0,10)}. So the enrollment is closed.  </p>
+                    <div>
+                        <div className="divider divider-info my-4"></div>
+
+                        <SectionHeading title="Course Enrollment" />
+
+                        <div className="alert alert-error text-white text-xl font-medium shadow-lg my-5">
+                            <IoWarningOutline className="text-xl" />
+                            <p>Note: Even though there are seats available but the classes for this course have already started on {new Date(start_date).toISOString().slice(0, 10)}. So the enrollment is closed.  </p>
+                        </div>
                     </div>
                 }
             </div>
+
+
+
+            {/* course edit option for admin and faculty */}
+            {
+                user.user_role !== "student" &&
+                <div>
+                    <div className="divider divider-info my-4"></div>
+
+                    <SectionHeading title="Edit Course Details" />
+
+
+                    <CourseUpdateForm refetch={refetch} singleCourseDetails={getSingleCourseDetails} />
+                </div>
+            }
+
+
         </div>
     );
 };
