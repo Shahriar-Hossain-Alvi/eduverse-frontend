@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../../../Utilities/LoadingSpinner";
@@ -10,14 +10,14 @@ import { LuBookOpenCheck } from "react-icons/lu";
 import Marquee from "react-fast-marquee";
 import { IoWarningOutline } from "react-icons/io5";
 import CourseUpdateForm from "../../CourseUpdateForm";
+import Swal from "sweetalert2";
 
 
 
 const CourseDetails = () => {
 
     // todo: create enrollment button function
-    // todo: create course update form for admin and faculty
-
+    const navigate = useNavigate();
     const { id } = useParams();
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
@@ -33,6 +33,34 @@ const CourseDetails = () => {
     const { _id, assigned_faculty, cover_url, credits, description, end_date, is_active, prerequisites, start_date, title, total_available_seats } = getSingleCourseDetails;
 
     const currentDate = new Date().toISOString().slice(0, 16);
+
+
+    // course delete button for admin and faculty
+    const handleCourseDeleteButton = () => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#008000",
+            confirmButtonText: "Yes, delete it!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+
+                const courseDeleteRes = await axiosSecure.delete(`/courses/${_id}`)
+
+                if (courseDeleteRes.data.success === true) {
+                    navigate(`/${user.user_role}/courses`)
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: `${title} deleted successfully`,
+                        icon: "success"
+                    });
+                }
+            }
+        });
+    }
 
 
     const handleCourseEnrollment = () => {
@@ -164,14 +192,18 @@ const CourseDetails = () => {
 
                 {
                     assigned_faculty.length > 0 &&
-                    assigned_faculty.map(singleFaculty =>
-                        <div key={singleFaculty._id}>
-                            <h2 className="text-xl">
-                                <span className="font-medium">Name:</span> {singleFaculty.first_name} {singleFaculty.last_name}
+                    assigned_faculty.map((singleFaculty, index) =>
+                        <div className="my-2 flex gap-1" key={singleFaculty._id}>
+                            <h1 className="text-xl font-medium">{index + 1}.</h1>
+                            <div>
+                                <h2 className="text-xl">
+                                    <span className="font-medium">Name:</span> {singleFaculty.first_name} {singleFaculty.last_name}
 
-                            </h2>
-                            <h3 className="text-xl italic">
-                                <span className="font-medium not-italic">Email: </span> {singleFaculty.email}</h3>
+                                </h2>
+                                <h3 className="text-xl italic">
+                                    <span className="font-medium not-italic">Email: </span> {singleFaculty.email}
+                                </h3>
+                            </div>
                         </div>
                     )
                 }
@@ -190,7 +222,7 @@ const CourseDetails = () => {
 
                 {
                     prerequisites.length > 0 &&
-                    prerequisites.map(singlePrerequisiteCourse => <div className="flex justify-between items-center" key={singlePrerequisiteCourse._id}>
+                    prerequisites.map(singlePrerequisiteCourse => <div className="flex justify-between items-center my-2 border p-2 rounded-md" key={singlePrerequisiteCourse._id}>
 
                         <div className="flex gap-3 items-center">
                             <figure className="w-24 h-24">
@@ -255,7 +287,7 @@ const CourseDetails = () => {
 
 
 
-            {/* course edit option for admin and faculty */}
+            {/* course edit and delete option for admin and faculty */}
             {
                 user.user_role !== "student" &&
                 <div>
@@ -265,6 +297,10 @@ const CourseDetails = () => {
 
 
                     <CourseUpdateForm refetch={refetch} singleCourseDetails={getSingleCourseDetails} />
+
+
+                    {/* delete course */}
+                    <button onClick={handleCourseDeleteButton} className="btn btn-error text-white mt-4">Delete This Course</button>
                 </div>
             }
 

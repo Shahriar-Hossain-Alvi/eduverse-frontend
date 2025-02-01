@@ -90,7 +90,7 @@ const CourseUpdateForm = ({ singleCourseDetails, refetch }) => {
     const handleUpdateCourse = async (data) => {
         let updatedCoverUrl = "";
 
-        
+
         if (data.photo && Array.isArray(data.photo) && (data.photo.length > 0)) {
             const cover_photo_file = data.photo[0];
             const formData = new FormData();
@@ -185,6 +185,9 @@ const CourseUpdateForm = ({ singleCourseDetails, refetch }) => {
             const courseUpdateRes = await axiosSecure.patch(`/courses/${singleCourseDetails?._id}`, updateCourseData);
 
             if(courseUpdateRes.data.success === true){
+                setSelectedFaculties([]);
+                setSelectedPrerequisiteCourses([]);
+                reset();
                 refetch();
                 setFormSubmissionLoading(false);
                 setIsEditing(false);
@@ -354,7 +357,7 @@ const CourseUpdateForm = ({ singleCourseDetails, refetch }) => {
                             options={prerequisiteCourseOptions}
                             value={selectedPrerequisiteCourses}
                             onChange={handlePrerequisiteCourses}
-                            closeMenuOnSelect={false}
+                            closeMenuOnSelect={true}
                             placeholder="Select Prerequisites..."
                             className={`basic-multi-select mt-1 w-full col-span-2 text-black`}
                             classNamePrefix="select"
@@ -405,7 +408,8 @@ const CourseUpdateForm = ({ singleCourseDetails, refetch }) => {
 };
 
 CourseUpdateForm.propTypes = {
-    singleCourseDetails: PropTypes.object
+    singleCourseDetails: PropTypes.object,
+    refetch: PropTypes.func,
 }
 
 export default CourseUpdateForm;
