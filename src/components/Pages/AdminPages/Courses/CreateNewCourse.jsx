@@ -8,7 +8,6 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../../../Utilities/LoadingSpinner";
 import { GiCharacter } from "react-icons/gi";
-import useAuth from "../../../Hooks/useAuth";
 import Select from 'react-select'
 import { CgSpinnerTwoAlt } from "react-icons/cg";
 import toast, { Toaster } from "react-hot-toast";
@@ -19,50 +18,26 @@ const CreateNewCourse = () => {
     const myUploadPreset = import.meta.env.VITE_Cloudinary_Upload_Preset;
 
 
-    const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
 
-    const { register, reset, formState: { errors }, handleSubmit, setValue } = useForm({
-        defaultValues: {
-            assign_faculty: [],
-        }
-    });
+    const { register, reset, formState: { errors }, handleSubmit, setValue } = useForm({});
 
     const [formSubmissionLoading, setFormSubmissionLoading] = useState(false);
-    const [selectedFaculties, setSelectedFaculties] = useState([]);
     const [selectedPrerequisiteCourses, setSelectedPrerequisiteCourses] = useState([]);
 
 
-    const { data: facultyAndPrerequisiteData = [], isPending, isError, error } = useQuery({
-        queryKey: ["facultyAndPrerequisiteData"],
+    const { data: prerequisiteData = [], isPending, isError, error } = useQuery({
+        queryKey: ["prerequisiteData"],
         queryFn: async () => {
-            const res = await Promise.all([
-                axiosSecure.get("/users/allFacultyNames"),
-                axiosSecure.get("/courses/allCourseTitle")
-            ])
-            return res;
+            const res = await axiosSecure.get("/courses/allCourseTitle")
+            return res.data.data;
         }
     });
 
-    const facultyNamesRes = facultyAndPrerequisiteData[0]?.data;
-    const courseNamesRes = facultyAndPrerequisiteData[1]?.data;
 
-
-    // Transform faculty data to `react-select` format
-    const facultyOptions = facultyNamesRes?.data?.map(faculty => ({
-        value: faculty._id,
-        label: `${faculty.first_name} ${faculty.last_name} - ${faculty.email}`
-    }));
-
-    // Handle faculty selection change
-    const handleSelectedFaculty = (selectedOptions) => {
-        setSelectedFaculties(selectedOptions);
-        setValue("assign_faculty", selectedOptions.map(option => option.value));
-    };
-
-    // Transform faculty data to `react-select` format
-    const prerequisiteCourseOptions = courseNamesRes?.data?.map(course => ({
+    // Transform prerequisite Data to `react-select` format
+    const prerequisiteCourseOptions = prerequisiteData?.map(course => ({
         value: course._id,
         label: `${course.title}`
     }));
@@ -72,9 +47,6 @@ const CreateNewCourse = () => {
         setSelectedPrerequisiteCourses(selectedOptions);
         setValue("prerequisites", selectedOptions.map(option => option.value));
     };
-
-
-
 
 
     if (isPending) return <LoadingSpinner />
@@ -103,15 +75,9 @@ const CreateNewCourse = () => {
                 const total_available_seats = parseInt(data.total_available_seat);
                 const start_date = data.start_date;
                 const end_date = data.end_date;
-                const assigned_faculty = data.assign_faculty;
                 const prerequisites = data.prerequisites;
-                const cover_url = uploadedPhotoUrl; 
+                const cover_url = uploadedPhotoUrl;
 
-                if (user.user_role === "admin" && (!assigned_faculty || assigned_faculty.length === 0)) {
-                    toast.error("At least 1 faculty should be assigned", { duration: 1500, position: "top-center" });
-                    setFormSubmissionLoading(false);
-                    return;
-                }
 
                 if (start_date < currentDate || end_date < currentDate) {
                     setFormSubmissionLoading(false);
@@ -124,19 +90,18 @@ const CreateNewCourse = () => {
                 }
 
                 const newCourseCreationData = {
-                    title, description, total_available_seats, start_date, end_date, credits, assigned_faculty, prerequisites, cover_url
+                    title, description, total_available_seats, start_date, end_date, credits, prerequisites, cover_url
                 };
 
 
                 // function to upload data in the backend
                 const createNewCourse = await axiosSecure.post("/courses", newCourseCreationData);
-                
+
                 if (createNewCourse.data.success === true) {
                     toast.success("New course added", {
                         duration: 1500,
                         position: "top-center"
                     });
-                    setSelectedFaculties([]);
                     setSelectedPrerequisiteCourses([]);
                     setFormSubmissionLoading(false);
                     reset();
@@ -253,38 +218,6 @@ const CreateNewCourse = () => {
                         {errors.end_date && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.end_date.message}</p>}
                     </div>
                 </div>
-
-
-
-                {/* assign faculty */}
-                {
-                    user.user_role === "admin" &&
-                    <div className={`hidden py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4`}>
-                        <label className="text-sm font-medium text-gray-500 flex items-center">
-                            <GiCharacter className="mr-2" /> Assign Faculty
-                        </label>
-                        <Select
-                            isMulti
-                            options={facultyOptions}
-                            value={selectedFaculties}
-                            onChange={handleSelectedFaculty}
-                            closeMenuOnSelect={false}
-                            placeholder="Select Faculty..."
-                            className={`basic-multi-select mt-1 w-full col-span-2 text-black`}
-                            classNamePrefix="select"
-                            theme={(theme) => ({
-                                ...theme,
-                                borderRadius: 0,
-                                colors: {
-                                    ...theme.colors,
-                                    neutral80: "black",//selected text color
-                                    neutral60: "red", // cross and dropdown button color
-                                },
-                            })}
-                        />
-                        {errors.assign_faculty && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.assign_faculty.message}</p>}
-                    </div>
-                }
 
 
                 {/* prerequisite courses */}

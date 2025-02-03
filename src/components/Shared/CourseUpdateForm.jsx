@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from '../Hooks/useAxiosSecure';
-import useAuth from '../Hooks/useAuth';
 import Select from 'react-select'
 import LoadingSpinner from '../Utilities/LoadingSpinner';
 import { CiEdit } from "react-icons/ci";
@@ -20,7 +19,6 @@ const CourseUpdateForm = ({ singleCourseDetails, refetch }) => {
     const myUploadPreset = import.meta.env.VITE_Cloudinary_Upload_Preset;
 
 
-    const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
     const { register, formState: { errors }, reset, handleSubmit, setValue } = useForm({
         defaultValues: { ...singleCourseDetails }
@@ -33,46 +31,23 @@ const CourseUpdateForm = ({ singleCourseDetails, refetch }) => {
     const [isEditing, setIsEditing] = useState(false);
 
 
-    // destructure data
-
-
-    // get assigned faculties from the form
-    const [selectedFaculties, setSelectedFaculties] = useState([]);
-
     // get prerequisite from the form
     const [selectedPrerequisiteCourses, setSelectedPrerequisiteCourses] = useState([]);
 
 
 
-    const { data: facultyAndPrerequisiteData = [], isPending, isError, error } = useQuery({
-        queryKey: ["facultyAndPrerequisiteData"],
+    const { data: prerequisiteData = [], isPending, isError, error } = useQuery({
+        queryKey: ["prerequisiteData"],
         queryFn: async () => {
-            const res = await Promise.all([
-                axiosSecure.get("/users/allFacultyNames"),
-                axiosSecure.get("/courses/allCourseTitle")
-            ])
-            return res;
+            const res = await axiosSecure.get("/courses/allCourseTitle")
+            
+            return res.data.data;
         }
     });
 
-    const facultyNamesRes = facultyAndPrerequisiteData[0]?.data;
-    const courseNamesRes = facultyAndPrerequisiteData[1]?.data;
-
 
     // Transform faculty data to `react-select` format
-    const facultyOptions = facultyNamesRes?.data?.map(faculty => ({
-        value: faculty._id,
-        label: `${faculty.first_name} ${faculty.last_name} - ${faculty.email}`
-    }));
-
-    // Handle selection change
-    const handleSelectedFaculty = (selectedOptions) => {
-        setSelectedFaculties(selectedOptions);
-        setValue("assigned_faculty", selectedOptions.map(option => option.value));
-    };
-
-    // Transform faculty data to `react-select` format
-    const prerequisiteCourseOptions = courseNamesRes?.data?.map(course => ({
+    const prerequisiteCourseOptions = prerequisiteData?.map(course => ({
         value: course._id,
         label: `${course.title}`
     }));
@@ -160,10 +135,6 @@ const CourseUpdateForm = ({ singleCourseDetails, refetch }) => {
         if (data.is_active !== singleCourseDetails?.is_active) updateCourseData.is_active = data.is_active;
 
 
-        if (data.assigned_faculty && !isEqual(data.assigned_faculty, singleCourseDetails?.assigned_faculty)) {
-            updateCourseData.assigned_faculty = data.assigned_faculty;
-        }
-
         if (data.prerequisites && !isEqual(data.prerequisites, singleCourseDetails?.prerequisites)) {
             updateCourseData.prerequisites = data.prerequisites;
         }
@@ -185,7 +156,6 @@ const CourseUpdateForm = ({ singleCourseDetails, refetch }) => {
             const courseUpdateRes = await axiosSecure.patch(`/courses/${singleCourseDetails?._id}`, updateCourseData);
 
             if(courseUpdateRes.data.success === true){
-                setSelectedFaculties([]);
                 setSelectedPrerequisiteCourses([]);
                 reset();
                 refetch();
@@ -315,35 +285,6 @@ const CourseUpdateForm = ({ singleCourseDetails, refetch }) => {
                             {errors.end_date && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.end_date.message}</p>}
                         </div>
                     </div>
-
-
-
-                    {/* Assigned Faculty (Admin Only) */}
-                    {user.user_role === "admin" && (
-                        <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
-                            <label className="font-medium text-gray-500 flex items-center">Assign Faculty</label>
-                            <Select
-                                isMulti
-                                options={facultyOptions}
-                                value={selectedFaculties}
-                                onChange={handleSelectedFaculty}
-                                closeMenuOnSelect={true}
-                                placeholder="Select Faculty..."
-                                className={`basic-multi-select mt-1 w-full col-span-2 text-black`}
-                                classNamePrefix="select"
-                                theme={(theme) => ({
-                                    ...theme,
-                                    borderRadius: 0,
-                                    colors: {
-                                        ...theme.colors,
-                                        neutral80: "black",//selected text color
-                                        neutral60: "red", // cross and dropdown button color
-                                    },
-                                })}
-                            />
-                            {errors.assign_faculty && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.assign_faculty.message}</p>}
-                        </div>
-                    )}
 
 
 
