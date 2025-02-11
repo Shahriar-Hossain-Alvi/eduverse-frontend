@@ -21,7 +21,6 @@ import CourseDetails from "../Shared/CommonShared/Courses/CourseDetails";
 import CreateNewCourse from "../Pages/AdminPages/Courses/CreateNewCourse";
 
 
-
 const router = createBrowserRouter(
 
     createRoutesFromElements(
@@ -119,6 +118,7 @@ const router = createBrowserRouter(
                         </PrivateRoute>
                     }
                 />
+
             </Route>
             {/* admin routes end */}
 
@@ -171,7 +171,7 @@ const router = createBrowserRouter(
                     }
                 />
 
-<Route
+                <Route
                     path="addNewCourse"
                     element={
                         <PrivateRoute role="faculty">

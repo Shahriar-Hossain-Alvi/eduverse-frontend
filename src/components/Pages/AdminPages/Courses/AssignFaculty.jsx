@@ -3,50 +3,109 @@ import useAuth from "../../../Hooks/useAuth";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { GiCharacter } from "react-icons/gi";
 import LoadingSpinner from "../../../Utilities/LoadingSpinner";
+import Select from 'react-select'
+import toast, { Toaster } from "react-hot-toast";
+import PropTypes from 'prop-types';
+import { MdClose } from "react-icons/md";
+import { isEqual } from "lodash";
 
 
-const AssignFaculty = () => {
+const AssignFaculty = ({ assigned_faculty, courseId }) => {
+
+    //todo: select faculty from the dropdown -> send assigned_faculty array(id) in the update-course request and also send course id and faculty id(array) to the create-courseFacultyAssignment request
+
+    //todo: clicking the delete button will remove the currently assigned faculty from the course and also delete the courseFacultyAssignment(array) record
+
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
-
-    const { register, reset, formState: { errors }, handleSubmit, setValue } = useForm({
+    const { formState: { errors }, setValue } = useForm({
         defaultValues: {
             assign_faculty: [],
         }
     });
 
-    const [selectedFaculties, setSelectedFaculties] = useState([]);
+    // Initialize selected faculties state using the prop data (if available)
+    const initialSelectedFaculties = assigned_faculty
+        ? assigned_faculty.map((faculty) => ({
+            value: faculty._id,
+            label: `${faculty.first_name} ${faculty.last_name} - ${faculty.email}`
+        }))
+        : [];
+
+    const [selectedFaculties, setSelectedFaculties] = useState(initialSelectedFaculties);
 
 
-    const { data: facultyAndPrerequisiteData = [], isPending, isError, error } = useQuery({
-        queryKey: ["facultyAndPrerequisiteData"],
+
+    // get faculty names for assigning
+    const { data: assignFacultyData = [], isPending, isError, error } = useQuery({
+        queryKey: ["assignFacultyData"],
         queryFn: async () => {
-            const res = await Promise.all([
-                axiosSecure.get("/users/allFacultyNames")
-            ])
-            return res;
+            const res = await axiosSecure.get("/users/allFacultyNames")
+
+            return res.data.data;
         }
     });
 
-    const facultyNamesRes = facultyAndPrerequisiteData[0]?.data;
-
 
     // Transform faculty data to `react-select` format
-    const facultyOptions = facultyNamesRes?.data?.map(faculty => ({
+    const facultyOptions = assignFacultyData?.map(faculty => ({
         value: faculty._id,
         label: `${faculty.first_name} ${faculty.last_name} - ${faculty.email}`
     }));
 
-    // Handle faculty selection change
+
+
+    // Handle selection change from react-select
     const handleSelectedFaculty = (selectedOptions) => {
-        setSelectedFaculties(selectedOptions);
-        setValue("assign_faculty", selectedOptions.map(option => option.value));
+        // react-select in multi mode returns the entire selected array. We merge the new selection with any previously selected faculty. (If the user uses the remove button on the chips, react-select's value will update accordingly.)
+        setSelectedFaculties(selectedOptions || []);
+        // Update the react-hook-form value (an array of IDs)
+        setValue("assign_faculty", (selectedOptions || []).map(option => option.value));
+    };
+
+
+    // Remove a faculty from the list
+    const handleRemoveFaculty = (facultyId) => {
+        console.log(facultyId);
+        const updated = selectedFaculties.filter(option => option.value !== facultyId);
+        console.log(updated);
+        setSelectedFaculties(updated);
+        setValue("assign_faculty", updated.map(option => option.value));
     };
 
 
 
+    // update assigned faculty 
+    const updateAssignedFaculty = async () => {
+        if (selectedFaculties.length === 0) {
+            return toast.error("Please select a faculty to assign");
+        };
+
+
+        // if no change in the selected faculties
+        if (isEqual(initialSelectedFaculties, selectedFaculties)) {
+            return toast.error("No change in the selected faculties");
+        }
+
+        try {
+            const assigned_faculty = selectedFaculties.map(faculty => faculty.value);
+            console.log(courseId);
+            console.log(assigned_faculty);
+
+            const res = await axiosSecure.patch(`/courses/${courseId}`, { assigned_faculty });
+
+            console.log(res);
+
+        } catch (error) {
+            console.log(error);
+            const errorMessage = error.response?.data?.message || "Something went wrong.";
+            toast.error(errorMessage, { duration: 3000, position: "top-center" });
+            return;
+        }
+    }
 
 
     if (isPending) return <LoadingSpinner />
@@ -54,9 +113,78 @@ const AssignFaculty = () => {
 
     return (
         <div>
-            
+            <Toaster />
+
+            {isError && <p className="text-2xl text-error text-center">{error.message}</p>}
+
+
+            {/* show currently assigned faculty */}
+            <div>
+                <h2 className="text-xl font-semibold mb-2"> Currently Assigned Faculty</h2>
+
+                <div className="flex flex-wrap gap-2">
+                    {selectedFaculties?.length === 0 && <span className="badge badge-error text-white">No faculty assigned</span>}
+
+
+                    {selectedFaculties.map((faculty) => (
+                        <div key={faculty.value} className="flex items-center gap-1 bg-transparent border px-2 py-2 rounded">
+                            <span>{faculty.label}</span>
+                            <button
+                                onClick={() => handleRemoveFaculty(faculty.value)}
+                                className="btn btn-sm btn-error text-white"
+                            >
+                                <MdClose />
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+
+
+            {/* Faculty Selection Dropdown */}
+            <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <label className="text-sm font-medium text-gray-500 flex items-center">
+                    <GiCharacter className="mr-2" /> Assign a Faculty
+                </label>
+                <div className="col-span-2">
+                    <Select
+                        isMulti
+                        options={facultyOptions}
+                        value={selectedFaculties}
+                        onChange={handleSelectedFaculty}
+                        closeMenuOnSelect={false}
+                        placeholder="Select Faculty..."
+                        className="basic-multi-select mt-1 w-full col-span-2 text-black"
+                        classNamePrefix="select"
+                        theme={(theme) => ({
+                            ...theme,
+                            borderRadius: 0,
+                            colors: {
+                                ...theme.colors,
+                                neutral80: "black", // selected text color
+                                neutral60: "red",   // cross and dropdown button color
+                            },
+                        })}
+                    />
+                    {errors.assign_faculty && (
+                        <p className="text-error text-sm pl-3 pt-1 animate-pulse">
+                            {errors.assign_faculty.message}
+                        </p>
+                    )}
+                </div>
+
+                <button onClick={updateAssignedFaculty} type="submit" className="btn btn-success text-white mt-4">
+                    Assign
+                </button>
+            </div>
         </div>
     );
 };
+
+AssignFaculty.propTypes = {
+    assigned_faculty: PropTypes.array,
+    courseId: PropTypes.string
+}
 
 export default AssignFaculty;

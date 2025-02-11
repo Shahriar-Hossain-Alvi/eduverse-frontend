@@ -11,6 +11,10 @@ import Marquee from "react-fast-marquee";
 import { IoWarningOutline } from "react-icons/io5";
 import CourseUpdateForm from "../../CourseUpdateForm";
 import Swal from "sweetalert2";
+import { RiUserAddFill } from "react-icons/ri";
+import { useState } from "react";
+import { IoMdClose } from "react-icons/io";
+import AssignFaculty from "../../../Pages/AdminPages/Courses/AssignFaculty";
 
 
 
@@ -21,7 +25,7 @@ const CourseDetails = () => {
     const { id } = useParams();
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
-
+    const [showFacultyAssignmentForm, setShowFacultyAssignmentForm] = useState(false);
     const { data: getSingleCourseDetails = [], isError, error, isPending, refetch } = useQuery({
         queryKey: ["getSingleCourseDetails", id],
         queryFn: async () => {
@@ -60,6 +64,12 @@ const CourseDetails = () => {
                 }
             }
         });
+    }
+
+
+    // faculty assignment button
+    const handleFacultyAssignmentButton = () => {
+        console.log("clicked");
     }
 
 
@@ -184,14 +194,29 @@ const CourseDetails = () => {
 
             {/* faculty information */}
             <div>
-                <SectionHeading title="Faculty Information" />
+                <div className="flex justify-between">
+                    <SectionHeading title="Faculty Information" />
 
+
+                    {/* assign/remove faculty button */}
+                    {
+                        user.user_role === "admin" && <button onClick={() => setShowFacultyAssignmentForm(!showFacultyAssignmentForm)} className={`btn btn-sm ${showFacultyAssignmentForm ? "btn-error" : "btn-success"} text-white`}>
+                            {
+                                !showFacultyAssignmentForm ? <><RiUserAddFill /> Assign/Remove Faculty</> : <><IoMdClose /> Close</>
+                            }</button>
+                    }
+                </div>
+
+
+                {/* if no faculty is assigned */}
                 {assigned_faculty.length === 0 &&
                     <span className="text-center text-error">Faculty Not Assigned Yet</span>
                 }
 
+
+                {/* show assigned faculty */}
                 {
-                    assigned_faculty.length > 0 &&
+                    !showFacultyAssignmentForm && assigned_faculty.length > 0 &&
                     assigned_faculty.map((singleFaculty, index) =>
                         <div className="my-2 flex gap-1" key={singleFaculty._id}>
                             <h1 className="text-xl font-medium">{index + 1}.</h1>
@@ -206,6 +231,12 @@ const CourseDetails = () => {
                             </div>
                         </div>
                     )
+                }
+
+
+                {/* faculty assignment option */}
+                {
+                    showFacultyAssignmentForm && <AssignFaculty courseId={id} assigned_faculty={assigned_faculty} />
                 }
             </div>
 
