@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { MdClose } from "react-icons/md";
 import { isEqual } from "lodash";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
+import Swal from "sweetalert2";
 
 
 const AssignFaculty = ({ assigned_faculty, courseId, setShowFacultyAssignmentForm, refetch }) => {
@@ -70,7 +71,7 @@ const AssignFaculty = ({ assigned_faculty, courseId, setShowFacultyAssignmentFor
     const handleRemoveFaculty = (facultyId) => {
         console.log(facultyId);
         const updated = selectedFaculties.filter(option => option.value !== facultyId);
-       
+
         setSelectedFaculties(updated);
         setValue("assign_faculty", updated.map(option => option.value));
     };
@@ -84,6 +85,49 @@ const AssignFaculty = ({ assigned_faculty, courseId, setShowFacultyAssignmentFor
             return toast.error("No change in the selected faculties");
         }
 
+
+        // if no faculty is selected
+        if (selectedFaculties.length === 0) {
+            return Swal.fire({
+                title: "No Faculty Selected!",
+                text: "Do you want to continue without assigning any faculty? This will remove all the currently assigned faculties from the course.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, remove all faculty!"
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        setFacultyAssignLoading(true);
+                        const assigned_faculty = selectedFaculties.map(faculty => faculty.value);
+
+                        const res = await axiosSecure.patch(`/courses/${courseId}`, { assigned_faculty });
+
+                        if (res.data.success === true) {
+                            const res = await axiosSecure.post(`/courseFacultyAssignments`, { course_id: courseId, users_id: assigned_faculty });
+
+                            if (res.data.success === true) {
+                                toast.success("Faculty assigned successfully");
+                                setFacultyAssignLoading(false);
+                                refetch();
+                                setShowFacultyAssignmentForm(false);
+                            }
+                        }
+
+                    } catch (error) {
+                        console.log(error);
+                        setFacultyAssignLoading(false);
+                        const errorMessage = error.response?.data?.message || "Something went wrong.";
+                        toast.error(errorMessage, { duration: 3000, position: "top-center" });
+                        return;
+                    }
+                }
+            });
+        }
+
+
+        // if faculty is selected
         try {
             setFacultyAssignLoading(true);
             const assigned_faculty = selectedFaculties.map(faculty => faculty.value);

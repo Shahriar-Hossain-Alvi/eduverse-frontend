@@ -71,12 +71,6 @@ const CourseDetails = () => {
     }
 
 
-    // faculty assignment button
-    const handleFacultyAssignmentButton = () => {
-        console.log("clicked");
-    }
-
-
     const handleCourseEnrollment = () => {
         console.log(_id);
     }
