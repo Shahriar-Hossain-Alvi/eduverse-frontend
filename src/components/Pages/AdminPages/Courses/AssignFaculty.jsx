@@ -1,5 +1,4 @@
 import { useForm } from "react-hook-form";
-import useAuth from "../../../Hooks/useAuth";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -10,17 +9,16 @@ import toast, { Toaster } from "react-hot-toast";
 import PropTypes from 'prop-types';
 import { MdClose } from "react-icons/md";
 import { isEqual } from "lodash";
+import { CgSpinnerTwoAlt } from "react-icons/cg";
 
 
-const AssignFaculty = ({ assigned_faculty, courseId }) => {
-
-    //todo: select faculty from the dropdown -> send assigned_faculty array(id) in the update-course request and also send course id and faculty id(array) to the create-courseFacultyAssignment request
+const AssignFaculty = ({ assigned_faculty, courseId, setShowFacultyAssignmentForm, refetch }) => {
 
     //todo: clicking the delete button will remove the currently assigned faculty from the course and also delete the courseFacultyAssignment(array) record
 
-    const { user } = useAuth();
-    const axiosSecure = useAxiosSecure();
 
+    const axiosSecure = useAxiosSecure();
+    const [facultyAssignLoading, setFacultyAssignLoading] = useState(false);
     const { formState: { errors }, setValue } = useForm({
         defaultValues: {
             assign_faculty: [],
@@ -62,6 +60,7 @@ const AssignFaculty = ({ assigned_faculty, courseId }) => {
     const handleSelectedFaculty = (selectedOptions) => {
         // react-select in multi mode returns the entire selected array. We merge the new selection with any previously selected faculty. (If the user uses the remove button on the chips, react-select's value will update accordingly.)
         setSelectedFaculties(selectedOptions || []);
+
         // Update the react-hook-form value (an array of IDs)
         setValue("assign_faculty", (selectedOptions || []).map(option => option.value));
     };
@@ -71,7 +70,7 @@ const AssignFaculty = ({ assigned_faculty, courseId }) => {
     const handleRemoveFaculty = (facultyId) => {
         console.log(facultyId);
         const updated = selectedFaculties.filter(option => option.value !== facultyId);
-        console.log(updated);
+       
         setSelectedFaculties(updated);
         setValue("assign_faculty", updated.map(option => option.value));
     };
@@ -80,27 +79,31 @@ const AssignFaculty = ({ assigned_faculty, courseId }) => {
 
     // update assigned faculty 
     const updateAssignedFaculty = async () => {
-        if (selectedFaculties.length === 0) {
-            return toast.error("Please select a faculty to assign");
-        };
-
-
         // if no change in the selected faculties
         if (isEqual(initialSelectedFaculties, selectedFaculties)) {
             return toast.error("No change in the selected faculties");
         }
 
         try {
+            setFacultyAssignLoading(true);
             const assigned_faculty = selectedFaculties.map(faculty => faculty.value);
-            console.log(courseId);
-            console.log(assigned_faculty);
 
             const res = await axiosSecure.patch(`/courses/${courseId}`, { assigned_faculty });
 
-            console.log(res);
+            if (res.data.success === true) {
+                const res = await axiosSecure.post(`/courseFacultyAssignments`, { course_id: courseId, users_id: assigned_faculty });
+
+                if (res.data.success === true) {
+                    toast.success("Faculty assigned successfully");
+                    setFacultyAssignLoading(false);
+                    refetch();
+                    setShowFacultyAssignmentForm(false);
+                }
+            }
 
         } catch (error) {
             console.log(error);
+            setFacultyAssignLoading(false);
             const errorMessage = error.response?.data?.message || "Something went wrong.";
             toast.error(errorMessage, { duration: 3000, position: "top-center" });
             return;
@@ -173,10 +176,15 @@ const AssignFaculty = ({ assigned_faculty, courseId }) => {
                         </p>
                     )}
                 </div>
+                {
+                    facultyAssignLoading ?
+                        <button className="btn btn-disabled border-none w-full mb-2 "><CgSpinnerTwoAlt className="animate-spin" /></button>
+                        :
+                        <button onClick={updateAssignedFaculty} type="submit" className="btn btn-success text-white mt-4">
+                            Update Assigned Faculty
+                        </button>
+                }
 
-                <button onClick={updateAssignedFaculty} type="submit" className="btn btn-success text-white mt-4">
-                    Assign
-                </button>
             </div>
         </div>
     );
@@ -184,7 +192,9 @@ const AssignFaculty = ({ assigned_faculty, courseId }) => {
 
 AssignFaculty.propTypes = {
     assigned_faculty: PropTypes.array,
-    courseId: PropTypes.string
+    courseId: PropTypes.string,
+    setShowFacultyAssignmentForm: PropTypes.func,
+    refetch: PropTypes.func
 }
 
 export default AssignFaculty;

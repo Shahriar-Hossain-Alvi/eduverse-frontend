@@ -21,11 +21,15 @@ import AssignFaculty from "../../../Pages/AdminPages/Courses/AssignFaculty";
 const CourseDetails = () => {
 
     // todo: create enrollment button function
+
     const navigate = useNavigate();
     const { id } = useParams();
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
+
+
     const [showFacultyAssignmentForm, setShowFacultyAssignmentForm] = useState(false);
+
     const { data: getSingleCourseDetails = [], isError, error, isPending, refetch } = useQuery({
         queryKey: ["getSingleCourseDetails", id],
         queryFn: async () => {
@@ -236,7 +240,12 @@ const CourseDetails = () => {
 
                 {/* faculty assignment option */}
                 {
-                    showFacultyAssignmentForm && <AssignFaculty courseId={id} assigned_faculty={assigned_faculty} />
+                    showFacultyAssignmentForm && <AssignFaculty 
+                    courseId={id} assigned_faculty={assigned_faculty} 
+                    setShowFacultyAssignmentForm={setShowFacultyAssignmentForm}
+                    refetch={refetch}
+
+                    />
                 }
             </div>
 
