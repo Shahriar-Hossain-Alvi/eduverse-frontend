@@ -9,7 +9,7 @@ const Main = () => {
         <div className="font-inter">
             <ScrollRestoration />
             <Navbar />
-            <div className="container mx-auto">
+            <div className="mx-auto w-full">
                 <Outlet></Outlet>
             </div>
             <Footer></Footer>

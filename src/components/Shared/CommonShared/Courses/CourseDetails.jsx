@@ -15,18 +15,17 @@ import { RiUserAddFill } from "react-icons/ri";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import AssignFaculty from "../../../Pages/AdminPages/Courses/AssignFaculty";
+import toast, { Toaster } from "react-hot-toast";
 
 
 
 const CourseDetails = () => {
 
-    // todo: create enrollment button function
 
     const navigate = useNavigate();
     const { id } = useParams();
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
-
 
     const [showFacultyAssignmentForm, setShowFacultyAssignmentForm] = useState(false);
 
@@ -71,8 +70,40 @@ const CourseDetails = () => {
     }
 
 
-    const handleCourseEnrollment = () => {
-        console.log(_id);
+    // course enrollment apply button function
+    const handleCourseEnrollment = async () => {
+        const users_id = user._id;
+        const course_id = _id;
+
+        const result = await Swal.fire({
+            title: "Confirm Enrollment?",
+            text: "Check the necessary information carefully before enrolling in the course!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#006400",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Enroll"
+        })
+
+
+        if (result.isConfirmed) {
+            try {
+                const res = await axiosSecure.post("/courseStudentEnrollment", { users_id, course_id });
+                console.log(res);
+                if (res.data.success === true) {
+                    Swal.fire({
+                        title: "Enrolled!",
+                        text: `You have successfully enrolled in ${title}`,
+                        icon: "success"
+                    });
+                }
+            } catch (error) {
+                console.log(error);
+                const errorMessage = error.response?.data?.message || "Something went wrong";
+                
+                toast.error(errorMessage, { duration: 3000, position: "top-center" });
+            }
+        }
     }
 
 
@@ -80,7 +111,7 @@ const CourseDetails = () => {
 
     return (
         <div className="flex-1 p-3 md:p-8 mb-5">
-
+            <Toaster />
             <SectionHeading title="Course Details" />
 
 
@@ -234,10 +265,10 @@ const CourseDetails = () => {
 
                 {/* faculty assignment option */}
                 {
-                    showFacultyAssignmentForm && <AssignFaculty 
-                    courseId={id} assigned_faculty={assigned_faculty} 
-                    setShowFacultyAssignmentForm={setShowFacultyAssignmentForm}
-                    refetch={refetch}
+                    showFacultyAssignmentForm && <AssignFaculty
+                        courseId={id} assigned_faculty={assigned_faculty}
+                        setShowFacultyAssignmentForm={setShowFacultyAssignmentForm}
+                        refetch={refetch}
 
                     />
                 }

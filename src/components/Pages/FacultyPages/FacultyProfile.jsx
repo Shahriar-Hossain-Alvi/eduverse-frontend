@@ -1,5 +1,5 @@
 import { Toaster } from "react-hot-toast";
-import UserInfo from "../../Shared/UserInfo";
+import UserInfo from "../../Shared/CommonShared/UserInfo";
 
 const FacultyProfile = () => {
 

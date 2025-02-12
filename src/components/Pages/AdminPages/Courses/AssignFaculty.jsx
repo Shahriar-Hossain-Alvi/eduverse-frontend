@@ -15,8 +15,6 @@ import Swal from "sweetalert2";
 
 const AssignFaculty = ({ assigned_faculty, courseId, setShowFacultyAssignmentForm, refetch }) => {
 
-    //todo: clicking the delete button will remove the currently assigned faculty from the course and also delete the courseFacultyAssignment(array) record
-
 
     const axiosSecure = useAxiosSecure();
     const [facultyAssignLoading, setFacultyAssignLoading] = useState(false);

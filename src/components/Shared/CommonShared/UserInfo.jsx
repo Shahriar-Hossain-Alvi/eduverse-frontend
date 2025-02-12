@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import useAuth from "../Hooks/useAuth";
+import useAuth from "../../Hooks/useAuth";
 import { FiMail, FiUser, FiPhone, FiMapPin, FiLock, FiEdit2, FiSave, FiX } from "react-icons/fi";
 import { IoWarningOutline } from "react-icons/io5";
-import useAxiosSecure from "../Hooks/useAxiosSecure";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { FaUserCog } from "react-icons/fa";
 
 
