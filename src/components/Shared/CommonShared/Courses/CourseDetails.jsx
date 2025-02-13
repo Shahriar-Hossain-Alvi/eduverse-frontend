@@ -89,7 +89,7 @@ const CourseDetails = () => {
         if (result.isConfirmed) {
             try {
                 const res = await axiosSecure.post("/courseStudentEnrollment", { users_id, course_id });
-                console.log(res);
+                refetch();
                 if (res.data.success === true) {
                     Swal.fire({
                         title: "Enrolled!",
@@ -314,7 +314,7 @@ const CourseDetails = () => {
 
 
 
-            {/* apply option for students */}
+            {/* Course Enrollment */}
             <div>
                 {/* apply button */}
                 {
