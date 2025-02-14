@@ -67,7 +67,6 @@ const AssignFaculty = ({ assigned_faculty, courseId, setShowFacultyAssignmentFor
 
     // Remove a faculty from the list
     const handleRemoveFaculty = (facultyId) => {
-        console.log(facultyId);
         const updated = selectedFaculties.filter(option => option.value !== facultyId);
 
         setSelectedFaculties(updated);

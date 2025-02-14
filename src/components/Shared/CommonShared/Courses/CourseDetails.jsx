@@ -16,6 +16,7 @@ import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import AssignFaculty from "../../../Pages/AdminPages/Courses/AssignFaculty";
 import toast, { Toaster } from "react-hot-toast";
+import SingleCourseEnrollmentList from "../../SingleCourseEnrollmentList";
 
 
 
@@ -29,13 +30,16 @@ const CourseDetails = () => {
 
     const [showFacultyAssignmentForm, setShowFacultyAssignmentForm] = useState(false);
 
+
     const { data: getSingleCourseDetails = [], isError, error, isPending, refetch } = useQuery({
         queryKey: ["getSingleCourseDetails", id],
         queryFn: async () => {
             const res = await axiosSecure.get(`/courses/${id}`);
+
             if (res.data.success) return res.data.data;
         }
-    })
+    });
+
 
     const { _id, assigned_faculty, cover_url, credits, description, end_date, is_active, prerequisites, start_date, title, total_available_seats } = getSingleCourseDetails;
 
@@ -100,7 +104,7 @@ const CourseDetails = () => {
             } catch (error) {
                 console.log(error);
                 const errorMessage = error.response?.data?.message || "Something went wrong";
-                
+
                 toast.error(errorMessage, { duration: 3000, position: "top-center" });
             }
         }
@@ -221,7 +225,7 @@ const CourseDetails = () => {
 
             <div className="divider divider-info my-4"></div>
 
-            {/* faculty information */}
+            {/* faculty information and edit faculty */}
             <div>
                 <div className="flex justify-between">
                     <SectionHeading title="Faculty Information" />
@@ -312,8 +316,6 @@ const CourseDetails = () => {
 
 
 
-
-
             {/* Course Enrollment */}
             <div>
                 {/* apply button */}
@@ -369,6 +371,13 @@ const CourseDetails = () => {
                 </div>
             }
 
+
+
+            {/* show a list of enrolled student for this course */}
+            {
+                user.user_role !== "student" && 
+                <SingleCourseEnrollmentList id={id} />
+            }   
 
         </div>
     );
