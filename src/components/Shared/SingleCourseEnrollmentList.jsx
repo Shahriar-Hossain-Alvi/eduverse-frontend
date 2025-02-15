@@ -5,6 +5,7 @@ import LoadingSpinner from "../Utilities/LoadingSpinner";
 import PropTypes from "prop-types";
 import { Link } from "react-router";
 import useAuth from "../Hooks/useAuth";
+import TanstackQueryErrorMessage from "../Utilities/TanstackQueryErrorMessage";
 
 
 const SingleCourseEnrollmentList = ({ id }) => {
@@ -29,14 +30,14 @@ const SingleCourseEnrollmentList = ({ id }) => {
 
             {isPending && <LoadingSpinner />}
 
-            {isError && <p className="text-2xl text-error text-center">{error.message}</p>}
+            {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
 
             <div className="overflow-x-auto">
-                <table className="table border border-gray-200">
+                <table className="table border border-gray-400">
                     {/* head */}
                     <thead>
-                        <tr>
+                        <tr className="border border-gray-400">
                             <th>No.</th>
                             <th>Name</th>
                             <th>Email</th>
@@ -46,7 +47,7 @@ const SingleCourseEnrollmentList = ({ id }) => {
                     <tbody>
                         {
                             singleCourseEnrollmentList.map((singleStudent, index) => (
-                                <tr key={singleStudent._id} className="hover">
+                                <tr key={singleStudent._id} className="hover border-gray-400">
                                     <th>{index+1}</th>
                                     <td>{singleStudent.users_id.first_name} {singleStudent.users_id.last_name}</td>
                                     <td>{singleStudent.users_id.email}</td>

@@ -11,6 +11,7 @@ import { CgSpinnerTwoAlt } from "react-icons/cg";
 import toast, { Toaster } from 'react-hot-toast';
 import { isEqual } from 'lodash';
 import axios from 'axios';
+import TanstackQueryErrorMessage from '../Utilities/TanstackQueryErrorMessage';
 
 
 
@@ -190,7 +191,7 @@ const CourseUpdateForm = ({ singleCourseDetails, refetch }) => {
                     </>}
             </button>
 
-            {isError && <p className="text-2xl text-error text-center">{error.message}</p>}
+            {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
             {isPending && <LoadingSpinner />}
 

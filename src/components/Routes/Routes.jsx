@@ -19,6 +19,7 @@ import EditUserDetails from "../Pages/AdminPages/ManageUsers/EditUserDetails";
 import Courses from "../Shared/CommonShared/Courses/Courses";
 import CourseDetails from "../Shared/CommonShared/Courses/CourseDetails";
 import CreateNewCourse from "../Pages/AdminPages/Courses/CreateNewCourse";
+import FacultyAssignedCourses from "../Pages/FacultyPages/FacultyAssignedCourses";
 
 
 const router = createBrowserRouter(
@@ -144,15 +145,6 @@ const router = createBrowserRouter(
                     }
                 />
 
-                < Route
-                    path="profile"
-                    element={
-                        < PrivateRoute role="faculty" >
-                            <FacultyProfile />
-                        </PrivateRoute >
-                    }
-                />
-
                 <Route
                     path="courses"
                     element={
@@ -180,6 +172,24 @@ const router = createBrowserRouter(
                     }
                 />
 
+                <Route
+                    path="myCourses"
+                    element={
+                        <PrivateRoute role="faculty">
+                            <FacultyAssignedCourses />
+                        </PrivateRoute>
+                    }
+                />
+
+
+                < Route
+                    path="profile"
+                    element={
+                        < PrivateRoute role="faculty" >
+                            <FacultyProfile />
+                        </PrivateRoute >
+                    }
+                />
             </Route >
 
 

@@ -17,6 +17,7 @@ import { IoMdClose } from "react-icons/io";
 import AssignFaculty from "../../../Pages/AdminPages/Courses/AssignFaculty";
 import toast, { Toaster } from "react-hot-toast";
 import SingleCourseEnrollmentList from "../../SingleCourseEnrollmentList";
+import TanstackQueryErrorMessage from "../../../Utilities/TanstackQueryErrorMessage";
 
 
 
@@ -119,7 +120,7 @@ const CourseDetails = () => {
             <SectionHeading title="Course Details" />
 
 
-            {isError && <p className="text-2xl text-error text-center">{error.message}</p>}
+            {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
             {/* course info */}
             <div className="grid lg:grid-cols-3 gap-5">

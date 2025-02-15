@@ -4,11 +4,13 @@ import SectionHeading from "../../../Utilities/SectionHeading";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import CourseCard from "./CourseCard";
 import { useState } from "react";
+import TanstackQueryErrorMessage from "../../../Utilities/TanstackQueryErrorMessage";
 
 
 const Courses = () => {
     const axiosSecure = useAxiosSecure();
     const [searchedCourseTitle, setSearchedCourseTitle] = useState("");
+    
     const { data: getAllCourses = [], isError, error, isPending } = useQuery({
         queryKey: ["getAllCourses", searchedCourseTitle],
         queryFn: async () => {
@@ -40,7 +42,7 @@ const Courses = () => {
                 </label>
             </div>
 
-            {isError && <p className="text-2xl text-error text-center">{error.message}</p>}
+            {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
             {isPending && <LoadingSpinner />}
 

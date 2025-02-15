@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import SectionHeading from "../../../Utilities/SectionHeading";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import TanstackQueryErrorMessage from "../../../Utilities/TanstackQueryErrorMessage";
 
 
 const EditUserDetails = () => {
@@ -132,9 +133,7 @@ const EditUserDetails = () => {
             </div>
 
             {
-                isError && <div>
-                    <p className="text-error text-lg font-medium">{error?.message}</p>
-                </div>
+                isError && <TanstackQueryErrorMessage errorMessage={error.message} />
             }
 
             {/* user update form */}

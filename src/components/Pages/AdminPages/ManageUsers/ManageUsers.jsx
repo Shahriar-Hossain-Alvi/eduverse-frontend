@@ -4,6 +4,7 @@ import LoadingSpinner from "../../../Utilities/LoadingSpinner";
 import SectionHeading from "../../../Utilities/SectionHeading";
 import UserTableRow from "../../../Utilities/UserTableRow";
 import { useState } from "react";
+import TanstackQueryErrorMessage from "../../../Utilities/TanstackQueryErrorMessage";
 
 const ManageUsers = () => {
     const axiosSecure = useAxiosSecure();
@@ -44,7 +45,7 @@ const ManageUsers = () => {
             </div>
 
 
-            {isError && <p className="text-2xl text-error text-center">{error.message}</p>}
+            {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
 
             {getAllUsers.length === 0 && <p className="text-2xl text-error text-center my-5">User List is empty</p>}

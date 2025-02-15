@@ -11,6 +11,7 @@ import { MdClose } from "react-icons/md";
 import { isEqual } from "lodash";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
 import Swal from "sweetalert2";
+import TanstackQueryErrorMessage from "../../../Utilities/TanstackQueryErrorMessage";
 
 
 const AssignFaculty = ({ assigned_faculty, courseId, setShowFacultyAssignmentForm, refetch }) => {
@@ -99,9 +100,11 @@ const AssignFaculty = ({ assigned_faculty, courseId, setShowFacultyAssignmentFor
                         setFacultyAssignLoading(true);
                         const assigned_faculty = selectedFaculties.map(faculty => faculty.value);
 
+                        // add assigned faculty array to the courses collection
                         const res = await axiosSecure.patch(`/courses/${courseId}`, { assigned_faculty });
 
                         if (res.data.success === true) {
+                            // send a post request to update the courseFacultyAssignment collection
                             const res = await axiosSecure.post(`/courseFacultyAssignments`, { course_id: courseId, users_id: assigned_faculty });
 
                             if (res.data.success === true) {
@@ -129,9 +132,12 @@ const AssignFaculty = ({ assigned_faculty, courseId, setShowFacultyAssignmentFor
             setFacultyAssignLoading(true);
             const assigned_faculty = selectedFaculties.map(faculty => faculty.value);
 
+
+            // add assigned faculty array to the courses collection
             const res = await axiosSecure.patch(`/courses/${courseId}`, { assigned_faculty });
 
             if (res.data.success === true) {
+                // send a post request to update the courseFacultyAssignment
                 const res = await axiosSecure.post(`/courseFacultyAssignments`, { course_id: courseId, users_id: assigned_faculty });
 
                 if (res.data.success === true) {
@@ -159,7 +165,7 @@ const AssignFaculty = ({ assigned_faculty, courseId, setShowFacultyAssignmentFor
         <div>
             <Toaster />
 
-            {isError && <p className="text-2xl text-error text-center">{error.message}</p>}
+            {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
 
             {/* show currently assigned faculty */}

@@ -12,6 +12,7 @@ import Select from 'react-select'
 import { CgSpinnerTwoAlt } from "react-icons/cg";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
+import TanstackQueryErrorMessage from "../../../Utilities/TanstackQueryErrorMessage";
 
 const CreateNewCourse = () => {
     const myCloudName = import.meta.env.VITE_Cloudinary_Cloud_Name;
@@ -122,7 +123,7 @@ const CreateNewCourse = () => {
             <SectionHeading title="Add a New Course" />
             <Toaster />
 
-            {isError && <p className="text-2xl text-error text-center">{error.message}</p>}
+            {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
             {/* form starts here */}
             <form onSubmit={handleSubmit(handleAddNewCourse)} className="divide-y divide-gray-200">

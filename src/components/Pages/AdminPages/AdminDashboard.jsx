@@ -3,6 +3,7 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import LoadingSpinner from "../../Utilities/LoadingSpinner";
 import { formatDistanceToNow } from "date-fns";
 import SectionHeading from "../../Utilities/SectionHeading";
+import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
 
 
 const AdminDashboard = () => {
@@ -57,7 +58,7 @@ const AdminDashboard = () => {
                 {
                     isError && <div className="bg-base-300 p-3 md:p-6 rounded-lg shadow-md">
                         <h3 className="text-xl font-semibold mb-2">Error Happened</h3>
-                        <p className="text-3xl font-bold text-indigo-600">{error.message}</p>
+                        <TanstackQueryErrorMessage errorMessage={error.message} />
                     </div>
                 }
             </div>
