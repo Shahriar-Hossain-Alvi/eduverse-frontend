@@ -4,6 +4,7 @@ import { LuBookOpenCheck } from 'react-icons/lu';
 import useAuth from '../../../Hooks/useAuth';
 import { Link } from 'react-router';
 import { MdOutlineAirlineSeatReclineNormal } from 'react-icons/md';
+import { format } from "date-fns"
 
 const CourseCard = ({ singleCourseDetails }) => {
 
@@ -106,7 +107,7 @@ const CourseCard = ({ singleCourseDetails }) => {
                 <div className="flex items-center gap-2 text-white/90">
                     <FaCalendarAlt className="h-5 w-5" />
                     <span className="text-sm">
-                        Duration: {new Date(start_date).toLocaleDateString()} - {new Date(end_date).toLocaleDateString()}
+                        Duration: {format(new Date(start_date), "MMM d, yyyy")} - {format(new Date(end_date), "MMM d, yyyy")}
                     </span>
                 </div>
 
