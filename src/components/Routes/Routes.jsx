@@ -20,6 +20,7 @@ import Courses from "../Shared/CommonShared/Courses/Courses";
 import CourseDetails from "../Shared/CommonShared/Courses/CourseDetails";
 import CreateNewCourse from "../Pages/AdminPages/Courses/CreateNewCourse";
 import FacultyAssignedCourses from "../Pages/FacultyPages/FacultyAssignedCourses";
+import SingleAssignedCourseDetails from "../Pages/FacultyPages/SingleAssignedCourseDetails";
 
 
 const router = createBrowserRouter(
@@ -177,6 +178,15 @@ const router = createBrowserRouter(
                     element={
                         <PrivateRoute role="faculty">
                             <FacultyAssignedCourses />
+                        </PrivateRoute>
+                    }
+                />
+
+                <Route
+                    path="myCourses/:id"
+                    element={
+                        <PrivateRoute role="faculty">
+                            <SingleAssignedCourseDetails />
                         </PrivateRoute>
                     }
                 />

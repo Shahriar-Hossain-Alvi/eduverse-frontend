@@ -12,8 +12,6 @@ const FacultyAssignedCourses = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
-    console.log(user._id);
-
     const { data: singleFacultyAssignedCoursesData = [], isPending, isError, error } = useQuery({
         queryKey: ["singleFacultyAssignedCoursesData", user._id],
         queryFn: async () => {
@@ -25,7 +23,6 @@ const FacultyAssignedCourses = () => {
 
     if (isPending) return <LoadingSpinner />
 
-    console.log(singleFacultyAssignedCoursesData);
 
     return (
         <div className="flex-1 p-3 md:p-8">
@@ -36,18 +33,22 @@ const FacultyAssignedCourses = () => {
             <div>
                 <SectionHeading title="My Assigned Courses" />
 
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div className="grid grid-cols-1 gap-6">
                     {singleFacultyAssignedCoursesData.map((assignedCourse) => (
-                        <div key={assignedCourse._id} className="bg-green-700 overflow-hidden shadow-lg rounded-lg">
-                            <div className="relative pb-48">
+                        // card
+                        <div key={assignedCourse._id} className="bg-green-700 overflow-hidden shadow-lg rounded-lg grid grid-cols-6 gap-3 p-3">
+
+                            {/* cover image */}
+                            <div className="flex rounded-md col-span-2">
                                 <img
-                                    className="absolute h-full w-full object-fill"
+                                    className="w-full rounded-md object-fill"
                                     src={assignedCourse.course_id.cover_url}
                                     alt={assignedCourse.course_id.title}
                                 />
                             </div>
 
-                            <div className="p-6">
+
+                            <div className="col-span-4">
                                 <h2 className="text-xl font-bold text-white mb-2">{assignedCourse.course_id.title}</h2>
 
                                 {/* three badges */}
@@ -63,50 +64,38 @@ const FacultyAssignedCourses = () => {
                                     )}
                                 </div>
 
-                                {/* Dates */}
-                                <div className="mb-4 text-white">
-                                    <h3 className="text-lg font-semibold mb-2 ">Course Dates</h3>
+                                {/* Date and co-faculty */}
+                                <div className="flex gap-5">
+                                    {/* Dates */}
+                                    <div className="mb-4 text-white">
+                                        <h3 className="text-lg font-semibold mb-2 ">Course Dates</h3>
 
-                                    <p className="text-sm">
-                                        Start: {format(new Date(assignedCourse.course_id.start_date), "MMMM d, yyyy")}
-                                    </p>
+                                        <p className="text-sm">
+                                            Start: {format(new Date(assignedCourse.course_id.start_date), "MMMM d, yyyy")}
+                                        </p>
 
-                                    <p className="text-sm">
-                                        End: {format(new Date(assignedCourse.course_id.end_date), "MMMM d, yyyy")}
-                                    </p>
+                                        <p className="text-sm">
+                                            End: {format(new Date(assignedCourse.course_id.end_date), "MMMM d, yyyy")}
+                                        </p>
+                                    </div>
+
+                                    {/* Co-Faculty */}
+                                    <div className="mb-4 text-white">
+                                        <h3 className="text-lg font-semibold mb-2">Faculty</h3>
+
+                                        <ul className="space-y-1">
+                                            {assignedCourse.users_id.map((user) => (
+                                                <li key={user._id} className="text-sm">
+                                                    {user.first_name} {user.last_name}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
                                 </div>
 
-                                {/* Co-Faculty */}
-                                <div className="mb-4 text-white">
-                                    <h3 className="text-lg font-semibold mb-2">Co-faculty</h3>
-
-                                    <ul className="space-y-1">
-                                        {assignedCourse.users_id.map((user) => (
-                                            <li key={user._id} className="text-sm">
-                                                {user.first_name} {user.last_name} ({user.email})
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-
-                                {/* prerequisites */}
-                                <div className="text-white mb-3">
-                                    <h3 className="text-lg font-semibold mb-2">Prerequisites</h3>
-
-                                    {assignedCourse.course_id.prerequisites.length === 0 && <span className="text-center text-error font-semibold uppercase text-lg">None</span>}
-
-                                    {assignedCourse.course_id.prerequisites.map((prerequisite) => (
-                                        <div key={prerequisite._id} className=" text-white flex justify-between gap-2 items-center border p-2 rounded-lg">
-                                            <div className="space-y-1">
-                                                <h2>{prerequisite.title}</h2>
-                                                <button className="badge badge-success text-white">{prerequisite.credits} Credits</button>
-                                            </div>
-                                            <Link to={`/${user.user_role}/courses/${prerequisite._id}`} className="btn btn-success text-white btn-sm">View</Link>
-                                        </div>
-                                    ))}
-                                </div>
+                                {/* view details button */}
                                 <div className="flex justify-end">
-                                    <button className="btn btn-primary">View Details</button>
+                                    <Link to={`/faculty/myCourses/${assignedCourse._id}`} className="btn btn-block">View </Link>
                                 </div>
                             </div>
                         </div>
