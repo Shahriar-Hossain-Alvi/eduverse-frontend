@@ -21,6 +21,7 @@ import CourseDetails from "../Shared/CommonShared/Courses/CourseDetails";
 import CreateNewCourse from "../Pages/AdminPages/Courses/CreateNewCourse";
 import FacultyAssignedCourses from "../Pages/FacultyPages/FacultyAssignedCourses";
 import SingleAssignedCourseDetails from "../Pages/FacultyPages/SingleAssignedCourseDetails";
+import StudentAcademicInfo from "../Shared/CommonShared/StudentAcademicInfo/StudentAcademicInfo";
 
 
 const router = createBrowserRouter(
@@ -36,6 +37,15 @@ const router = createBrowserRouter(
                 index
                 element={
                     <RoleBasedRedirect />
+                }
+            />
+
+
+            {/* visit users profile */}
+            <Route
+                path="StudentAcademicInfo/:id"
+                element={
+                    <StudentAcademicInfo />
                 }
             />
 
@@ -85,6 +95,7 @@ const router = createBrowserRouter(
                     </PrivateRoute>
                 } />
 
+                {/* visit users profile */}
                 <Route
                     path="users/:id"
                     element={
