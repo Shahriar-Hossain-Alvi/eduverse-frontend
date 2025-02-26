@@ -6,6 +6,7 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import SectionHeading from "../../Utilities/SectionHeading";
 import { useState } from "react";
 import { FiPlus, FiEdit, FiTrash2, FiUpload, FiLink } from "react-icons/fi";
+import EnrolledStudentList from "../../Shared/EnrolledStudentList";
 
 // todo:
 //     <h1>Show list of total enrolled students.</h1>
@@ -43,21 +44,7 @@ const SingleAssignedCourseDetails = () => {
     } = singleAssignedCourseObject;
 
 
-    // fetch enrolled students using course id
-    const { data: singleAssignedCourseEnrollmentList = [], isError: isEnrollmentError, isPending: isEnrollmentPending } = useQuery({
-        queryKey: ["singleAssignedCourseEnrollmentList", course_id],
-        queryFn: async () => {
-            const res = await axiosSecure.get(`/courseStudentEnrollment/enrollmentList/${course_id?._id}`) // fetch enrolled students using course id
-
-            return res.data.data;
-        },
-        enabled: !!course_id // Runs only when course_id is available
-    });
-
-    console.log(singleAssignedCourseEnrollmentList);
-
-
-    if (isPending || isEnrollmentPending) return <LoadingSpinner />
+    if (isPending) return <LoadingSpinner />
 
 
     const handleScheduleSubmit = (e) => {
@@ -91,42 +78,26 @@ const SingleAssignedCourseDetails = () => {
 
     return (
         <div className="flex-1 p-3 md:p-8">
+            {/* Error messages */}
             {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
-            {isEnrollmentError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
+
+            {/* title and description */}
             <SectionHeading title={course_id.title} />
 
             <p className="font-medium text-lg mb-5">{course_id.description}</p>
 
-            <h2 className="text-2xl font-semibold mt-6 mb-3">Enrolled Students</h2>
+
+
+            <SectionHeading title="Enrolled Students" />
 
             {/* enrolled student list */}
-            <div className="overflow-x-auto">
-                <table className="table">
-                    {/* head */}
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {singleAssignedCourseEnrollmentList.map((student, index) => (
-                            <tr key={student._id}>
-                                <th>{index + 1}</th>
-                                <td>{student.users_id.first_name} {student.users_id.last_name}</td>
-                                <td>{student.users_id.email}</td>
-                                <td><Link to={`/StudentAcademicInfo/${student.users_id._id}`} className="btn btn-success btn-sm text-white">Profile</Link></td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+            <EnrolledStudentList course_id={course_id._id} />
 
 
-            <h2 className="text-2xl font-semibold text-gray-900 mt-6 mb-3">Class Schedules</h2>
+            {/* show class schedules */}
+            <SectionHeading title="Class Schedules" />
+            
             <button
                 onClick={() => setShowScheduleForm(!showScheduleForm)}
                 className="mb-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded inline-flex items-center"
