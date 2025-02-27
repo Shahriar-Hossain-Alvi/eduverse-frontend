@@ -7,6 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { handleError } from "../Utilities/HandleError";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import PropTypes from "prop-types";
+import { CgClose, CgSpinnerTwoAlt } from "react-icons/cg";
 
 
 const ClassScheduleForm = ({ course_id, faculty }) => {
@@ -14,6 +15,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
 
     const [schedules, setSchedules] = useState([])
     const [showScheduleForm, setShowScheduleForm] = useState(false);
+    const [formLoading, setFormLoading] = useState(false);
 
 
 
@@ -49,10 +51,12 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
         console.log(classScheduleData);
 
         try {
+            setFormLoading(true);
             const res = await axiosSecure.post("/classes", classScheduleData);
 
             if (res.data.success) {
                 reset();
+                setFormLoading(false);
                 toast.success(res.data.message, {
                     duration: 2500,
                     position: "top-center"
@@ -60,6 +64,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
             }
         } catch (error) {
             handleError(error, "Something went wrong, try again later!");
+            setFormLoading(false);
         }
 
         setShowScheduleForm(false);
@@ -88,9 +93,14 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
             {/* toggle schedule form */}
             <button
                 onClick={() => setShowScheduleForm(!showScheduleForm)}
-                className="mb-4 btn bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg"
+                className={`mb-4 btn ${showScheduleForm? "bg-error hover:bg-red-600" : "bg-blue-500 hover:bg-blue-600"} text-white font-bold rounded-lg`}
             >
-                <FiPlus className="mr-2" /> Add New Schedule
+                {
+                    showScheduleForm ? <>
+                    <CgClose className="mr-2" /> Cancel </> : <>
+                    <FiPlus className="mr-2" /> Add New Schedule</>
+                }
+                
             </button>
 
 
@@ -171,8 +181,10 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
                     </div>
 
 
-                    <button type="submit" className="btn btn-success text-white font-bold  rounded">
-                        Add Schedule
+                    <button type="submit" className={`btn ${formLoading ? "btn-disabled" : "btn-success text-white font-bold"}  rounded`}>
+                        {
+                            formLoading ? <CgSpinnerTwoAlt className="animate-spin" /> : "Add Schedule"
+                        }
                     </button>
                 </form>
             )}
