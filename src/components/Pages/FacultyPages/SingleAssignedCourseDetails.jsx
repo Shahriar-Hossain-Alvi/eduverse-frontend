@@ -7,7 +7,7 @@ import SectionHeading from "../../Utilities/SectionHeading";
 import { useState } from "react";
 import { FiPlus, FiEdit, FiTrash2, FiUpload, FiLink } from "react-icons/fi";
 import EnrolledStudentList from "../../Shared/EnrolledStudentList";
-import ClassScheduleForm from "../../Shared/ClassScheduleForm";
+import ClassScheduleFormAndList from "../../Shared/ClassScheduleFormAndList";
 
 // todo:
 //     <h1>Show list of total enrolled students.</h1>
@@ -74,7 +74,7 @@ const SingleAssignedCourseDetails = () => {
 
 
             {/* class schedules form*/}
-            <ClassScheduleForm course_id={course_id._id} faculty={users_id} />
+            <ClassScheduleFormAndList course_id={course_id._id} faculty={users_id} />
 
 
 

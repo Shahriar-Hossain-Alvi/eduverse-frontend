@@ -8,6 +8,8 @@ import { handleError } from "../Utilities/HandleError";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import PropTypes from "prop-types";
 import { CgClose, CgSpinnerTwoAlt } from "react-icons/cg";
+import { useQuery } from "@tanstack/react-query";
+import LoadingSpinner from "../Utilities/LoadingSpinner";
 
 
 const ClassScheduleForm = ({ course_id, faculty }) => {
@@ -21,6 +23,21 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
 
     // hook form
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
+
+
+    // fetch all the classes of a course
+    const { data: classList = [], isPending, isError, error, refetch } = useQuery({
+        queryKey: ["classList"],
+        queryFn: async () => {
+            const res = await axiosSecure.get(`/classes/${course_id}`);
+
+            return res.data.data;
+        },
+        enabled: !!course_id
+    })
+
+    console.log(classList);
+
 
 
     const handleScheduleSubmit = async (data) => {
@@ -48,8 +65,6 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
             title, description, scheduled_time: fullDateTime, course_id, faculty_id
         }
 
-        console.log(classScheduleData);
-
         try {
             setFormLoading(true);
             const res = await axiosSecure.post("/classes", classScheduleData);
@@ -60,7 +75,8 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
                 toast.success(res.data.message, {
                     duration: 2500,
                     position: "top-center"
-                })
+                });
+                refetch();
             }
         } catch (error) {
             handleError(error, "Something went wrong, try again later!");
@@ -93,14 +109,14 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
             {/* toggle schedule form */}
             <button
                 onClick={() => setShowScheduleForm(!showScheduleForm)}
-                className={`mb-4 btn ${showScheduleForm? "bg-error hover:bg-red-600" : "bg-blue-500 hover:bg-blue-600"} text-white font-bold rounded-lg`}
+                className={`mb-4 btn ${showScheduleForm ? "bg-error hover:bg-red-600" : "bg-blue-500 hover:bg-blue-600"} text-white font-bold rounded-lg`}
             >
                 {
                     showScheduleForm ? <>
-                    <CgClose className="mr-2" /> Cancel </> : <>
-                    <FiPlus className="mr-2" /> Add New Schedule</>
+                        <CgClose className="mr-2" /> Cancel </> : <>
+                        <FiPlus className="mr-2" /> Add New Schedule</>
                 }
-                
+
             </button>
 
 
@@ -192,28 +208,42 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
 
 
             {/* display class schedules */}
-            <ul className="space-y-2">
-                {schedules.map((schedule) => (
-                    <li key={schedule.id} className="flex justify-between items-center bg-gray-100 p-3 rounded">
-                        <div>
-                            <h3 className="font-semibold">{schedule.title}</h3>
-                            <p className="text-sm text-gray-600">{schedule.description}</p>
-                            <p className="text-sm text-gray-500">{new Date(schedule.scheduled_time).toLocaleString()}</p>
-                        </div>
-                        <div>
-                            <button
-                                onClick={() => handleScheduleUpdate(schedule.id)}
-                                className="text-blue-500 hover:text-blue-600 mr-2"
-                            >
-                                <FiEdit />
-                            </button>
-                            <button onClick={() => handleScheduleDelete(schedule.id)} className="text-red-500 hover:text-red-600">
-                                <FiTrash2 />
-                            </button>
-                        </div>
-                    </li>
-                ))}
-            </ul>
+            <div>
+                {isPending && <LoadingSpinner />}
+
+
+                <ul className="space-y-2">
+                    {classList.map((singleClass) => (
+                        <li key={singleClass._id} className="flex justify-between items-center bg-base-300 border p-3 rounded">
+
+                            <div className="space-y-1">
+                                <h3 className="font-semibold">{singleClass.title}</h3>
+
+                                <p className="text-sm">{singleClass.description}</p>
+
+                                <p className="text-sm">
+                                    Class Time:
+
+                                    <button className="badge badge-success text-white ml-2 rounded">
+                                        {format(singleClass.scheduled_time, "yyyy-MM-dd, HH:MM a")}
+                                    </button>
+                                </p>
+                            </div>
+                            <div>
+                                <button
+                                    onClick={() => handleScheduleUpdate(singleClass._id)}
+                                    className="text-blue-500 hover:text-blue-600 mr-2"
+                                >
+                                    <FiEdit />
+                                </button>
+                                <button onClick={() => handleScheduleDelete(singleClass._id)} className="text-red-500 hover:text-red-600">
+                                    <FiTrash2 />
+                                </button>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 };
