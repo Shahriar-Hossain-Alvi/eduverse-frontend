@@ -69,7 +69,7 @@ const CreateNewCourse = () => {
             if (cloudinaryRes.status === 200) {
                 const uploadedPhotoUrl = cloudinaryRes.data.secure_url;
 
-                const currentDate = new Date().toISOString().slice(0, 16);
+                const currentDate = new Date().toISOString().slice(0, 10);
                 const title = data.title;
                 const description = data.description;
                 const credits = parseFloat(data.credits);
@@ -201,7 +201,7 @@ const CreateNewCourse = () => {
                     </label>
 
                     <div className="col-span-2">
-                        <input type="date" min={new Date().toISOString().slice(0, 16)} {...register("start_date", { required: "Start date is required" })} className="mt-1 w-full border-gray-300 rounded-md input focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                        <input type="date" min={new Date().toISOString().slice(0, 10)} {...register("start_date", { required: "Start date is required" })} className="mt-1 w-full border-gray-300 rounded-md input focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                         {errors.start_date && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.start_date.message}</p>}
                     </div>
                 </div>
@@ -215,7 +215,7 @@ const CreateNewCourse = () => {
                     </label>
 
                     <div className="col-span-2">
-                        <input type="date" {...register("end_date", { required: "End date is required" })} className="mt-1 w-full border-gray-300 rounded-md input focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Add course finishing date" />
+                        <input type="date" min={new Date().toISOString().slice(0, 10)} {...register("end_date", { required: "End date is required" })} className="mt-1 w-full border-gray-300 rounded-md input focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Add course finishing date" />
                         {errors.end_date && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.end_date.message}</p>}
                     </div>
                 </div>

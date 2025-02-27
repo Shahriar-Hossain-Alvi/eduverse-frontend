@@ -23,8 +23,6 @@ const FacultyAssignedCourses = () => {
 
     if (isPending) return <LoadingSpinner />
 
-    console.log(singleFacultyAssignedCoursesData);
-
     return (
         <div className="flex-1 p-3 md:p-8">
 
