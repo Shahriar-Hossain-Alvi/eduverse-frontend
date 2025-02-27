@@ -10,19 +10,23 @@ import PropTypes from "prop-types";
 import { CgClose, CgSpinnerTwoAlt } from "react-icons/cg";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../Utilities/LoadingSpinner";
+import TanstackQueryErrorMessage from "../Utilities/TanstackQueryErrorMessage";
+import Swal from "sweetalert2";
 
 
 const ClassScheduleForm = ({ course_id, faculty }) => {
     const axiosSecure = useAxiosSecure();
 
-    const [schedules, setSchedules] = useState([])
+
     const [showScheduleForm, setShowScheduleForm] = useState(false);
+    const [showUpdateScheduleForm, setShowUpdateScheduleForm] = useState(false);
     const [formLoading, setFormLoading] = useState(false);
+    const [selectedClass, setSelectedClass] = useState(null);
 
 
 
     // hook form
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
 
 
     // fetch all the classes of a course
@@ -39,7 +43,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
     console.log(classList);
 
 
-
+    // create new class schedule
     const handleScheduleSubmit = async (data) => {
 
         const currentDate = new Date().toISOString().slice(0, 10);
@@ -88,122 +92,180 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
 
 
 
-
-    const handleScheduleDelete = (id) => {
-        setSchedules(schedules.filter((schedule) => schedule.id !== id))
-    }
-
+    // update class schedule
     const handleScheduleUpdate = (id) => {
-        const scheduleToUpdate = schedules.find((schedule) => schedule.id === id);
+        setShowUpdateScheduleForm(true);
 
-        setShowScheduleForm(true)
+        const foundClass = classList.find(singleClass => singleClass._id === id);
+
+        if (foundClass) {
+            setValue("updateClassTitle", foundClass.title);
+            setValue("updateClassDescription", foundClass.description);
+            setValue("updateClassScheduledDate", foundClass.scheduled_time.split("T")[0]); // Extract date
+            setValue("updateClassScheduledTime", foundClass.scheduled_time.split("T")[1]?.slice(0, 5));
+        }
+
+
     }
+
+
+    const handleScheduleDelete = async (id) => {
+        console.log(id);
+
+        const swalResponse = await Swal.fire({
+            title: "Do you want to delete this class schedule?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#FF0000",
+            cancelButtonColor: "#16A34A",
+            confirmButtonText: "Yes, delete it!",
+        })
+
+
+        if (swalResponse.isConfirmed) {
+
+            try {
+                const res = await axiosSecure.delete(`/classes/${id}`);
+
+                if(res.data.success){
+                    refetch();
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "This class schedule has been deleted.",
+                        icon: "success",
+                        confirmButtonColor: "#16A34A",
+                    });
+                }
+
+            } catch (error) {
+                handleError(error, "Something went wrong, Class Schedule could not be deleted. Try again later.");
+            }
+
+
+        }
+
+    }
+
+
 
 
 
     return (
-        <div>
+        <div className="mb-10">
             <Toaster />
             <SectionHeading title="Class Schedules" />
 
-            {/* toggle schedule form */}
-            <button
-                onClick={() => setShowScheduleForm(!showScheduleForm)}
-                className={`mb-4 btn ${showScheduleForm ? "bg-error hover:bg-red-600" : "bg-blue-500 hover:bg-blue-600"} text-white font-bold rounded-lg`}
-            >
-                {
-                    showScheduleForm ? <>
-                        <CgClose className="mr-2" /> Cancel </> : <>
-                        <FiPlus className="mr-2" /> Add New Schedule</>
-                }
 
-            </button>
+            {/* create class schedule form */}
+            <div>
+                {/* toggle schedule form */}
+                <button
+                    onClick={() => setShowScheduleForm(!showScheduleForm)}
+                    className={`mb-4 btn ${showScheduleForm ? "bg-error hover:bg-red-600" : "bg-blue-500 hover:bg-blue-600"} text-white font-bold rounded-lg`}
+                >
+                    {
+                        showScheduleForm ? <>
+                            <CgClose className="mr-2" /> Cancel </> : <>
+                            <FiPlus className="mr-2" /> Add New Schedule</>
+                    }
+
+                </button>
 
 
-            {/* form */}
-            {showScheduleForm && (
-                <form onSubmit={handleSubmit(handleScheduleSubmit)} className="mb-6 p-4 rounded-lg">
+                {/* form */}
+                {showScheduleForm && (
+                    <form onSubmit={handleSubmit(handleScheduleSubmit)} className="mb-6 p-4 rounded-lg">
 
-                    {/* class title */}
-                    <div className="grid grid-cols-6 gap-2">
-                        <div className="label">
-                            <span className="label-text">Title: </span>
+                        {/* class title */}
+                        <div className="grid grid-cols-6 gap-2">
+                            <div className="label">
+                                <span className="label-text">Title: </span>
+                            </div>
+
+                            <div className="col-span-5">
+                                <input
+                                    type="text"
+                                    placeholder="Class Title"
+
+                                    {...register("classTitle", { required: "Class Title is Required" })}
+
+                                    className="input input-bordered mb-2 w-full rounded-lg "
+                                />
+
+                                {errors.classTitle && <p className="text-error font-medium text-sm mb-2">{errors.classTitle.message}</p>}
+                            </div>
                         </div>
 
-                        <input
-                            type="text"
-                            placeholder="Class Title"
 
-                            {...register("classTitle", { required: "Class Title is Required" })}
+                        {/* class description */}
+                        <div className="grid grid-cols-6 gap-2">
+                            <div className="label">
+                                <span className="label-text">Description: </span>
+                            </div>
 
-                            className="input input-bordered mb-2 w-full rounded-lg col-span-5"
-                        />
+                            <div className="col-span-5">
+                                <textarea
+                                    placeholder="Class Description"
 
-                        {errors.classTitle && <p className="text-error font-medium text-sm mb-2">{errors.classTitle.message}</p>}
-                    </div>
+                                    {...register("classDescription", { required: "Class Description is required" })}
 
-
-                    {/* class description */}
-                    <div className="grid grid-cols-6 gap-2">
-                        <div className="label">
-                            <span className="label-text">Description: </span>
+                                    className="textarea textarea-bordered mb-2 w-full rounded-lg "
+                                />
+                                {errors.classDescription && <p className="text-error font-medium text-sm mb-2">{errors.classDescription.message}</p>}
+                            </div>
                         </div>
 
-                        <textarea
-                            placeholder="Class Description"
 
-                            {...register("classDescription", { required: "Class Description is required" })}
-
-                            className="textarea textarea-bordered mb-2 w-full  rounded-lg col-span-5"
-                        />
-                        {errors.classDescription && <p className="text-error font-medium text-sm mb-2">{errors.classDescription.message}</p>}
-                    </div>
-
-
-                    {/* class date */}
-                    <div className="grid grid-cols-6 gap-2
+                        {/* class date */}
+                        <div className="grid grid-cols-6 gap-2
                     ">
-                        <div className="label">
-                            <span className="label-text">Date: </span>
+                            <div className="label">
+                                <span className="label-text">Date: </span>
+                            </div>
+
+                            <div className="col-span-5">
+                                <input
+                                    type="date"
+
+                                    min={new Date().toISOString().slice(0, 10)}
+
+                                    {...register("classScheduledDate", { required: "Class Date is Required" })}
+
+                                    className="mb-2 w-full input input-bordered rounded-lg"
+                                />
+                                {errors.classScheduledDate && <p className="text-error font-medium text-sm mb-2">{errors.classScheduledDate.message}</p>}
+                            </div>
                         </div>
 
-                        <input
-                            type="date"
 
-                            min={new Date().toISOString().slice(0, 10)}
+                        {/* class time */}
+                        <div className="grid grid-cols-6 gap-2">
+                            <div className="label">
+                                <span className="label-text">Time: </span>
+                            </div>
 
-                            {...register("classScheduledDate", { required: "Class Date is Required" })}
+                            <div className="col-span-5">
+                                <input
+                                    type="time"
 
-                            className="mb-2 w-full input input-bordered rounded-lg col-span-5"
-                        />
-                        {errors.classScheduledDate && <p className="text-error font-medium text-sm mb-2">{errors.classScheduledDate.message}</p>}
-                    </div>
+                                    {...register("classScheduledTime", { required: "Class Time is Required" })}
 
-
-                    {/* class time */}
-                    <div className="grid grid-cols-6 gap-2">
-                        <div className="label">
-                            <span className="label-text">Time: </span>
+                                    className="mb-2 w-full input input-bordered rounded-lg"
+                                />
+                                {errors.classScheduledTime && <p className="text-error font-medium text-sm mb-2">{errors.classScheduledTime.message}</p>}
+                            </div>
                         </div>
 
-                        <input
-                            type="time"
 
-                            {...register("classScheduledTime", { required: "Class Time is Required" })}
-
-                            className="mb-2 w-full input input-bordered rounded-lg col-span-5"
-                        />
-                        {errors.classScheduledTime && <p className="text-error font-medium text-sm mb-2">{errors.classScheduledTime.message}</p>}
-                    </div>
-
-
-                    <button type="submit" className={`btn ${formLoading ? "btn-disabled" : "btn-success text-white font-bold"}  rounded`}>
-                        {
-                            formLoading ? <CgSpinnerTwoAlt className="animate-spin" /> : "Add Schedule"
-                        }
-                    </button>
-                </form>
-            )}
+                        <button type="submit" className={`btn ${formLoading ? "btn-disabled" : "btn-success text-white font-bold"}  rounded`}>
+                            {
+                                formLoading ? <CgSpinnerTwoAlt className="animate-spin" /> : "Add Schedule"
+                            }
+                        </button>
+                    </form>
+                )}
+            </div>
 
 
 
@@ -211,6 +273,8 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
             <div>
                 {isPending && <LoadingSpinner />}
 
+                {/* Error messages */}
+                {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
                 <ul className="space-y-2">
                     {classList.map((singleClass) => (
@@ -243,6 +307,106 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
                         </li>
                     ))}
                 </ul>
+            </div>
+
+
+
+            {/* update class schedule form */}
+            <div>
+                {/* toggle update schedule form */}
+                {
+                    showUpdateScheduleForm && <button
+                        onClick={() => setShowUpdateScheduleForm(false)}
+                        className="mb-4 btn btn-error text-white font-bold rounded-lg mt-5"
+                    >
+                        <CgClose className="mr-2" /> Cancel
+                    </button>
+                }
+
+
+                {showUpdateScheduleForm && (
+                    <form onSubmit={handleSubmit(handleScheduleUpdate)} className="mb-6 p-4 rounded-lg">
+
+                        {/* class title */}
+                        <div className="grid grid-cols-6 gap-2">
+                            <div className="label">
+                                <span className="label-text">Title: </span>
+                            </div>
+
+                            <input
+                                type="text"
+                                placeholder="Class Title"
+
+                                {...register("classTitle", { required: "Class Title is Required" })}
+
+                                className="input input-bordered mb-2 w-full rounded-lg col-span-5"
+                            />
+
+                            {errors.classTitle && <p className="text-error font-medium text-sm mb-2">{errors.classTitle.message}</p>}
+                        </div>
+
+
+                        {/* class description */}
+                        <div className="grid grid-cols-6 gap-2">
+                            <div className="label">
+                                <span className="label-text">Description: </span>
+                            </div>
+
+                            <textarea
+                                placeholder="Class Description"
+
+                                {...register("classDescription", { required: "Class Description is required" })}
+
+                                className="textarea textarea-bordered mb-2 w-full  rounded-lg col-span-5"
+                            />
+                            {errors.classDescription && <p className="text-error font-medium text-sm mb-2">{errors.classDescription.message}</p>}
+                        </div>
+
+
+                        {/* class date */}
+                        <div className="grid grid-cols-6 gap-2
+                    ">
+                            <div className="label">
+                                <span className="label-text">Date: </span>
+                            </div>
+
+                            <input
+                                type="date"
+
+                                min={new Date().toISOString().slice(0, 10)}
+
+                                {...register("classScheduledDate", { required: "Class Date is Required" })}
+
+                                className="mb-2 w-full input input-bordered rounded-lg col-span-5"
+                            />
+                            {errors.classScheduledDate && <p className="text-error font-medium text-sm mb-2">{errors.classScheduledDate.message}</p>}
+                        </div>
+
+
+                        {/* class time */}
+                        <div className="grid grid-cols-6 gap-2">
+                            <div className="label">
+                                <span className="label-text">Time: </span>
+                            </div>
+
+                            <input
+                                type="time"
+
+                                {...register("classScheduledTime", { required: "Class Time is Required" })}
+
+                                className="mb-2 w-full input input-bordered rounded-lg col-span-5"
+                            />
+                            {errors.classScheduledTime && <p className="text-error font-medium text-sm mb-2">{errors.classScheduledTime.message}</p>}
+                        </div>
+
+
+                        <button type="submit" className={`btn ${formLoading ? "btn-disabled" : "btn-success text-white font-bold"}  rounded`}>
+                            {
+                                formLoading ? <CgSpinnerTwoAlt className="animate-spin" /> : "Add Schedule"
+                            }
+                        </button>
+                    </form>
+                )}
             </div>
         </div>
     );

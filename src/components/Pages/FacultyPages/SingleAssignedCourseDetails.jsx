@@ -5,7 +5,7 @@ import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import SectionHeading from "../../Utilities/SectionHeading";
 import { useState } from "react";
-import { FiPlus, FiEdit, FiTrash2, FiUpload, FiLink } from "react-icons/fi";
+import { FiPlus, FiUpload, FiLink } from "react-icons/fi";
 import EnrolledStudentList from "../../Shared/EnrolledStudentList";
 import ClassScheduleFormAndList from "../../Shared/ClassScheduleFormAndList";
 
@@ -67,14 +67,12 @@ const SingleAssignedCourseDetails = () => {
             <p className="font-medium text-lg mb-5">{course_id.description}</p>
 
 
+            {/* class schedules form*/}
+            <ClassScheduleFormAndList course_id={course_id._id} faculty={users_id} />
+
 
             {/* enrolled student list */}
             <EnrolledStudentList course_id={course_id._id} />
-
-
-
-            {/* class schedules form*/}
-            <ClassScheduleFormAndList course_id={course_id._id} faculty={users_id} />
 
 
 
