@@ -21,7 +21,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
     const [showScheduleForm, setShowScheduleForm] = useState(false);
     const [showUpdateScheduleForm, setShowUpdateScheduleForm] = useState(false);
     const [formLoading, setFormLoading] = useState(false);
-    const [selectedClass, setSelectedClass] = useState(null);
+    const [originalClassData, setOriginalClassData] = useState(null);
 
 
 
@@ -40,7 +40,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
         enabled: !!course_id
     })
 
-    console.log(classList);
+
 
 
     // create new class schedule
@@ -51,8 +51,8 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
         const title = data.classTitle;
         const description = data.classDescription;
 
-        const classScheduledDate = data.classScheduledDate;
-        const classScheduledTime = data.classScheduledTime;
+        const classScheduledDate = (data.classScheduledDate);
+        const classScheduledTime = (data.classScheduledTime);
 
         if (currentDate > classScheduledDate) {
             return toast.error("Class schedule date can not be in the past", {
@@ -61,7 +61,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
             });
         }
 
-        const fullDateTime = (`${classScheduledDate} ${classScheduledTime}`);
+        const fullDateTime = new Date(`${classScheduledDate}T${classScheduledTime}:00.000+06:00`).toISOString();
 
         const faculty_id = faculty.map(singleFaculty => singleFaculty._id)
 
@@ -88,29 +88,97 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
         }
 
         setShowScheduleForm(false);
+        setShowUpdateScheduleForm(false);
     }
 
 
-
-    // update class schedule
-    const handleScheduleUpdate = (id) => {
+    // get class schedule data when clicked edit button
+    const handleScheduleEditButton = (id) => {
         setShowUpdateScheduleForm(true);
 
         const foundClass = classList.find(singleClass => singleClass._id === id);
 
+
         if (foundClass) {
+            setOriginalClassData(foundClass);
+
             setValue("updateClassTitle", foundClass.title);
             setValue("updateClassDescription", foundClass.description);
             setValue("updateClassScheduledDate", foundClass.scheduled_time.split("T")[0]); // Extract date
-            setValue("updateClassScheduledTime", foundClass.scheduled_time.split("T")[1]?.slice(0, 5));
+
+            // convert UTC to local time
+            const localTime = new Date(foundClass.scheduled_time).toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false
+            });
+
+            setValue("updateClassScheduledTime", localTime)
         }
-
-
     }
 
 
+    // update class schedule
+    const handleScheduleUpdate = async (data) => {
+        if (!originalClassData) return;
+        const id = originalClassData._id;
+
+        const updateClassScheduleData = {};
+
+        if (data.updateClassTitle !== originalClassData.title) {
+            updateClassScheduleData.title = data.updateClassTitle;
+        }
+
+        if (data.updateClassDescription !== originalClassData.description) {
+            updateClassScheduleData.description = data.updateClassDescription;
+        }
+
+        const newScheduleDate = data.updateClassScheduledDate;
+        const newScheduleTime = data.updateClassScheduledTime;
+
+        const newScheduled_time = new Date(`${newScheduleDate}T${newScheduleTime}:00.000+06:00`).toISOString();
+
+        if (newScheduled_time !== originalClassData.scheduled_time) {
+            updateClassScheduleData.scheduled_time = newScheduled_time;
+        }
+
+
+
+        if (Object.keys(updateClassScheduleData).length > 0) {
+            try {
+                setFormLoading(true);
+                const res = await axiosSecure.patch(`/classes/${id}`, updateClassScheduleData);
+
+                if (res.data.success) {
+                    setFormLoading(false);
+                    refetch();
+                    setShowUpdateScheduleForm(false);
+                    toast.success(res.data.message, {
+                        duration: 2500,
+                        position: "top-center"
+                    })
+                }
+
+            } catch (error) {
+                setFormLoading(false);
+                setShowUpdateScheduleForm(false);
+                handleError(error, "Class schedule update failed.")
+            }
+        }
+        else {
+            setFormLoading(false);
+            setShowUpdateScheduleForm(false);
+            toast.error("No changes detected", {
+                duration: 2500,
+                position: "top-center"
+            })
+        }
+    }
+
+
+
+    // delete a class
     const handleScheduleDelete = async (id) => {
-        console.log(id);
 
         const swalResponse = await Swal.fire({
             title: "Do you want to delete this class schedule?",
@@ -128,7 +196,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
             try {
                 const res = await axiosSecure.delete(`/classes/${id}`);
 
-                if(res.data.success){
+                if (res.data.success) {
                     refetch();
                     Swal.fire({
                         title: "Deleted!",
@@ -141,8 +209,6 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
             } catch (error) {
                 handleError(error, "Something went wrong, Class Schedule could not be deleted. Try again later.");
             }
-
-
         }
 
     }
@@ -161,7 +227,13 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
             <div>
                 {/* toggle schedule form */}
                 <button
-                    onClick={() => setShowScheduleForm(!showScheduleForm)}
+                    onClick={() => {
+                        setShowScheduleForm(!showScheduleForm);
+
+                        if (showUpdateScheduleForm) {
+                            setShowUpdateScheduleForm(false);
+                        };
+                    }}
                     className={`mb-4 btn ${showScheduleForm ? "bg-error hover:bg-red-600" : "bg-blue-500 hover:bg-blue-600"} text-white font-bold rounded-lg`}
                 >
                     {
@@ -289,13 +361,19 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
                                     Class Time:
 
                                     <button className="badge badge-success text-white ml-2 rounded">
-                                        {format(singleClass.scheduled_time, "yyyy-MM-dd, HH:MM a")}
+                                        {format(singleClass.scheduled_time, "yyyy-MM-dd, hh:mm a")}
                                     </button>
                                 </p>
                             </div>
                             <div>
                                 <button
-                                    onClick={() => handleScheduleUpdate(singleClass._id)}
+                                    onClick={() => {
+                                        handleScheduleEditButton(singleClass._id);
+
+                                        if(showScheduleForm){
+                                            setShowScheduleForm(false);
+                                        }
+                                    }}
                                     className="text-blue-500 hover:text-blue-600 mr-2"
                                 >
                                     <FiEdit />
@@ -337,12 +415,12 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
                                 type="text"
                                 placeholder="Class Title"
 
-                                {...register("classTitle", { required: "Class Title is Required" })}
+                                {...register("updateClassTitle")}
 
                                 className="input input-bordered mb-2 w-full rounded-lg col-span-5"
                             />
 
-                            {errors.classTitle && <p className="text-error font-medium text-sm mb-2">{errors.classTitle.message}</p>}
+                            {errors.updateClassTitle && <p className="text-error font-medium text-sm mb-2">{errors.updateClassTitle.message}</p>}
                         </div>
 
 
@@ -355,11 +433,11 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
                             <textarea
                                 placeholder="Class Description"
 
-                                {...register("classDescription", { required: "Class Description is required" })}
+                                {...register("updateClassDescription")}
 
                                 className="textarea textarea-bordered mb-2 w-full  rounded-lg col-span-5"
                             />
-                            {errors.classDescription && <p className="text-error font-medium text-sm mb-2">{errors.classDescription.message}</p>}
+                            {errors.updateClassDescription && <p className="text-error font-medium text-sm mb-2">{errors.updateClassDescription.message}</p>}
                         </div>
 
 
@@ -375,11 +453,11 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
 
                                 min={new Date().toISOString().slice(0, 10)}
 
-                                {...register("classScheduledDate", { required: "Class Date is Required" })}
+                                {...register("updateClassScheduledDate")}
 
                                 className="mb-2 w-full input input-bordered rounded-lg col-span-5"
                             />
-                            {errors.classScheduledDate && <p className="text-error font-medium text-sm mb-2">{errors.classScheduledDate.message}</p>}
+                            {errors.updateClassScheduledDate && <p className="text-error font-medium text-sm mb-2">{errors.updateClassScheduledDate.message}</p>}
                         </div>
 
 
@@ -392,17 +470,17 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
                             <input
                                 type="time"
 
-                                {...register("classScheduledTime", { required: "Class Time is Required" })}
+                                {...register("updateClassScheduledTime")}
 
                                 className="mb-2 w-full input input-bordered rounded-lg col-span-5"
                             />
-                            {errors.classScheduledTime && <p className="text-error font-medium text-sm mb-2">{errors.classScheduledTime.message}</p>}
+                            {errors.updateClassScheduledTime && <p className="text-error font-medium text-sm mb-2">{errors.updateClassScheduledTime.message}</p>}
                         </div>
 
 
                         <button type="submit" className={`btn ${formLoading ? "btn-disabled" : "btn-success text-white font-bold"}  rounded`}>
                             {
-                                formLoading ? <CgSpinnerTwoAlt className="animate-spin" /> : "Add Schedule"
+                                formLoading ? <CgSpinnerTwoAlt className="animate-spin" /> : "Update Schedule"
                             }
                         </button>
                     </form>

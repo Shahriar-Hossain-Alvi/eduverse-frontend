@@ -12,6 +12,7 @@
   "dependencies": {
     "@cloudinary/react": "1.13.1",
     "@cloudinary/url-gen": "1.21.0",
+    "@date-fns/tz": "^1.2.0",
     "@tanstack/react-query": "5.62.8",
     "axios": "1.7.9",
     "date-fns": "4.1.0",
