@@ -9,14 +9,14 @@ import useAuth from "../../../Hooks/useAuth";
 import { LuBookOpenCheck } from "react-icons/lu";
 import Marquee from "react-fast-marquee";
 import { IoWarningOutline } from "react-icons/io5";
-import CourseUpdateForm from "../../CourseUpdateForm";
+import CourseUpdateForm from "../../Admin&FacultyShared/CourseUpdateForm";
 import Swal from "sweetalert2";
 import { RiUserAddFill } from "react-icons/ri";
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import AssignFaculty from "../../../Pages/AdminPages/Courses/AssignFaculty";
 import toast, { Toaster } from "react-hot-toast";
-import SingleCourseEnrollmentList from "../../SingleCourseEnrollmentList";
+import SingleCourseEnrollmentList from "../../Admin&FacultyShared/SingleCourseEnrollmentList";
 import TanstackQueryErrorMessage from "../../../Utilities/TanstackQueryErrorMessage";
 
 

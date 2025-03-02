@@ -2,16 +2,16 @@ import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from '../Hooks/useAxiosSecure';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import Select from 'react-select'
-import LoadingSpinner from '../Utilities/LoadingSpinner';
+import LoadingSpinner from '../../Utilities/LoadingSpinner';
 import { CiEdit } from "react-icons/ci";
 import { GiCancel } from 'react-icons/gi';
 import { CgSpinnerTwoAlt } from "react-icons/cg";
 import toast, { Toaster } from 'react-hot-toast';
 import { isEqual } from 'lodash';
 import axios from 'axios';
-import TanstackQueryErrorMessage from '../Utilities/TanstackQueryErrorMessage';
+import TanstackQueryErrorMessage from '../../Utilities/TanstackQueryErrorMessage';
 
 
 

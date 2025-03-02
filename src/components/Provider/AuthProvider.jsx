@@ -48,7 +48,6 @@ const AuthProvider = ({ children }) => {
             return response.data.data; // Returns the full user object from the backend
         } catch (error) {
             console.error("Error fetching user info:", error);
-            // logout();
             throw error;
         }
     }, [axiosPublic])
@@ -72,8 +71,8 @@ const AuthProvider = ({ children }) => {
     // logout user remove from LS and set user to null in the state
     const logout = useCallback(() => {
         setRoleVerified(null);
-        setUser(null);
         localStorage.removeItem("access-token");
+        setUser(null);
         setLoading(false);
     }, []);
 

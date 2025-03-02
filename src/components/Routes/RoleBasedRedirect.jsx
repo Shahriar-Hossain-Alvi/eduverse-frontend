@@ -40,7 +40,7 @@ const RoleBasedRedirect = () => {
   if (loading || (user && !role)) return <LoadingSpinner />;
 
   if (!user)  {
-    console.log("Go to sign in from role based redirect  line 43");
+    console.log("Go to sign in from role based redirect line 43");
     return <Navigate to="/signin" />
   };
 

@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "../Hooks/useAxiosSecure";
-import LoadingSpinner from "../Utilities/LoadingSpinner";
-import TanstackQueryErrorMessage from "../Utilities/TanstackQueryErrorMessage";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import LoadingSpinner from "../../Utilities/LoadingSpinner";
+import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
 import { Link } from "react-router";
 import PropTypes from 'prop-types';
-import SectionHeading from "../Utilities/SectionHeading";
+import SectionHeading from "../../Utilities/SectionHeading";
 
 
 const EnrolledStudentList = ({ course_id }) => {

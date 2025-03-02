@@ -6,8 +6,8 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import SectionHeading from "../../Utilities/SectionHeading";
 import { useState } from "react";
 import { FiPlus, FiUpload, FiLink } from "react-icons/fi";
-import EnrolledStudentList from "../../Shared/EnrolledStudentList";
-import ClassScheduleFormAndList from "../../Shared/ClassScheduleFormAndList";
+import EnrolledStudentList from "../../Shared/Admin&FacultyShared/EnrolledStudentList";
+import ClassScheduleFormAndList from "../../Shared/Admin&FacultyShared/ClassScheduleFormAndList"
 
 // todo:
 //     <h1>Show list of total enrolled students.</h1>
@@ -71,10 +71,7 @@ const SingleAssignedCourseDetails = () => {
             <ClassScheduleFormAndList course_id={course_id._id} faculty={users_id} />
 
 
-            {/* enrolled student list */}
-            <EnrolledStudentList course_id={course_id._id} />
-
-
+            {/* upload course materials */}
 
             <h2 className="text-2xl font-semibold text-gray-900 mt-6 mb-3">Course Materials</h2>
             <button
@@ -142,6 +139,10 @@ const SingleAssignedCourseDetails = () => {
                     </li>
                 ))}
             </ul>
+
+
+            {/* enrolled student list */}
+            <EnrolledStudentList course_id={course_id._id} />
 
         </div>
     );

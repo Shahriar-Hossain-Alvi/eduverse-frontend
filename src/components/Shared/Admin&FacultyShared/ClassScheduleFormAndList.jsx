@@ -1,16 +1,16 @@
 import { useState } from "react";
-import SectionHeading from "../Utilities/SectionHeading";
+import SectionHeading from "../../Utilities/SectionHeading";
 import { FiEdit, FiPlus, FiTrash2 } from "react-icons/fi";
 import { useForm } from "react-hook-form";
-import { format, parse, parseISO } from "date-fns"
+import { format } from "date-fns"
 import toast, { Toaster } from "react-hot-toast";
-import { handleError } from "../Utilities/HandleError";
-import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { handleError } from "../../Utilities/HandleError";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import PropTypes from "prop-types";
 import { CgClose, CgSpinnerTwoAlt } from "react-icons/cg";
 import { useQuery } from "@tanstack/react-query";
-import LoadingSpinner from "../Utilities/LoadingSpinner";
-import TanstackQueryErrorMessage from "../Utilities/TanstackQueryErrorMessage";
+import LoadingSpinner from "../../Utilities/LoadingSpinner";
+import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
 import Swal from "sweetalert2";
 
 
@@ -340,55 +340,6 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
             </div>
 
 
-
-            {/* display class schedules */}
-            <div>
-                {isPending && <LoadingSpinner />}
-
-                {/* Error messages */}
-                {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
-
-                <ul className="space-y-2">
-                    {classList.map((singleClass) => (
-                        <li key={singleClass._id} className="flex justify-between items-center bg-base-300 border p-3 rounded">
-
-                            <div className="space-y-1">
-                                <h3 className="font-semibold">{singleClass.title}</h3>
-
-                                <p className="text-sm">{singleClass.description}</p>
-
-                                <p className="text-sm">
-                                    Class Time:
-
-                                    <button className="badge badge-success text-white ml-2 rounded">
-                                        {format(singleClass.scheduled_time, "yyyy-MM-dd, hh:mm a")}
-                                    </button>
-                                </p>
-                            </div>
-                            <div>
-                                <button
-                                    onClick={() => {
-                                        handleScheduleEditButton(singleClass._id);
-
-                                        if(showScheduleForm){
-                                            setShowScheduleForm(false);
-                                        }
-                                    }}
-                                    className="text-blue-500 hover:text-blue-600 mr-2"
-                                >
-                                    <FiEdit />
-                                </button>
-                                <button onClick={() => handleScheduleDelete(singleClass._id)} className="text-red-500 hover:text-red-600">
-                                    <FiTrash2 />
-                                </button>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-
-
-
             {/* update class schedule form */}
             <div>
                 {/* toggle update schedule form */}
@@ -485,6 +436,54 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
                         </button>
                     </form>
                 )}
+            </div>
+
+
+
+            {/* display class schedules */}
+            <div>
+                {isPending && <LoadingSpinner />}
+
+                {/* Error messages */}
+                {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
+
+                <ul className="space-y-2">
+                    {classList.map((singleClass) => (
+                        <li key={singleClass._id} className="flex justify-between items-center bg-base-300 border p-3 rounded">
+
+                            <div className="space-y-1">
+                                <h3 className="font-semibold">{singleClass.title}</h3>
+
+                                <p className="text-sm">{singleClass.description}</p>
+
+                                <p className="text-sm">
+                                    Class Time:
+
+                                    <button className="badge badge-success text-white ml-2 rounded">
+                                        {format(singleClass.scheduled_time, "yyyy-MM-dd, hh:mm a")}
+                                    </button>
+                                </p>
+                            </div>
+                            <div>
+                                <button
+                                    onClick={() => {
+                                        handleScheduleEditButton(singleClass._id);
+
+                                        if (showScheduleForm) {
+                                            setShowScheduleForm(false);
+                                        }
+                                    }}
+                                    className="text-blue-500 hover:text-blue-600 mr-2"
+                                >
+                                    <FiEdit />
+                                </button>
+                                <button onClick={() => handleScheduleDelete(singleClass._id)} className="text-red-500 hover:text-red-600">
+                                    <FiTrash2 />
+                                </button>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
             </div>
         </div>
     );

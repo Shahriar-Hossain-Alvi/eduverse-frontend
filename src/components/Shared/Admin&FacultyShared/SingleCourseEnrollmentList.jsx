@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "../Hooks/useAxiosSecure";
-import SectionHeading from "../Utilities/SectionHeading";
-import LoadingSpinner from "../Utilities/LoadingSpinner";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import SectionHeading from "../../Utilities/SectionHeading";
+import LoadingSpinner from "../../Utilities/LoadingSpinner";
 import PropTypes from "prop-types";
 import { Link } from "react-router";
-import useAuth from "../Hooks/useAuth";
-import TanstackQueryErrorMessage from "../Utilities/TanstackQueryErrorMessage";
+import useAuth from "../../Hooks/useAuth";
+import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
 
 
 const SingleCourseEnrollmentList = ({ id }) => {
