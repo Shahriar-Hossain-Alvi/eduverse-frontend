@@ -3,25 +3,87 @@ import { useForm } from "react-hook-form";
 import { FiLink, FiPlus, FiUpload } from "react-icons/fi";
 import SectionHeading from "../../Utilities/SectionHeading";
 import { CgClose } from "react-icons/cg";
+import { handleError } from "../../Utilities/HandleError";
+import useAuth from "../../Hooks/useAuth";
+import PropTypes from 'prop-types';
+import { use } from "react";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import axios from "axios";
+import { CgSpinnerTwoAlt } from "react-icons/cg";
+import toast, { Toaster } from "react-hot-toast";
 
-const CourseMaterialFormAndList = () => {
+
+
+
+const CourseMaterialFormAndList = ({ course_id }) => {
+    const myCloudName = import.meta.env.VITE_Cloudinary_Cloud_Name;
+    const myUploadPreset = import.meta.env.VITE_Cloudinary_Upload_Preset;
+
+    const { user } = useAuth();
+    const axiosSecure = useAxiosSecure();
+
     const [showMaterialForm, setShowMaterialForm] = useState(false); // show/hide material form
-    const [materials, setMaterials] = useState([])
+    const [material_url, setMaterialUrl] = useState("");
+    const [formSubmissionLoading, setFormSubmissionLoading] = useState(false);
+
+    const [materials, setMaterials] = useState([]);
+
 
     // hook form
-    const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
 
     const materialType = watch("fileType", "file");
 
 
-    const handleMaterialSubmit = (data) => {
+    const handleMaterialSubmit = async (data) => {
+        const title = data.ClassMaterialTitle;
+        const description = data.ClassMaterialDescription;
+        const created_by = user._id;
+        const materialType = data.fileType;
 
-        console.log(data);
+
+        if (materialType === "file") {
+            const file = data.file[0]; // get the pdf file
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", myUploadPreset);
+            formData.append("folder", "course_materials");
+
+            try {
+                setFormSubmissionLoading(true);
+                const cloudinaryRes = await axios.post(`https://api.cloudinary.com/v1_1/${myCloudName}/raw/upload`, formData);
+
+                if (cloudinaryRes.status === 200) {
+                    toast.success("File uploaded successfully.", {
+                        duration: 3500,
+                        position: "top-center"
+                    });
+                    setMaterialUrl(cloudinaryRes?.data?.secure_url);
+
+                    if (material_url !== "") {
+                        const courseMaterialData = {
+                            title, description, material_url, course_id, created_by
+                        }
+                        console.log(courseMaterialData);
+                        setFormSubmissionLoading(false);
+                    }
+                }
+            } catch (error) {
+                handleError(error, "Failed to upload file.");
+                setFormSubmissionLoading(false);
+            }
+        }
+        if (materialType === "url") {
+            const material_url = data.url;
+            console.log(typeof (material_url));
+        }
     }
 
 
     return (
         <div>
+            <Toaster />
             <SectionHeading title="Course Materials" />
 
             <button
@@ -58,6 +120,27 @@ const CourseMaterialFormAndList = () => {
                             />
 
                             {errors.ClassMaterialTitle && <p className="text-error font-medium text-sm mb-2">{errors.ClassMaterialTitle.message}</p>}
+                        </div>
+                    </div>
+
+
+                    {/* description */}
+                    <div className="grid grid-cols-6 gap-2">
+                        <div className="label">
+                            <span className="label-text">Description: </span>
+                        </div>
+
+                        <div className="col-span-5">
+                            <input
+                                type="text"
+                                placeholder="Material Description"
+
+                                {...register("ClassMaterialDescription", { required: "Material Description is required" })}
+
+                                className="input input-bordered mb-2 w-full rounded-lg "
+                            />
+
+                            {errors.ClassMaterialDescription && <p className="text-error font-medium text-sm mb-2">{errors.ClassMaterialDescription.message}</p>}
                         </div>
                     </div>
 
@@ -100,9 +183,18 @@ const CourseMaterialFormAndList = () => {
                     )}
 
 
-                    <button type="submit" className="bg-success text-white font-bold py-2 px-4 rounded">
-                        Upload Material
-                    </button>
+                    {/* submit button */}
+                    {
+                        formSubmissionLoading ?
+                            <button className="btn w-36 btn-disabled py-2 px-4 rounded">
+                                <CgSpinnerTwoAlt className="animate-spin " />
+                            </button>
+                            :
+                            <button type="submit" className="btn btn-success text-white font-bold py-2 px-4 rounded">
+                                Upload Material
+                            </button>
+                    }
+
                 </form>
             )}
 
@@ -129,5 +221,9 @@ const CourseMaterialFormAndList = () => {
         </div>
     );
 };
+
+CourseMaterialFormAndList.propTypes = {
+    course_id: PropTypes.number
+}
 
 export default CourseMaterialFormAndList;

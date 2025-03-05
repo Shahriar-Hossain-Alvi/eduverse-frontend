@@ -59,7 +59,7 @@ const SingleAssignedCourseDetails = () => {
 
 
             {/* upload course materials */}
-            <CourseMaterialFormAndList />
+            <CourseMaterialFormAndList course_id={course_id._id} />
 
 
 
