@@ -23,7 +23,7 @@ const CourseMaterialFormAndList = ({ course_id }) => {
     const axiosSecure = useAxiosSecure();
 
     const [showMaterialForm, setShowMaterialForm] = useState(false); // show/hide material form
-    const [material_url, setMaterialUrl] = useState("");
+
     const [formSubmissionLoading, setFormSubmissionLoading] = useState(false);
 
     const [materials, setMaterials] = useState([]);
@@ -41,7 +41,10 @@ const CourseMaterialFormAndList = ({ course_id }) => {
         const created_by = user._id;
         const materialType = data.fileType;
 
+        console.log(materialType);
 
+
+        // upload file to cloudinary
         if (materialType === "file") {
             const file = data.file[0]; // get the pdf file
 
@@ -54,29 +57,69 @@ const CourseMaterialFormAndList = ({ course_id }) => {
                 setFormSubmissionLoading(true);
                 const cloudinaryRes = await axios.post(`https://api.cloudinary.com/v1_1/${myCloudName}/raw/upload`, formData);
 
-                if (cloudinaryRes.status === 200) {
-                    toast.success("File uploaded successfully.", {
-                        duration: 3500,
-                        position: "top-center"
-                    });
-                    setMaterialUrl(cloudinaryRes?.data?.secure_url);
 
-                    if (material_url !== "") {
-                        const courseMaterialData = {
-                            title, description, material_url, course_id, created_by
-                        }
-                        console.log(courseMaterialData);
+                // create course material
+                if (cloudinaryRes.status === 200) {
+                    const cloudinaryUrl = cloudinaryRes.data.secure_url;
+
+                    const courseMaterialData = {
+                        title, description, material_url: cloudinaryUrl, course_id, created_by
+                    }
+
+                    const res = await axiosSecure.post("/courseMaterials", courseMaterialData);
+
+                    if (res.data.success) {
+                        toast.success(res.data.message, {
+                            duration: 2500,
+                            position: "top-center"
+                        })
                         setFormSubmissionLoading(false);
+                        reset();
+                        setShowMaterialForm(false);
                     }
                 }
             } catch (error) {
-                handleError(error, "Failed to upload file.");
+                handleError(error, "Failed to create Course Material.");
                 setFormSubmissionLoading(false);
+                setShowMaterialForm(false);
+                toast.error("Failed to create Course Material.", {
+                    duration: 2500,
+                    position: "top-center"
+                });
+
             }
         }
+
+
+        // create course material with url
         if (materialType === "url") {
-            const material_url = data.url;
-            console.log(typeof (material_url));
+            try {
+                setFormSubmissionLoading(true);
+                const courseMaterialData = {
+                    title, description, material_url: data.url, course_id, created_by
+                }
+
+                const res = await axiosSecure.post("/courseMaterials", courseMaterialData);
+
+                if (res.data.success) {
+                    toast.success(res.data.message, {
+                        duration: 2500,
+                        position: "top-center"
+                    })
+                    setFormSubmissionLoading(false);
+                    reset();
+                    setShowMaterialForm(false);
+                }
+            } catch (error) {
+                handleError(error, "Failed to create Course Material.");
+                setFormSubmissionLoading(false);
+                setShowMaterialForm(false);
+                toast.error("Failed to create Course Material.", {
+                    duration: 2500,
+                    position: "top-center"
+                });
+
+            }
         }
     }
 
@@ -223,7 +266,7 @@ const CourseMaterialFormAndList = ({ course_id }) => {
 };
 
 CourseMaterialFormAndList.propTypes = {
-    course_id: PropTypes.number
+    course_id: PropTypes.string
 }
 
 export default CourseMaterialFormAndList;
