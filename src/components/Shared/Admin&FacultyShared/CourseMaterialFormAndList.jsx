@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { FiLink, FiPlus, FiUpload } from "react-icons/fi";
+import { FiPlus} from "react-icons/fi";
 import SectionHeading from "../../Utilities/SectionHeading";
 import { CgClose } from "react-icons/cg";
 import { handleError } from "../../Utilities/HandleError";
 import useAuth from "../../Hooks/useAuth";
 import PropTypes from 'prop-types';
-import { use } from "react";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import axios from "axios";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
 import toast, { Toaster } from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
+import LoadingSpinner from "../../Utilities/LoadingSpinner";
+import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
 
 
 
@@ -26,15 +28,29 @@ const CourseMaterialFormAndList = ({ course_id }) => {
 
     const [formSubmissionLoading, setFormSubmissionLoading] = useState(false);
 
-    const [materials, setMaterials] = useState([]);
-
-
     // hook form
     const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
 
-    const materialType = watch("fileType", "file");
+    const materialType = watch("fileType", "file"); // watch the file type
 
 
+
+    // get course materials
+    const { data: courseMaterials = [], error, isError, isPending } = useQuery({
+        queryKey: ["courseMaterials", course_id],
+        queryFn: async () => {
+            const res = await axiosSecure.get(`courseMaterials/getMaterialByCourseId/${course_id}`);
+
+            return res.data.data;
+        }
+    })
+
+    if (isPending) return <LoadingSpinner />
+
+    console.log(courseMaterials);
+
+
+    // create course material
     const handleMaterialSubmit = async (data) => {
         const title = data.ClassMaterialTitle;
         const description = data.ClassMaterialDescription;
@@ -129,6 +145,8 @@ const CourseMaterialFormAndList = ({ course_id }) => {
             <Toaster />
             <SectionHeading title="Course Materials" />
 
+
+            {/* toggle form button */}
             <button
                 onClick={() => setShowMaterialForm(!showMaterialForm)}
                 className={`mb-4 ${showMaterialForm ? "bg-error" : "bg-blue-500 hover:bg-blue-600"} text-white font-bold py-2 px-4 rounded inline-flex items-center`}
@@ -143,6 +161,9 @@ const CourseMaterialFormAndList = ({ course_id }) => {
                 }
             </button>
 
+
+
+            {/* form */}
             {showMaterialForm && (
                 <form onSubmit={handleSubmit(handleMaterialSubmit)} className="mb-6 p-4 rounded-lg">
 
@@ -242,25 +263,47 @@ const CourseMaterialFormAndList = ({ course_id }) => {
             )}
 
 
-
             {/* Material List */}
-            <ul className="space-y-2">
-                {materials.map((material) => (
-                    <li key={material.id} className="flex justify-between items-center bg-gray-100 p-3 rounded">
-                        <div>
-                            <h3 className="font-semibold">{material.title}</h3>
-                            <p className="text-sm text-gray-600">{material.type === "file" ? "Uploaded File" : "External URL"}</p>
-                        </div>
-                        <div>
-                            {material.type === "file" ? (
-                                <FiUpload className="text-green-500" />
-                            ) : (
-                                <FiLink className="text-blue-500" />
+            {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
+
+            <div className="overflow-x-auto">
+                <table className="table">
+                    {/* head */}
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Uploader</th>
+                            <th>Resource</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            courseMaterials.map((material, index) =>
+                                <tr key={material._id}>
+                                    <th>{index + 1}</th>
+
+                                    <td>{material.title}</td>
+
+                                    <td>{material.description}</td>
+
+                                    <td>{material.created_by.first_name} {material.created_by.last_name}</td>
+
+                                    <td>
+                                        <a href={material.material_url}
+                                        target="_blank" rel="noreferrer" 
+                                        className="btn btn-success text-white text-sm">
+                                            Get Resource
+                                        </a>
+                                    </td>
+                                </tr>
+
                             )}
-                        </div>
-                    </li>
-                ))}
-            </ul>
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     );
 };
