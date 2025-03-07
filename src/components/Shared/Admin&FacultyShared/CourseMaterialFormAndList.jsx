@@ -48,7 +48,6 @@ const CourseMaterialFormAndList = ({ course_id }) => {
 
     if (isPending) return <LoadingSpinner />
 
-    console.log(courseMaterials);
 
 
     // create course material
@@ -309,7 +308,7 @@ const CourseMaterialFormAndList = ({ course_id }) => {
             {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
             <div>
-                {courseMaterials.length === 0 && <p className="text-center text-error text-lg font-medium">No Course Materials Found</p>}
+                {courseMaterials.length === 0 && <p className="text-center text-error text-lg font-medium">Course Materials are not added yet</p>}
             </div>
 
 

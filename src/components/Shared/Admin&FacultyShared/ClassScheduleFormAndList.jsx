@@ -447,6 +447,8 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
                 {/* Error messages */}
                 {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
+                {classList.length === 0 && <p className="text-center text-error text-lg font-medium">Class Schedules are not added yet</p>}
+
                 <ul className="space-y-2">
                     {classList.map((singleClass) => (
                         <li key={singleClass._id} className="flex justify-between items-center bg-base-300 border p-3 rounded">
