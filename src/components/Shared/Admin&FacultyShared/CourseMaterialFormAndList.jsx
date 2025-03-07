@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { FiPlus} from "react-icons/fi";
+import { FiEdit, FiPlus, FiTrash2 } from "react-icons/fi";
 import SectionHeading from "../../Utilities/SectionHeading";
 import { CgClose } from "react-icons/cg";
 import { handleError } from "../../Utilities/HandleError";
@@ -13,6 +13,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../../Utilities/LoadingSpinner";
 import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
+import Swal from "sweetalert2";
 
 
 
@@ -36,7 +37,7 @@ const CourseMaterialFormAndList = ({ course_id }) => {
 
 
     // get course materials
-    const { data: courseMaterials = [], error, isError, isPending } = useQuery({
+    const { data: courseMaterials = [], error, isError, isPending, refetch } = useQuery({
         queryKey: ["courseMaterials", course_id],
         queryFn: async () => {
             const res = await axiosSecure.get(`courseMaterials/getMaterialByCourseId/${course_id}`);
@@ -67,7 +68,7 @@ const CourseMaterialFormAndList = ({ course_id }) => {
             const formData = new FormData();
             formData.append("file", file);
             formData.append("upload_preset", myUploadPreset);
-            formData.append("folder", "course_materials");
+            formData.append("folder", "course_and_class_materials");
 
             try {
                 setFormSubmissionLoading(true);
@@ -137,11 +138,52 @@ const CourseMaterialFormAndList = ({ course_id }) => {
 
             }
         }
+
+        refetch();
     }
 
 
+
+    // delete course material
+    const handleCourseMaterialDelete = async (id, url, material_title) => {
+
+        const swalResponse = await Swal.fire({
+            title: "Delete this Course Material?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#FF0000",
+            cancelButtonColor: "#16A34A",
+            confirmButtonText: "Yes, delete it!",
+        });
+
+        if (swalResponse.isConfirmed) {
+            try {
+                const res = await axiosSecure.delete(`/courseMaterials/${id}`, {
+                    data: { material_title, material_url: url }
+                });
+
+                if (res.data.success) {
+                    refetch();
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: res.data.message,
+                        icon: "success",
+                        confirmButtonColor: "#16A34A",
+                    });
+                }
+            } catch (error) {
+                handleError(error, "Failed to delete Course Material.");
+                toast.error("Failed to delete Course Material.", {
+                    duration: 2500,
+                    position: "top-center"
+                });
+            }
+        }
+    }
+
     return (
-        <div>
+        <div className="mb-20">
             <Toaster />
             <SectionHeading title="Course Materials" />
 
@@ -266,43 +308,75 @@ const CourseMaterialFormAndList = ({ course_id }) => {
             {/* Material List */}
             {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
-            <div className="overflow-x-auto">
-                <table className="table">
-                    {/* head */}
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>Title</th>
-                            <th>Description</th>
-                            <th>Uploader</th>
-                            <th>Resource</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            courseMaterials.map((material, index) =>
-                                <tr key={material._id}>
-                                    <th>{index + 1}</th>
-
-                                    <td>{material.title}</td>
-
-                                    <td>{material.description}</td>
-
-                                    <td>{material.created_by.first_name} {material.created_by.last_name}</td>
-
-                                    <td>
-                                        <a href={material.material_url}
-                                        target="_blank" rel="noreferrer" 
-                                        className="btn btn-success text-white text-sm">
-                                            Get Resource
-                                        </a>
-                                    </td>
-                                </tr>
-
-                            )}
-                    </tbody>
-                </table>
+            <div>
+                {courseMaterials.length === 0 && <p className="text-center text-error text-lg font-medium">No Course Materials Found</p>}
             </div>
+
+
+            {/* table */}
+            {courseMaterials.length > 0 &&
+                <div className="overflow-x-auto">
+                    <table className="table">
+                        {/* head */}
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Uploader</th>
+                                <th>Resource</th>
+                                {
+                                    user.user_role !== "student" &&
+                                    <th>
+                                        Action
+                                    </th>
+                                }
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {
+                                courseMaterials.map((material, index) =>
+                                    <tr key={material._id}>
+                                        <th>{index + 1}</th>
+
+                                        <td>{material.title}</td>
+
+                                        <td>{material.description}</td>
+
+                                        <td>{material.created_by.first_name} {material.created_by.last_name}</td>
+
+                                        <td>
+                                            <a href={material.material_url}
+                                                target="_blank" rel="noreferrer"
+                                                className="btn btn-success text-white text-sm">
+                                                Get Resource
+                                            </a>
+                                        </td>
+
+
+                                        {
+                                            user.user_role !== "student" &&
+                                            <th>
+                                                <button
+
+                                                    className="text-blue-500 hover:text-blue-600 mr-2"
+                                                >
+                                                    <FiEdit />
+                                                </button>
+                                                <button onClick={() => handleCourseMaterialDelete(material._id, material.material_url, material.title)} className="text-red-500 hover:text-red-600">
+                                                    <FiTrash2 />
+                                                </button>
+                                            </th>
+                                        }
+                                    </tr>
+
+                                )}
+                        </tbody>
+                    </table>
+                </div>
+
+            }
 
         </div>
     );

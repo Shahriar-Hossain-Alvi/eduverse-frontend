@@ -9,9 +9,7 @@ import ClassScheduleFormAndList from "../../Shared/Admin&FacultyShared/ClassSche
 import CourseMaterialFormAndList from "../../Shared/Admin&FacultyShared/CourseMaterialFormAndList";
 
 // todo:
-//     <h1>Show list of total enrolled students.</h1>
 //     <h1>Show/option to create/schedule a class for this course (admin & faculty).</h1>
-//     <h1>Show/option to upload course materials (admin & faculty)</h1>
 
 
 const SingleAssignedCourseDetails = () => {
