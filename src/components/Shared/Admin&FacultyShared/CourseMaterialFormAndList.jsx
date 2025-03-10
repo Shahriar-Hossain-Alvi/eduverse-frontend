@@ -27,10 +27,14 @@ const CourseMaterialFormAndList = ({ course_id }) => {
 
     const [showMaterialForm, setShowMaterialForm] = useState(false); // show/hide material form
 
+    const [showUpdateCourseMaterialsForm, setShowUpdateCourseMaterialsForm] = useState(false); // show hide course material update form
+
+    const [originalCourseMaterialData, setOriginalCourseMaterialData] = useState(null); // autofill current material data to the update form
+
     const [formSubmissionLoading, setFormSubmissionLoading] = useState(false);
 
     // hook form
-    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, watch, formState: { errors }, setValue } = useForm();
 
     const materialType = watch("fileType", "file"); // watch the file type
 
@@ -181,6 +185,35 @@ const CourseMaterialFormAndList = ({ course_id }) => {
         }
     }
 
+
+    // material edit button
+    const handleCourseMaterialEdit = (id) => {
+        setShowUpdateCourseMaterialsForm(true);
+
+        const foundClass = courseMaterials.find(singleCourseMaterials => singleCourseMaterials._id === id);
+
+
+        if (foundClass) {
+            setOriginalCourseMaterialData(foundClass);
+
+            setValue("updateCourseMaterialTitle", foundClass.title);
+            setValue("updateCourseMaterialDescription", foundClass.description);
+        }
+    }
+
+
+    // update course material
+    const handleCourseMaterialUpdate = async (data) => {
+        if (!originalCourseMaterialData) return;
+        const id = originalCourseMaterialData._id;
+
+        const updateCourseMaterialData = {};
+
+        if (data.updateClassTitle !== updateCourseMaterialData.title) {
+            updateCourseMaterialData.title = data.updateClassTitle;
+        }
+    }
+
     return (
         <div className="mb-20">
             <Toaster />
@@ -204,7 +237,7 @@ const CourseMaterialFormAndList = ({ course_id }) => {
 
 
 
-            {/* form */}
+            {/* create new course material form */}
             {showMaterialForm && (
                 <form onSubmit={handleSubmit(handleMaterialSubmit)} className="mb-6 p-4 rounded-lg">
 
@@ -304,6 +337,109 @@ const CourseMaterialFormAndList = ({ course_id }) => {
             )}
 
 
+
+            {/* update course material form */}
+
+            <div>
+                {/* toggle update schedule form */}
+                {
+                    showUpdateScheduleForm && <button
+                        onClick={() => setShowUpdateScheduleForm(false)}
+                        className="mb-4 btn btn-error text-white font-bold rounded-lg mt-5"
+                    >
+                        <CgClose className="mr-2" /> Cancel
+                    </button>
+                }
+
+
+                {showUpdateScheduleForm && (
+                    <form onSubmit={handleSubmit(handleScheduleUpdate)} className="mb-6 p-4 rounded-lg">
+
+                        {/* class title */}
+                        <div className="grid grid-cols-6 gap-2">
+                            <div className="label">
+                                <span className="label-text">Title: </span>
+                            </div>
+
+                            <input
+                                type="text"
+                                placeholder="Class Title"
+
+                                {...register("updateClassTitle")}
+
+                                className="input input-bordered mb-2 w-full rounded-lg col-span-5"
+                            />
+
+                            {errors.updateClassTitle && <p className="text-error font-medium text-sm mb-2">{errors.updateClassTitle.message}</p>}
+                        </div>
+
+
+                        {/* class description */}
+                        <div className="grid grid-cols-6 gap-2">
+                            <div className="label">
+                                <span className="label-text">Description: </span>
+                            </div>
+
+                            <textarea
+                                placeholder="Class Description"
+
+                                {...register("updateClassDescription")}
+
+                                className="textarea textarea-bordered mb-2 w-full  rounded-lg col-span-5"
+                            />
+                            {errors.updateClassDescription && <p className="text-error font-medium text-sm mb-2">{errors.updateClassDescription.message}</p>}
+                        </div>
+
+
+                        {/* class date */}
+                        <div className="grid grid-cols-6 gap-2
+                    ">
+                            <div className="label">
+                                <span className="label-text">Date: </span>
+                            </div>
+
+                            <input
+                                type="date"
+
+                                min={new Date().toISOString().slice(0, 10)}
+
+                                {...register("updateClassScheduledDate")}
+
+                                className="mb-2 w-full input input-bordered rounded-lg col-span-5"
+                            />
+                            {errors.updateClassScheduledDate && <p className="text-error font-medium text-sm mb-2">{errors.updateClassScheduledDate.message}</p>}
+                        </div>
+
+
+                        {/* class time */}
+                        <div className="grid grid-cols-6 gap-2">
+                            <div className="label">
+                                <span className="label-text">Time: </span>
+                            </div>
+
+                            <input
+                                type="time"
+
+                                {...register("updateClassScheduledTime")}
+
+                                className="mb-2 w-full input input-bordered rounded-lg col-span-5"
+                            />
+                            {errors.updateClassScheduledTime && <p className="text-error font-medium text-sm mb-2">{errors.updateClassScheduledTime.message}</p>}
+                        </div>
+
+
+                        <button type="submit" className={`btn ${formSubmissionLoading ? "btn-disabled" : "btn-success text-white font-bold"}  rounded`}>
+                            {
+                                formSubmissionLoading ? <CgSpinnerTwoAlt className="animate-spin" /> : "Update Schedule"
+                            }
+                        </button>
+                    </form>
+                )}
+            </div>
+
+
+
+
             {/* Material List */}
             {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
@@ -358,7 +494,13 @@ const CourseMaterialFormAndList = ({ course_id }) => {
                                             user.user_role !== "student" &&
                                             <th>
                                                 <button
+                                                    onClick={() => {
+                                                        handleCourseMaterialEdit(material._id);
 
+                                                        if (showMaterialForm) {
+                                                            setShowMaterialForm(false);
+                                                        }
+                                                    }}
                                                     className="text-blue-500 hover:text-blue-600 mr-2"
                                                 >
                                                     <FiEdit />
@@ -374,7 +516,6 @@ const CourseMaterialFormAndList = ({ course_id }) => {
                         </tbody>
                     </table>
                 </div>
-
             }
 
         </div>
