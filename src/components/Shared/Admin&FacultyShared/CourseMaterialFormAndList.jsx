@@ -14,9 +14,10 @@ import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../../Utilities/LoadingSpinner";
 import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
 import Swal from "sweetalert2";
+import { set } from "lodash";
 
 
-
+// handle is_active field for admin
 
 const CourseMaterialFormAndList = ({ course_id }) => {
     const myCloudName = import.meta.env.VITE_Cloudinary_Cloud_Name;
@@ -190,14 +191,15 @@ const CourseMaterialFormAndList = ({ course_id }) => {
     const handleCourseMaterialEdit = (id) => {
         setShowUpdateCourseMaterialsForm(true);
 
-        const foundClass = courseMaterials.find(singleCourseMaterials => singleCourseMaterials._id === id);
+        const foundCourseMaterial = courseMaterials.find(singleCourseMaterials => singleCourseMaterials._id === id);
 
+        console.log(foundCourseMaterial);
 
-        if (foundClass) {
-            setOriginalCourseMaterialData(foundClass);
+        if (foundCourseMaterial) {
+            setOriginalCourseMaterialData(foundCourseMaterial);
 
-            setValue("updateCourseMaterialTitle", foundClass.title);
-            setValue("updateCourseMaterialDescription", foundClass.description);
+            setValue("updateCourseMaterialTitle", foundCourseMaterial.title);
+            setValue("updateCourseMaterialDescription", foundCourseMaterial.description);
         }
     }
 
@@ -209,10 +211,86 @@ const CourseMaterialFormAndList = ({ course_id }) => {
 
         const updateCourseMaterialData = {};
 
-        if (data.updateClassTitle !== updateCourseMaterialData.title) {
-            updateCourseMaterialData.title = data.updateClassTitle;
+        if (data.updateCourseMaterialTitle !== originalCourseMaterialData.title) {
+            updateCourseMaterialData.title = data.updateCourseMaterialTitle;
+        }
+
+        if (data.updateCourseMaterialDescription !== originalCourseMaterialData.description) {
+            updateCourseMaterialData.description = data.updateCourseMaterialDescription;
+        }
+
+        if (user._id !== originalCourseMaterialData.created_by._id) {
+            updateCourseMaterialData.created_by = user._id;
+        }
+
+        // upload file to cloudinary
+        if (materialType === "file") {
+            const file = data.file[0]; // get the file
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", myUploadPreset);
+            formData.append("folder", "course_and_class_materials");
+
+            try {
+                setFormSubmissionLoading(true);
+                const cloudinaryRes = await axios.post(`https://api.cloudinary.com/v1_1/${myCloudName}/raw/upload`, formData);
+
+
+                // create course material
+                if (cloudinaryRes.status === 200) {
+                    const cloudinaryUrl = cloudinaryRes.data.secure_url;
+
+                    updateCourseMaterialData.material_url = cloudinaryUrl;
+
+                    setFormSubmissionLoading(false);
+
+                    toast.success("Resource uploaded successfully", {
+                        duration: 2500,
+                        position: "top-center"
+                    });
+                }
+            } catch (error) {
+                handleError(error, "Failed to create Course Material.");
+                setFormSubmissionLoading(false);
+                toast.error("Failed to upload resource", {
+                    duration: 2500,
+                    position: "top-center"
+                });
+
+            }
+        }
+
+        if (materialType === "url") {
+            updateCourseMaterialData.material_url = data.url;
+        }
+
+        try {
+            setFormSubmissionLoading(true);
+            const res = await axiosSecure.patch(`/courseMaterials/${id}`, updateCourseMaterialData);
+
+            if (res.data.success) {
+                toast.success(res.data.message, {
+                    duration: 2500,
+                    position: "top-center"
+                });
+                setShowUpdateCourseMaterialsForm(false);
+                refetch();
+                setFormSubmissionLoading(false);
+            }
+            
+        } catch (error) {
+            handleError(error, "Failed to update Course Material.");
+            setFormSubmissionLoading(false);
+            toast.error("Failed to update Course Material.", {
+                duration: 2500,
+                position: "top-center"
+            });
         }
     }
+
+
+    
 
     return (
         <div className="mb-20">
@@ -239,101 +317,105 @@ const CourseMaterialFormAndList = ({ course_id }) => {
 
             {/* create new course material form */}
             {showMaterialForm && (
-                <form onSubmit={handleSubmit(handleMaterialSubmit)} className="mb-6 p-4 rounded-lg">
+                <div>
+                    <SectionHeading title="Add New Course Material" />
 
-                    {/* title */}
-                    <div className="grid grid-cols-6 gap-2">
-                        <div className="label">
-                            <span className="label-text">Material Title: </span>
+                    <form onSubmit={handleSubmit(handleMaterialSubmit)} className="mb-6 p-4 rounded-lg">
+
+                        {/* title */}
+                        <div className="grid grid-cols-6 gap-2">
+                            <div className="label">
+                                <span className="label-text">Material Title: </span>
+                            </div>
+
+                            <div className="col-span-5">
+                                <input
+                                    type="text"
+                                    placeholder="Material Title"
+
+                                    {...register("ClassMaterialTitle", { required: "Material Title is required" })}
+
+                                    className="input input-bordered mb-2 w-full rounded-lg "
+                                />
+
+                                {errors.ClassMaterialTitle && <p className="text-error font-medium text-sm mb-2">{errors.ClassMaterialTitle.message}</p>}
+                            </div>
                         </div>
 
-                        <div className="col-span-5">
-                            <input
-                                type="text"
-                                placeholder="Material Title"
 
-                                {...register("ClassMaterialTitle", { required: "Material Title is required" })}
+                        {/* description */}
+                        <div className="grid grid-cols-6 gap-2">
+                            <div className="label">
+                                <span className="label-text">Description: </span>
+                            </div>
 
-                                className="input input-bordered mb-2 w-full rounded-lg "
-                            />
+                            <div className="col-span-5">
+                                <input
+                                    type="text"
+                                    placeholder="Material Description"
 
-                            {errors.ClassMaterialTitle && <p className="text-error font-medium text-sm mb-2">{errors.ClassMaterialTitle.message}</p>}
+                                    {...register("ClassMaterialDescription", { required: "Material Description is required" })}
+
+                                    className="input input-bordered mb-2 w-full rounded-lg "
+                                />
+
+                                {errors.ClassMaterialDescription && <p className="text-error font-medium text-sm mb-2">{errors.ClassMaterialDescription.message}</p>}
+                            </div>
                         </div>
-                    </div>
 
 
-                    {/* description */}
-                    <div className="grid grid-cols-6 gap-2">
-                        <div className="label">
-                            <span className="label-text">Description: </span>
+
+                        {/* File Type */}
+                        <div className="grid grid-cols-6 gap-2">
+                            <div className="label">
+                                <span className="label-text">Resource Type: </span>
+                            </div>
+                            <select
+                                {...register("fileType")}
+                                className="mb-2 w-full p-2 select-bordered select rounded col-span-5"
+                            >
+                                <option value="file">File Upload</option>
+                                <option value="url">External URL</option>
+                            </select>
                         </div>
 
-                        <div className="col-span-5">
-                            <input
-                                type="text"
-                                placeholder="Material Description"
-
-                                {...register("ClassMaterialDescription", { required: "Material Description is required" })}
-
-                                className="input input-bordered mb-2 w-full rounded-lg "
-                            />
-
-                            {errors.ClassMaterialDescription && <p className="text-error font-medium text-sm mb-2">{errors.ClassMaterialDescription.message}</p>}
-                        </div>
-                    </div>
-
-
-
-                    {/* File Type */}
-                    <div className="grid grid-cols-6 gap-2">
-                        <div className="label">
-                            <span className="label-text">Resource Type: </span>
-                        </div>
-                        <select
-                            {...register("fileType")}
-                            className="mb-2 w-full p-2 select-bordered select rounded col-span-5"
-                        >
-                            <option value="file">File Upload</option>
-                            <option value="url">External URL</option>
-                        </select>
-                    </div>
-
-                    {/* Conditional Input */}
-                    {materialType === "file" ? (
-                        <div>
-                            <input
-                                type="file"
-                                {...register("file", { required: "File is required" })}
-                                className="file-input file-input-bordered mb-2 w-full p-2 border rounded"
-                            />
-                            {errors.file && <p className="text-error font-medium text-sm mb-2">{errors.file.message}</p>}
-                        </div>
-                    ) : (
-                        <div>
-                            <input
-                                type="url"
-                                placeholder="External URL"
-                                {...register("url", { required: "URL is required" })}
-                                className="input input-bordered mb-2 w-full p-2 rounded"
-                            />
-                            {errors.url && <p className="text-error font-medium text-sm mb-2">{errors.url.message}</p>}
-                        </div>
-                    )}
+                        {/* Conditional Input */}
+                        {materialType === "file" ? (
+                            <div>
+                                <input
+                                    type="file"
+                                    {...register("file", { required: "File is required" })}
+                                    className="file-input file-input-bordered mb-2 w-full p-2 border rounded"
+                                />
+                                {errors.file && <p className="text-error font-medium text-sm mb-2">{errors.file.message}</p>}
+                            </div>
+                        ) : (
+                            <div>
+                                <input
+                                    type="url"
+                                    placeholder="External URL"
+                                    {...register("url", { required: "URL is required" })}
+                                    className="input input-bordered mb-2 w-full p-2 rounded"
+                                />
+                                {errors.url && <p className="text-error font-medium text-sm mb-2">{errors.url.message}</p>}
+                            </div>
+                        )}
 
 
-                    {/* submit button */}
-                    {
-                        formSubmissionLoading ?
-                            <button className="btn w-36 btn-disabled py-2 px-4 rounded">
-                                <CgSpinnerTwoAlt className="animate-spin " />
-                            </button>
-                            :
-                            <button type="submit" className="btn btn-success text-white font-bold py-2 px-4 rounded">
-                                Upload Material
-                            </button>
-                    }
+                        {/* submit button */}
+                        {
+                            formSubmissionLoading ?
+                                <button className="btn w-36 btn-disabled py-2 px-4 rounded">
+                                    <CgSpinnerTwoAlt className="animate-spin " />
+                                </button>
+                                :
+                                <button type="submit" className="btn btn-success text-white font-bold py-2 px-4 rounded">
+                                    Upload Material
+                                </button>
+                        }
 
-                </form>
+                    </form>
+                </div>
             )}
 
 
@@ -343,8 +425,8 @@ const CourseMaterialFormAndList = ({ course_id }) => {
             <div>
                 {/* toggle update schedule form */}
                 {
-                    showUpdateScheduleForm && <button
-                        onClick={() => setShowUpdateScheduleForm(false)}
+                    showUpdateCourseMaterialsForm && <button
+                        onClick={() => setShowUpdateCourseMaterialsForm(false)}
                         className="mb-4 btn btn-error text-white font-bold rounded-lg mt-5"
                     >
                         <CgClose className="mr-2" /> Cancel
@@ -352,88 +434,93 @@ const CourseMaterialFormAndList = ({ course_id }) => {
                 }
 
 
-                {showUpdateScheduleForm && (
-                    <form onSubmit={handleSubmit(handleScheduleUpdate)} className="mb-6 p-4 rounded-lg">
+                {showUpdateCourseMaterialsForm && (
+                    <div>
+                        <SectionHeading title="Update Course Material" />
 
-                        {/* class title */}
-                        <div className="grid grid-cols-6 gap-2">
-                            <div className="label">
-                                <span className="label-text">Title: </span>
+                        <form onSubmit={handleSubmit(handleCourseMaterialUpdate)} className="mb-6 p-4 rounded-lg">
+
+                            {/* Course material title */}
+                            <div className="grid grid-cols-6 gap-2">
+                                <div className="label">
+                                    <span className="label-text">Title: </span>
+                                </div>
+
+                                <input
+                                    type="text"
+                                    placeholder="Course Material Title"
+
+                                    {...register("updateCourseMaterialTitle")}
+
+                                    className="input input-bordered mb-2 w-full rounded-lg col-span-5"
+                                />
+
+                                {errors.updateCourseMaterialTitle && <p className="text-error font-medium text-sm mb-2">{errors.updateCourseMaterialTitle.message}</p>}
                             </div>
 
-                            <input
-                                type="text"
-                                placeholder="Class Title"
 
-                                {...register("updateClassTitle")}
+                            {/* course material description */}
+                            <div className="grid grid-cols-6 gap-2">
+                                <div className="label">
+                                    <span className="label-text">Description: </span>
+                                </div>
 
-                                className="input input-bordered mb-2 w-full rounded-lg col-span-5"
-                            />
+                                <textarea
+                                    placeholder="Class Description"
 
-                            {errors.updateClassTitle && <p className="text-error font-medium text-sm mb-2">{errors.updateClassTitle.message}</p>}
-                        </div>
+                                    {...register("updateCourseMaterialDescription")}
 
-
-                        {/* class description */}
-                        <div className="grid grid-cols-6 gap-2">
-                            <div className="label">
-                                <span className="label-text">Description: </span>
+                                    className="textarea textarea-bordered mb-2 w-full  rounded-lg col-span-5"
+                                />
+                                {errors.updateCourseMaterialDescription && <p className="text-error font-medium text-sm mb-2">{errors.updateCourseMaterialDescription.message}</p>}
                             </div>
 
-                            <textarea
-                                placeholder="Class Description"
 
-                                {...register("updateClassDescription")}
-
-                                className="textarea textarea-bordered mb-2 w-full  rounded-lg col-span-5"
-                            />
-                            {errors.updateClassDescription && <p className="text-error font-medium text-sm mb-2">{errors.updateClassDescription.message}</p>}
-                        </div>
-
-
-                        {/* class date */}
-                        <div className="grid grid-cols-6 gap-2
-                    ">
-                            <div className="label">
-                                <span className="label-text">Date: </span>
+                            {/* File Type */}
+                            <div className="grid grid-cols-6 gap-2">
+                                <div className="label">
+                                    <span className="label-text">Resource Type: </span>
+                                </div>
+                                <select
+                                    {...register("fileType")}
+                                    className="mb-2 w-full p-2 select-bordered select rounded col-span-5"
+                                >
+                                    <option value="file">File Upload</option>
+                                    <option value="url">External URL</option>
+                                </select>
                             </div>
 
-                            <input
-                                type="date"
-
-                                min={new Date().toISOString().slice(0, 10)}
-
-                                {...register("updateClassScheduledDate")}
-
-                                className="mb-2 w-full input input-bordered rounded-lg col-span-5"
-                            />
-                            {errors.updateClassScheduledDate && <p className="text-error font-medium text-sm mb-2">{errors.updateClassScheduledDate.message}</p>}
-                        </div>
-
-
-                        {/* class time */}
-                        <div className="grid grid-cols-6 gap-2">
-                            <div className="label">
-                                <span className="label-text">Time: </span>
-                            </div>
-
-                            <input
-                                type="time"
-
-                                {...register("updateClassScheduledTime")}
-
-                                className="mb-2 w-full input input-bordered rounded-lg col-span-5"
-                            />
-                            {errors.updateClassScheduledTime && <p className="text-error font-medium text-sm mb-2">{errors.updateClassScheduledTime.message}</p>}
-                        </div>
+                            {/* Conditional Input */}
+                            {materialType === "file" ? (
+                                <div>
+                                    <input
+                                        type="file"
+                                        {...register("file")}
+                                        className="file-input file-input-bordered mb-2 w-full p-2 border rounded"
+                                    />
+                                    {errors.file && <p className="text-error font-medium text-sm mb-2">{errors.file.message}</p>}
+                                </div>
+                            ) : (
+                                <div>
+                                    <input
+                                        type="url"
+                                        placeholder="External URL"
+                                        {...register("url")}
+                                        className="input input-bordered mb-2 w-full p-2 rounded"
+                                    />
+                                    {errors.url && <p className="text-error font-medium text-sm mb-2">{errors.url.message}</p>}
+                                </div>
+                            )}
 
 
-                        <button type="submit" className={`btn ${formSubmissionLoading ? "btn-disabled" : "btn-success text-white font-bold"}  rounded`}>
-                            {
-                                formSubmissionLoading ? <CgSpinnerTwoAlt className="animate-spin" /> : "Update Schedule"
-                            }
-                        </button>
-                    </form>
+
+                            <button type="submit" className={`btn ${formSubmissionLoading ? "btn-disabled" : "btn-success text-white font-bold"}  rounded`}>
+                                {
+                                    formSubmissionLoading ? <CgSpinnerTwoAlt className="animate-spin" /> : "Update Material"
+                                }
+                            </button>
+                        </form>
+                    </div>
                 )}
             </div>
 
