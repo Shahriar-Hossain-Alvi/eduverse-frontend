@@ -62,7 +62,6 @@ const CourseMaterialFormAndList = ({ course_id }) => {
         const created_by = user._id;
         const materialType = data.fileType;
 
-        console.log(materialType);
 
 
         // upload file to cloudinary
@@ -103,11 +102,6 @@ const CourseMaterialFormAndList = ({ course_id }) => {
                 handleError(error, "Failed to create Course Material.");
                 setFormSubmissionLoading(false);
                 setShowMaterialForm(false);
-                toast.error("Failed to create Course Material.", {
-                    duration: 2500,
-                    position: "top-center"
-                });
-
             }
         }
 
@@ -135,11 +129,6 @@ const CourseMaterialFormAndList = ({ course_id }) => {
                 handleError(error, "Failed to create Course Material.");
                 setFormSubmissionLoading(false);
                 setShowMaterialForm(false);
-                toast.error("Failed to create Course Material.", {
-                    duration: 2500,
-                    position: "top-center"
-                });
-
             }
         }
 
@@ -178,10 +167,6 @@ const CourseMaterialFormAndList = ({ course_id }) => {
                 }
             } catch (error) {
                 handleError(error, "Failed to delete Course Material.");
-                toast.error("Failed to delete Course Material.", {
-                    duration: 2500,
-                    position: "top-center"
-                });
             }
         }
     }
@@ -192,8 +177,6 @@ const CourseMaterialFormAndList = ({ course_id }) => {
         setShowUpdateCourseMaterialsForm(true);
 
         const foundCourseMaterial = courseMaterials.find(singleCourseMaterials => singleCourseMaterials._id === id);
-
-        console.log(foundCourseMaterial);
 
         if (foundCourseMaterial) {
             setOriginalCourseMaterialData(foundCourseMaterial);
@@ -224,7 +207,7 @@ const CourseMaterialFormAndList = ({ course_id }) => {
         }
 
         // upload file to cloudinary
-        if (materialType === "file") {
+        if (materialType === "file" && data.file[0] !== undefined) {
             const file = data.file[0]; // get the file
 
             const formData = new FormData();
@@ -265,6 +248,14 @@ const CourseMaterialFormAndList = ({ course_id }) => {
             updateCourseMaterialData.material_url = data.url;
         }
 
+        if (Object.keys(updateCourseMaterialData).length === 0) {
+            toast.error("No changes detected", {
+                duration: 2500,
+                position: "top-center"
+            });
+            return;
+        }
+
         try {
             setFormSubmissionLoading(true);
             const res = await axiosSecure.patch(`/courseMaterials/${id}`, updateCourseMaterialData);
@@ -276,21 +267,18 @@ const CourseMaterialFormAndList = ({ course_id }) => {
                 });
                 setShowUpdateCourseMaterialsForm(false);
                 refetch();
+                reset();
                 setFormSubmissionLoading(false);
             }
-            
+
         } catch (error) {
             handleError(error, "Failed to update Course Material.");
             setFormSubmissionLoading(false);
-            toast.error("Failed to update Course Material.", {
-                duration: 2500,
-                position: "top-center"
-            });
         }
     }
 
 
-    
+
 
     return (
         <div className="mb-20">
