@@ -4,12 +4,18 @@ import useAuth from "../../Hooks/useAuth";
 import useTheme from "../../Hooks/useTheme"
 import { TbFidgetSpinner } from "react-icons/tb";
 import toast, { Toaster } from 'react-hot-toast';
+import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
+
+
 
 const SignIn = () => {
     const { theme } = useTheme();
     const { user, login, loading } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
     const from = location?.state?.from?.pathname || "/";
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
@@ -93,8 +99,21 @@ const SignIn = () => {
                                 <span className="label-text">Password:</span>
                             </label>
 
-                            <div className="col-span-10">
-                                <input type="password" placeholder="Enter your password" className="input  input-bordered w-full"
+                            <div className="col-span-10 relative">
+                                {
+                                    showPassword ?
+                                        <button type="button" onClick={() => setShowPassword(false)} className="btn absolute right-3 btn-sm top-1/2 btn-ghost hover:bg-transparent -translate-y-1/2">
+                                            <FaEyeSlash />
+                                        </button>
+                                        :
+                                        <button type="button" onClick={() => setShowPassword(true)} className="btn absolute right-3 btn-sm top-1/2 btn-ghost hover:bg-transparent -translate-y-1/2">
+                                            <FaEye />
+                                        </button>
+                                }
+
+                                <input type={
+                                    showPassword ? "text" :
+                                        "password"} placeholder="Enter your password" className="input  input-bordered w-full"
                                     {...register("password", {
                                         required: "Password is required",
                                         minLength: { value: 6, message: "Password must be at least 6 character" }, maxLength: { value: 32, message: "Password must be within 32 character" },
