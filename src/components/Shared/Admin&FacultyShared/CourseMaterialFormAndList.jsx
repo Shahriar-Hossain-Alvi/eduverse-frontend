@@ -529,7 +529,6 @@ const CourseMaterialFormAndList = ({ course_id }) => {
                         {/* head */}
                         <thead>
                             <tr>
-                                <th>No.</th>
                                 <th>Title</th>
                                 <th>Description</th>
                                 <th>Uploader</th>
@@ -545,9 +544,8 @@ const CourseMaterialFormAndList = ({ course_id }) => {
 
                         <tbody>
                             {
-                                courseMaterials.map((material, index) =>
+                                courseMaterials.map((material) =>
                                     <tr key={material._id}>
-                                        <th>{index + 1}</th>
 
                                         <td>{material.title}</td>
 

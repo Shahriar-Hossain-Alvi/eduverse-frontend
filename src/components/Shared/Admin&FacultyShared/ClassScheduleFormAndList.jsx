@@ -12,6 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../../Utilities/LoadingSpinner";
 import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
 import Swal from "sweetalert2";
+import { BiError } from "react-icons/bi";
 
 
 // handle is_active field for admin
@@ -41,7 +42,9 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
             return res.data.data;
         },
         enabled: !!course_id
-    })
+    });
+
+    console.log(classList);
 
 
 
@@ -53,6 +56,8 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
 
         const title = data.classTitle;
         const description = data.classDescription;
+        const location = data.classLocation;
+        console.log(location);
 
         const classScheduledDate = (data.classScheduledDate);
         const classScheduledTime = (data.classScheduledTime);
@@ -69,7 +74,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
         const faculty_id = faculty.map(singleFaculty => singleFaculty._id)
 
         const classScheduleData = {
-            title, description, scheduled_time: fullDateTime, course_id, faculty_id
+            title, description, scheduled_time: fullDateTime, course_id, faculty_id, location
         }
 
         try {
@@ -107,6 +112,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
 
             setValue("updateClassTitle", foundClass.title);
             setValue("updateClassDescription", foundClass.description);
+            setValue("updateClassLocation", foundClass.location);
             setValue("updateClassScheduledDate", foundClass.scheduled_time.split("T")[0]); // Extract date
 
             // convert UTC to local time
@@ -134,6 +140,10 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
 
         if (data.updateClassDescription !== originalClassData.description) {
             updateClassScheduleData.description = data.updateClassDescription;
+        }
+
+        if (data.updateClassLocation !== originalClassData.location) {
+            updateClassScheduleData.location = data.updateClassLocation;
         }
 
         const newScheduleDate = data.updateClassScheduledDate;
@@ -335,6 +345,29 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
                             </div>
 
 
+                            {/* class location */}
+                            <div className="grid grid-cols-6 gap-2">
+                                <div className="label">
+                                    <span className="label-text">Location: </span>
+                                </div>
+
+                                <div className="col-span-5">
+                                    <input
+                                        type="text"
+                                        placeholder="Class Location"
+
+                                        {...register("classLocation")}
+
+                                        className="input input-bordered mb-2 w-full rounded-lg "
+                                    />
+
+                                    {errors.classLocation && <p className="text-error font-medium text-sm mb-2">{errors?.classLocation?.message}</p>}
+                                </div>
+                            </div>
+
+
+
+                            {/* submit button */}
                             <button type="submit" className={`btn ${formLoading ? "btn-disabled" : "btn-success text-white font-bold"}  rounded`}>
                                 {
                                     formLoading ? <CgSpinnerTwoAlt className="animate-spin" /> : "Add Schedule"
@@ -439,6 +472,25 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
                             </div>
 
 
+                            {/* class location */}
+                            <div className="grid grid-cols-6 gap-2">
+                                <div className="label">
+                                    <span className="label-text">Location: </span>
+                                </div>
+
+                                <input
+                                    type="text"
+                                    placeholder="Class Location"
+
+                                    {...register("updateClassLocation")}
+
+                                    className="input input-bordered mb-2 w-full rounded-lg col-span-5"
+                                />
+
+                                {errors.updateClassLocation && <p className="text-error font-medium text-sm mb-2">{errors.updateClassLocation.message}</p>}
+                            </div>
+
+
                             <button type="submit" className={`btn ${formLoading ? "btn-disabled" : "btn-success text-white font-bold"}  rounded`}>
                                 {
                                     formLoading ? <CgSpinnerTwoAlt className="animate-spin" /> : "Update Schedule"
@@ -476,7 +528,23 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
                                         {format(singleClass.scheduled_time, "yyyy-MM-dd, hh:mm a")}
                                     </button>
                                 </p>
+
+                                <p className="text-sm">
+                                    <span className="mr-1">
+                                    Location:
+                                    </span> 
+                                    {singleClass.location}
+
+                                    {
+                                        singleClass.location === "" &&
+                                        <BiError className="inline ml-1 text-error text-base animate-pulse" />
+                                    }
+                                </p>
+
                             </div>
+
+
+                            {/* edit and delete button */}
                             <div>
                                 <button
                                     onClick={() => {
