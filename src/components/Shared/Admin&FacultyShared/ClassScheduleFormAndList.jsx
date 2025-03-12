@@ -44,10 +44,6 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
         enabled: !!course_id
     });
 
-    console.log(classList);
-
-
-
 
     // create new class schedule
     const handleScheduleSubmit = async (data) => {

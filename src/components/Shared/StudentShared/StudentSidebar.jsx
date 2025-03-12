@@ -13,7 +13,7 @@ const StudentSidebar = () => {
 
             <li><NavLink to="/student/courses" className="flex items-center space-x-2 hover:bg-blue-500 p-2 rounded"><FiBook className="text-xl" /> <span>Courses</span></NavLink></li>
 
-            <li><NavLink to="/student/myCourses" className="flex items-center space-x-2 hover:bg-blue-500 p-2 rounded"><FiBook className="text-xl" /> <span>My Courses</span></NavLink></li>
+            <li><NavLink to="/student/myEnrolledCourses" className="flex items-center space-x-2 hover:bg-blue-500 p-2 rounded"><FiBook className="text-xl" /> <span>My Courses</span></NavLink></li>
 
             <li><NavLink to="/student/schedule" className="flex items-center space-x-2 hover:bg-blue-500 p-2 rounded"><FiCalendar className="text-xl" /> <span>Schedule</span></NavLink></li>
 
