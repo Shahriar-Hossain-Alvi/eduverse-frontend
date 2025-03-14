@@ -7,7 +7,7 @@ import SectionHeading from '../../Utilities/SectionHeading';
 import { format } from 'date-fns';
 import { BiError } from "react-icons/bi";
 
-
+// todo: crate class details btn functionality
 
 const EnrolledCoursesClassSchedule = ({ courseID }) => {
     const course_id = courseID
@@ -22,8 +22,6 @@ const EnrolledCoursesClassSchedule = ({ courseID }) => {
         },
         enabled: !!course_id
     })
-
-    console.log(enrolledCoursesClassSchedule);
 
 
 
@@ -73,10 +71,17 @@ const EnrolledCoursesClassSchedule = ({ courseID }) => {
                                 }
                             </p>
 
-                            
+
                             {/* faculty */}
-                             
+                            <div className='flex gap-1'>
+                                <h2>Faculties: </h2>
+                                {(singleClass.faculty_id).map(singleFaculty =>
+                                    <p key={singleFaculty._id} className='badge badge-outline'>{singleFaculty.first_name} {singleFaculty.last_name}</p>
+                                )}
+                            </div>
                         </div>
+
+                        <button className="btn btn-success text-white">Details</button>
                     </div>
                 ))}
             </div>

@@ -8,6 +8,7 @@ import SectionHeading from "../../Utilities/SectionHeading";
 import { Link } from "react-router";
 import { format } from "date-fns";
 import EnrolledCoursesClassSchedule from "./EnrolledCoursesClassSchedule";
+import SingleEnrolledCourseMaterials from "./SingleEnrolledCourseMaterials";
 
 
 
@@ -72,12 +73,12 @@ const SingleEnrolledCourseDetails = () => {
             </div>
 
 
+            {/* CLass schedules */}
             <EnrolledCoursesClassSchedule courseID={course_id._id} />
 
 
-            <div>
-                Course Materials
-            </div>
+            {/* Course Materials */}
+            <SingleEnrolledCourseMaterials courseID={course_id._id} />
         </div>
     );
 };

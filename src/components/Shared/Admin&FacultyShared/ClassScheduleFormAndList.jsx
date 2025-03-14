@@ -16,7 +16,7 @@ import { BiError } from "react-icons/bi";
 
 
 // handle is_active field for admin
-
+// handle details button of class schedule
 
 const ClassScheduleForm = ({ course_id, faculty }) => {
     const axiosSecure = useAxiosSecure();
@@ -513,10 +513,14 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
                         <li key={singleClass._id} className="flex justify-between items-center bg-base-300 border p-3 rounded">
 
                             <div className="space-y-1">
+                                {/* title */}
                                 <h3 className="font-semibold">{singleClass.title}</h3>
 
+                                {/* description */}
                                 <p className="text-sm">{singleClass.description}</p>
 
+
+                                {/* time */}
                                 <p className="text-sm">
                                     Class Time:
 
@@ -525,10 +529,12 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
                                     </button>
                                 </p>
 
+
+                                {/* location */}
                                 <p className="text-sm">
                                     <span className="mr-1">
-                                    Location:
-                                    </span> 
+                                        Location:
+                                    </span>
                                     {singleClass.location}
 
                                     {
@@ -537,26 +543,43 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
                                     }
                                 </p>
 
+
+                                {/* faculty */}
+                                <div className='flex gap-1'>
+                                    <h2>Faculties: </h2>
+                                    {(singleClass.faculty_id).map(singleFaculty =>
+                                        <p key={singleFaculty._id} className='badge badge-outline'>{singleFaculty.first_name} {singleFaculty.last_name}</p>
+                                    )}
+                                </div>
                             </div>
 
 
                             {/* edit and delete button */}
-                            <div>
-                                <button
-                                    onClick={() => {
-                                        handleScheduleEditButton(singleClass._id);
+                            <div className="text-center space-y-3">
+                                <div>
+                                    {/* edit button */}
+                                    <button
+                                        onClick={() => {
+                                            handleScheduleEditButton(singleClass._id);
 
-                                        if (showScheduleForm) {
-                                            setShowScheduleForm(false);
-                                        }
-                                    }}
-                                    className="text-blue-500 hover:text-blue-600 mr-2"
-                                >
-                                    <FiEdit />
-                                </button>
-                                <button onClick={() => handleScheduleDelete(singleClass._id)} className="text-red-500 hover:text-red-600">
-                                    <FiTrash2 />
-                                </button>
+                                            if (showScheduleForm) {
+                                                setShowScheduleForm(false);
+                                            }
+                                        }}
+                                        className="text-blue-500 hover:text-blue-600 mr-2"
+                                    >
+                                        <FiEdit />
+                                    </button>
+
+                                    {/* delete button */}
+                                    <button
+                                        onClick={() => handleScheduleDelete(singleClass._id)} className="text-red-500 hover:text-red-600">
+                                        <FiTrash2 />
+                                    </button>
+                                </div>
+
+                                {/* class details button */}
+                                <button className="btn btn-success text-white ">Details</button>
                             </div>
                         </li>
                     ))}
