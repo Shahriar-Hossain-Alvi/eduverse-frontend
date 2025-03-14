@@ -8,8 +8,6 @@ import EnrolledStudentList from "../../Shared/Admin&FacultyShared/EnrolledStuden
 import ClassScheduleFormAndList from "../../Shared/Admin&FacultyShared/ClassScheduleFormAndList"
 import CourseMaterialFormAndList from "../../Shared/Admin&FacultyShared/CourseMaterialFormAndList";
 
-// todo:
-//     <h1>Show/option to create/schedule a class for this course (admin & faculty).</h1>
 
 
 const SingleAssignedCourseDetails = () => {

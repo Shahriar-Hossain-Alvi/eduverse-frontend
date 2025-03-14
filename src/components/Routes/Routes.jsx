@@ -23,6 +23,7 @@ import FacultyAssignedCourses from "../Pages/FacultyPages/FacultyAssignedCourses
 import SingleAssignedCourseDetails from "../Pages/FacultyPages/SingleAssignedCourseDetails";
 import StudentAcademicInfo from "../Shared/CommonShared/StudentAcademicInfo/StudentAcademicInfo";
 import StudentEnrolledCourses from "../Pages/StudentPages/StudentEnrolledCourses";
+import SingleEnrolledCourseDetails from "../Pages/StudentPages/SingleEnrolledCourseDetails";
 
 
 const router = createBrowserRouter(
@@ -262,6 +263,16 @@ const router = createBrowserRouter(
                     element={
                         <PrivateRoute role="student">
                             <StudentEnrolledCourses />
+                        </PrivateRoute>
+                    }
+
+                />
+
+                <Route 
+                    path="myEnrolledCourses/:id"
+                    element={
+                        <PrivateRoute role="student">
+                            <SingleEnrolledCourseDetails />
                         </PrivateRoute>
                     }
 
