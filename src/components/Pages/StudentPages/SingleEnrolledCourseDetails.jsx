@@ -1,11 +1,9 @@
 import { useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
-import useAuth from "../../Hooks/useAuth";
 import LoadingSpinner from "../../Utilities/LoadingSpinner";
 import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
 import SectionHeading from "../../Utilities/SectionHeading";
-import { Link } from "react-router";
 import { format } from "date-fns";
 import EnrolledCoursesClassSchedule from "./EnrolledCoursesClassSchedule";
 import SingleEnrolledCourseMaterials from "./SingleEnrolledCourseMaterials";

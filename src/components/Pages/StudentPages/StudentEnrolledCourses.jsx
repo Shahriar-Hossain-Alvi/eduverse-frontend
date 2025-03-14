@@ -35,7 +35,7 @@ const StudentEnrolledCourses = () => {
             <div className="grid grid-cols-1 gap-6">
                 {singleStudentEnrolledCourses.map((enrolledCourse) => (
                     // card
-                    <div key={enrolledCourse._id} className="bg-blue-600 overflow-hidden shadow-lg rounded-lg grid grid-cols-6 gap-3 p-3">
+                    <div key={enrolledCourse._id} className="border border-gray-200 overflow-hidden shadow-lg rounded-lg grid grid-cols-6 gap-3 p-3">
 
                         {/* cover image */}
                         <div className="flex rounded-md col-span-2">
@@ -48,13 +48,13 @@ const StudentEnrolledCourses = () => {
 
 
                         <div className="col-span-4">
-                            <h2 className="text-xl font-bold text-white mb-2">{enrolledCourse.course_id.title}</h2>
+                            <h2 className="text-xl font-bold mb-2">{enrolledCourse.course_id.title}</h2>
 
                             {/* three badges */}
                             <div className="flex flex-wrap gap-2 mb-4">
-                                <div className="badge badge-primary text-white font-medium">{enrolledCourse.course_id.credits} Credits</div>
+                                <div className="badge bg-eduverse_primary_lite text-white font-medium">{enrolledCourse.course_id.credits} Credits</div>
 
-                                <div className="badge badge-secondary text-white font-medium">{enrolledCourse.course_id.total_available_seats} Seats</div>
+                                <div className="badge bg-eduverse_primary_lite text-white font-medium">{enrolledCourse.course_id.total_available_seats} Seats</div>
 
                                 {enrolledCourse.course_id.is_active ? (
                                     <div className="badge badge-success text-white font-medium">Active</div>
@@ -66,7 +66,7 @@ const StudentEnrolledCourses = () => {
                             {/* Date and co-faculty */}
                             <div className="flex gap-5">
                                 {/* Dates */}
-                                <div className="mb-4 text-white">
+                                <div className="mb-4">
                                     <h3 className="text-lg font-semibold mb-2 ">Course Dates</h3>
 
                                     <p className="text-sm">
@@ -79,7 +79,7 @@ const StudentEnrolledCourses = () => {
                                 </div>
 
                                 {/* Faculty */}
-                                <div className="mb-4 text-white">
+                                <div className="mb-4 text">
                                     <h3 className="text-lg font-semibold mb-2">Faculty</h3>
 
                                     <ul className="space-y-1">
@@ -94,7 +94,7 @@ const StudentEnrolledCourses = () => {
 
                             {/* view details button */}
                             <div className="flex justify-end">
-                                <Link to={`/student/myEnrolledCourses/${enrolledCourse._id}`} className="btn btn-block btn-success text-white">View </Link>
+                                <Link to={`/student/myEnrolledCourses/${enrolledCourse._id}`} className="btn btn-block text-white bg-eduverse_primary_lite hover:border-eduverse_primary_lite">View </Link>
                             </div>
                         </div>
                     </div>

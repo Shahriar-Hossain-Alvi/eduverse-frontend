@@ -21,9 +21,6 @@ const SingleEnrolledCourseMaterials = ({ courseID }) => {
     })
 
 
-    console.log(enrolledCoursesMaterials);
-
-
     return (
         <div className='mt-10'>
 

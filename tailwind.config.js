@@ -9,8 +9,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        light_primary: "#37AFE1",
-        light_secondary: "#4CC9FE"
+        eduverse_primary_color: "#823159",
+        eduverse_primary_lite: "#b1266b"
       },
     },
   },
@@ -18,8 +18,8 @@ export default {
     daisyui,
   ],
   daisyui: {
-    themes: ["light", "forest"],
-    darkTheme: "forest", // name of one of the included themes for dark mode
+    themes: ["light", "black"],
+    darkTheme: "black", // name of one of the included themes for dark mode
     base: true, // applies background color and foreground color for root element by default
     styled: true, // include daisyUI colors and design decisions for all components
     utils: true, // adds responsive and modifier utility classes

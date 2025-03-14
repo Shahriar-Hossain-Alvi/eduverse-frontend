@@ -129,7 +129,7 @@ const UserInfo = () => {
                 {!isEditing ? (
                     <button
                         onClick={() => setIsEditing(true)}
-                        className="btn btn-primary btn-xs md:btn-md mt-2 md:mt-0 text-white"
+                        className="btn btn-primary border border-eduverse_primary_lite btn-xs md:btn-md mt-2 md:mt-0 text-white"
                     >
                         <FiEdit2 className="mr-2" /> Edit Profile
                     </button>
