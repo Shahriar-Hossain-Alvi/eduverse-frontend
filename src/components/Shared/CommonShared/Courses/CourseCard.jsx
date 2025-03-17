@@ -24,8 +24,8 @@ const CourseCard = ({ singleCourseDetails }) => {
             button: "bg-green-500 hover:bg-green-600 hover:border",
         },
         student: {
-            bg: "bg-eduverse_primary_color",
-            button: "bg-eduverse_primary_lite  hover:border",
+            bg: "bg-eduverse_student_primary_color",
+            button: "bg-eduverse_student_primary_color_lite  hover:border",
         },
     }
 

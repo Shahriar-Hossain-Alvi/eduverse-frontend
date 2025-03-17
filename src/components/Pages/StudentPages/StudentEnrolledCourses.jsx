@@ -52,9 +52,9 @@ const StudentEnrolledCourses = () => {
 
                             {/* three badges */}
                             <div className="flex flex-wrap gap-2 mb-4">
-                                <div className="badge bg-eduverse_primary_lite text-white font-medium">{enrolledCourse.course_id.credits} Credits</div>
+                                <div className="badge bg-eduverse_student_primary_color_lite text-white font-medium">{enrolledCourse.course_id.credits} Credits</div>
 
-                                <div className="badge bg-eduverse_primary_lite text-white font-medium">{enrolledCourse.course_id.total_available_seats} Seats</div>
+                                <div className="badge bg-eduverse_student_primary_color_lite text-white font-medium">{enrolledCourse.course_id.total_available_seats} Seats</div>
 
                                 {enrolledCourse.course_id.is_active ? (
                                     <div className="badge badge-success text-white font-medium">Active</div>
@@ -94,7 +94,7 @@ const StudentEnrolledCourses = () => {
 
                             {/* view details button */}
                             <div className="flex justify-end">
-                                <Link to={`/student/myEnrolledCourses/${enrolledCourse._id}`} className="btn btn-block text-white bg-eduverse_primary_lite hover:border-eduverse_primary_lite">View </Link>
+                                <Link to={`/student/myEnrolledCourses/${enrolledCourse._id}`} className="btn btn-block text-white hover:bg-eduverse_student_primary_color bg-eduverse_student_primary_color_lite hover:border-eduverse_student_primary_color_lite">View </Link>
                             </div>
                         </div>
                     </div>

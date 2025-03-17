@@ -39,7 +39,7 @@ const EnrolledCoursesClassSchedule = ({ courseID }) => {
 
             <div className="space-y-2">
                 {enrolledCoursesClassSchedule.map((singleClass) => (
-                    <div key={singleClass._id} className="flex justify-between items-center bg-base-300 border p-3 rounded">
+                    <div key={singleClass._id} className="flex justify-between items-center bg-base-200 border p-3 rounded">
                         <div className="space-y-1">
 
                             {/* title */}

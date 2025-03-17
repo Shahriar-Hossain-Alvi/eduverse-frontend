@@ -9,8 +9,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        eduverse_primary_color: "#823159",
-        eduverse_primary_lite: "#b1266b"
+        eduverse_student_primary_color: "#823159",
+        eduverse_student_primary_color_lite: "#b1266b"
       },
     },
   },

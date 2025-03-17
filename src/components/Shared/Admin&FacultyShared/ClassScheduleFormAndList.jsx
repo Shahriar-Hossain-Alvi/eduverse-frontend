@@ -13,6 +13,8 @@ import LoadingSpinner from "../../Utilities/LoadingSpinner";
 import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
 import Swal from "sweetalert2";
 import { BiError } from "react-icons/bi";
+import { Link } from "react-router";
+import useAuth from "../../Hooks/useAuth";
 
 
 // handle is_active field for admin
@@ -20,7 +22,7 @@ import { BiError } from "react-icons/bi";
 
 const ClassScheduleForm = ({ course_id, faculty }) => {
     const axiosSecure = useAxiosSecure();
-
+    const { user } = useAuth();
 
     const [showScheduleForm, setShowScheduleForm] = useState(false);
     const [showUpdateScheduleForm, setShowUpdateScheduleForm] = useState(false);
@@ -579,7 +581,10 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
                                 </div>
 
                                 {/* class details button */}
-                                <button className="btn btn-success text-white ">Details</button>
+                                {
+                                    user.user_role === "faculty" &&
+                                    <Link to={`/faculty/myCourses/classDetails/${singleClass._id}`} className="btn btn-success text-white ">Details</Link>
+                                }
                             </div>
                         </li>
                     ))}

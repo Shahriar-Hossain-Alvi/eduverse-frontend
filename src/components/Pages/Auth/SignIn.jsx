@@ -1,7 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import useAuth from "../../Hooks/useAuth";
-import useTheme from "../../Hooks/useTheme"
 import { TbFidgetSpinner } from "react-icons/tb";
 import toast, { Toaster } from 'react-hot-toast';
 import { useState } from "react";
@@ -11,7 +10,6 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 
 const SignIn = () => {
-    const { theme } = useTheme();
     const { user, login, loading } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
@@ -70,21 +68,21 @@ const SignIn = () => {
 
 
     return (
-        <div className="bg-base-200 min-h-screen py-20 px-20 md:px-28 lg:px-44">
+        <div className="min-h-screen py-20 px-20 md:px-28 lg:px-44">
             <div className="flex-col">
                 <div className="text-center">
                     <Toaster />
                     <h1 className="text-5xl font-bold">Login</h1>
-                    <p className={`py-6 font-medium ${theme === "dark" ? "text-secondary" : "text-light_secondary"}`}>
+                    <p className="py-6 font-medium">
                         Use you email and password to login.
                     </p>
                 </div>
 
-                <div className="bg-base-100 rounded-lg w-full shadow-2xl">
-                    <form onSubmit={handleSubmit(handleLogin)} className="px-7 pt-7 mb-3 space-y-4">
+                <div className="bg-base-200 rounded-lg w-full mx-auto shadow-2xl">
+                    <form onSubmit={handleSubmit(handleLogin)} className="px-5 pt-5 mb-3 space-y-4">
                         <div className="grid grid-cols-12">
                             <label className="label col-span-2">
-                                <span className="label-text">Email:</span>
+                                <span className="label-text ">Email:</span>
                             </label>
 
                             <div className="col-span-10">
@@ -124,11 +122,15 @@ const SignIn = () => {
                                 }
                             </div>
                         </div>
-                        <div className="form-control mt-6">
+
+                        <div className="form-control">
                             {
                                 loading ?
-                                    <button type="submit" className="btn btn-primary btn-disabled" ><TbFidgetSpinner className="animate-spin text-lg" /></button> :
-                                    <button type="submit" className="btn btn-primary">Login</button>
+                                    <button type="submit" className="btn btn-primary btn-disabled" ><TbFidgetSpinner className="animate-spin text-lg" /></button>
+
+                                     :
+
+                                    <button type="submit" className="btn btn-primary text-white ">Login</button>
                             }
                         </div>
                     </form>
@@ -136,7 +138,7 @@ const SignIn = () => {
                     <div className="px-7 pb-7 justify-between flex">
                         <Link to="/passwordReset" className="text-error font-medium hover:underline">Forgot Password?</Link>
 
-                        <Link to="/signup" className="text-error font-medium hover:underline">Signup</Link>
+                        {/* <Link to="/signup" className="text-white font-medium hover:underline">Signup</Link> */}
                     </div>
                 </div>
             </div>

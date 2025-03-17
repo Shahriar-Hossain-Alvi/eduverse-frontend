@@ -24,6 +24,7 @@ import SingleAssignedCourseDetails from "../Pages/FacultyPages/SingleAssignedCou
 import StudentAcademicInfo from "../Shared/CommonShared/StudentAcademicInfo/StudentAcademicInfo";
 import StudentEnrolledCourses from "../Pages/StudentPages/StudentEnrolledCourses";
 import SingleEnrolledCourseDetails from "../Pages/StudentPages/SingleEnrolledCourseDetails";
+import SingleClassDetails from "../Shared/Admin&FacultyShared/SingleClassDetails";
 
 
 const router = createBrowserRouter(
@@ -139,7 +140,7 @@ const router = createBrowserRouter(
 
 
 
-            {/* faculty routes */}
+            {/* =============== faculty routes ========= */}
             < Route path="faculty" element={< FacultyLayout />} errorElement={< ErrorPage />}>
 
                 {/* for auto redirects */}
@@ -196,6 +197,15 @@ const router = createBrowserRouter(
                 />
 
                 <Route
+                    path="myCourses/classDetails/:id"
+                    element={
+                        <PrivateRoute role="faculty">
+                            <SingleClassDetails />
+                        </PrivateRoute>
+                    }
+                />
+
+                <Route
                     path="myCourses/:id"
                     element={
                         <PrivateRoute role="faculty">
@@ -218,7 +228,7 @@ const router = createBrowserRouter(
 
 
 
-            {/* student routes */}
+            {/* ============ student routes =========== */}
             < Route path="student" element={< StudentLayout />} errorElement={< ErrorPage />}>
                 {/* for auto redirects */}
                 < Route

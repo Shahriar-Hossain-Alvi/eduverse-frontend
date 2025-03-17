@@ -7,6 +7,7 @@ import SectionHeading from "../../Utilities/SectionHeading";
 import EnrolledStudentList from "../../Shared/Admin&FacultyShared/EnrolledStudentList";
 import ClassScheduleFormAndList from "../../Shared/Admin&FacultyShared/ClassScheduleFormAndList"
 import CourseMaterialFormAndList from "../../Shared/Admin&FacultyShared/CourseMaterialFormAndList";
+import { format } from "date-fns";
 
 
 
@@ -48,6 +49,32 @@ const SingleAssignedCourseDetails = () => {
             <SectionHeading title={course_id.title} />
 
             <p className="font-medium text-lg mb-5">{course_id.description}</p>
+
+            <div className="flex gap-3 mt-5">
+                <h4>
+                    <span className="font-medium mr-1">
+                        Start:
+                    </span>
+                    {format(new Date(course_id.start_date), "MMMM d, yyyy")}
+                </h4>
+
+                <div className="divider divider-horizontal divider-primary"></div>
+
+                <h4>
+                    <span className="font-medium mr-1">
+                        End:
+                    </span>
+                    {format(new Date(course_id.end_date), "MMMM d, yyyy")}
+                </h4>
+
+                <div className="divider divider-horizontal divider-primary"></div>
+
+                <h4>
+                    <span className="font-medium mr-1">
+                    Credits:
+                    </span>
+                     {course_id.credits}</h4>
+            </div>
 
 
             {/* class schedules form*/}
