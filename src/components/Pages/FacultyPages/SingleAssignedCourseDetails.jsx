@@ -18,21 +18,22 @@ const SingleAssignedCourseDetails = () => {
 
 
     // fetch single assigned course details using courseFacultyAssignments id
-    const { data: singleAssignedCourse = [], isError, error, isPending } = useQuery({
+    const { data: singleAssignedCourse = {}, isError, error, isPending } = useQuery({
         queryKey: ["singleAssignedCourse", id],
         queryFn: async () => {
             const res = await axiosSecure.get(`/courseFacultyAssignments/${id}`)
 
-            return [res.data.data];
+            return res.data.data;
         }
     });
 
-    const singleAssignedCourseObject = singleAssignedCourse[0] || {};
+
 
     const { course_id, // oject
         is_active,
         users_id, // array
-    } = singleAssignedCourseObject;
+    } = singleAssignedCourse;
+
 
 
     if (isPending) return <LoadingSpinner />
