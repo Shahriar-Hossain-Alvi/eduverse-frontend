@@ -140,7 +140,7 @@ const ClassMaterialFormAndList = ({ class_id }) => {
 
 
     // delete course material
-    const handleCourseMaterialDelete = async (id, url, material_title) => {
+    const handleClassMaterialDelete = async (id, url, material_title) => {
 
         const swalResponse = await Swal.fire({
             title: "Delete this Class Material?",
@@ -175,37 +175,37 @@ const ClassMaterialFormAndList = ({ class_id }) => {
 
 
     // material edit button
-    const handleCourseMaterialEdit = (id) => {
+    const handleClassMaterialEdit = (id) => {
         setShowUpdateClassMaterialsForm(true);
 
-        const foundCourseMaterial = classMaterials.find(singleCourseMaterials => singleCourseMaterials._id === id);
+        const foundClassMaterial = classMaterials.find(singleClassMaterials => singleClassMaterials._id === id);
 
-        if (foundCourseMaterial) {
-            setOriginalClassMaterialData(foundCourseMaterial);
+        if (foundClassMaterial) {
+            setOriginalClassMaterialData(foundClassMaterial);
 
-            setValue("updateCourseMaterialTitle", foundCourseMaterial.title);
-            setValue("updateCourseMaterialDescription", foundCourseMaterial.description);
+            setValue("updateClassMaterialTitle", foundClassMaterial.title);
+            setValue("updateClassMaterialDescription", foundClassMaterial.description);
         }
     }
 
 
     // update course material
-    const handleCourseMaterialUpdate = async (data) => {
+    const handleClassMaterialUpdate = async (data) => {
         if (!originalClassMaterialData) return;
         const id = originalClassMaterialData._id;
 
-        const updateCourseMaterialData = {};
+        const updateClassMaterialData = {};
 
-        if (data.updateCourseMaterialTitle !== originalClassMaterialData.title) {
-            updateCourseMaterialData.title = data.updateCourseMaterialTitle;
+        if (data.updateClassMaterialTitle !== originalClassMaterialData.title) {
+            updateClassMaterialData.title = data.updateClassMaterialTitle;
         }
 
-        if (data.updateCourseMaterialDescription !== originalClassMaterialData.description) {
-            updateCourseMaterialData.description = data.updateCourseMaterialDescription;
+        if (data.updateClassMaterialDescription !== originalClassMaterialData.description) {
+            updateClassMaterialData.description = data.updateClassMaterialDescription;
         }
 
         if (user._id !== originalClassMaterialData.created_by._id) {
-            updateCourseMaterialData.created_by = user._id;
+            updateClassMaterialData.created_by = user._id;
         }
 
         // upload file to cloudinary
@@ -226,7 +226,7 @@ const ClassMaterialFormAndList = ({ class_id }) => {
                 if (cloudinaryRes.status === 200) {
                     const cloudinaryUrl = cloudinaryRes.data.secure_url;
 
-                    updateCourseMaterialData.material_url = cloudinaryUrl;
+                    updateClassMaterialData.material_url = cloudinaryUrl;
 
                     setFormSubmissionLoading(false);
 
@@ -236,7 +236,7 @@ const ClassMaterialFormAndList = ({ class_id }) => {
                     });
                 }
             } catch (error) {
-                handleError(error, "Failed to create Course Material.");
+                handleError(error, "Failed to update Class Material.");
                 setFormSubmissionLoading(false);
                 toast.error("Failed to upload resource", {
                     duration: 2500,
@@ -247,10 +247,10 @@ const ClassMaterialFormAndList = ({ class_id }) => {
         }
 
         if (materialType === "url") {
-            updateCourseMaterialData.material_url = data.url;
+            updateClassMaterialData.material_url = data.url;
         }
 
-        if (Object.keys(updateCourseMaterialData).length === 0) {
+        if (Object.keys(updateClassMaterialData).length === 0) {
             toast.error("No changes detected", {
                 duration: 2500,
                 position: "top-center"
@@ -260,7 +260,7 @@ const ClassMaterialFormAndList = ({ class_id }) => {
 
         try {
             setFormSubmissionLoading(true);
-            const res = await axiosSecure.patch(`/courseMaterials/${id}`, updateCourseMaterialData);
+            const res = await axiosSecure.patch(`/classMaterials/${id}`, updateClassMaterialData);
 
             if (res.data.success) {
                 toast.success(res.data.message, {
@@ -425,9 +425,9 @@ const ClassMaterialFormAndList = ({ class_id }) => {
 
                 {showUpdateClassMaterialsForm && (
                     <div>
-                        <SectionHeading title="Update Course Material" />
+                        <SectionHeading title="Update Class Material" />
 
-                        <form onSubmit={handleSubmit(handleCourseMaterialUpdate)} className="mb-6 p-4 rounded-lg">
+                        <form onSubmit={handleSubmit(handleClassMaterialUpdate)} className="mb-6 p-4 rounded-lg">
 
                             {/* Course material title */}
                             <div className="grid grid-cols-6 gap-2">
@@ -439,12 +439,12 @@ const ClassMaterialFormAndList = ({ class_id }) => {
                                     type="text"
                                     placeholder="Course Material Title"
 
-                                    {...register("updateCourseMaterialTitle")}
+                                    {...register("updateClassMaterialTitle")}
 
                                     className="input input-bordered mb-2 w-full rounded-lg col-span-5"
                                 />
 
-                                {errors.updateCourseMaterialTitle && <p className="text-error font-medium text-sm mb-2">{errors.updateCourseMaterialTitle.message}</p>}
+                                {errors.updateClassMaterialTitle && <p className="text-error font-medium text-sm mb-2">{errors.updateClassMaterialTitle.message}</p>}
                             </div>
 
 
@@ -457,11 +457,11 @@ const ClassMaterialFormAndList = ({ class_id }) => {
                                 <textarea
                                     placeholder="Class Description"
 
-                                    {...register("updateCourseMaterialDescription")}
+                                    {...register("updateClassMaterialDescription")}
 
                                     className="textarea textarea-bordered mb-2 w-full  rounded-lg col-span-5"
                                 />
-                                {errors.updateCourseMaterialDescription && <p className="text-error font-medium text-sm mb-2">{errors.updateCourseMaterialDescription.message}</p>}
+                                {errors.updateClassMaterialDescription && <p className="text-error font-medium text-sm mb-2">{errors.updateClassMaterialDescription.message}</p>}
                             </div>
 
 
@@ -569,7 +569,7 @@ const ClassMaterialFormAndList = ({ class_id }) => {
                                             <th>
                                                 <button
                                                     onClick={() => {
-                                                        handleCourseMaterialEdit(material._id);
+                                                        handleClassMaterialEdit(material._id);
 
                                                         if (showMaterialForm) {
                                                             setShowMaterialForm(false);
@@ -579,7 +579,7 @@ const ClassMaterialFormAndList = ({ class_id }) => {
                                                 >
                                                     <FiEdit />
                                                 </button>
-                                                <button onClick={() => handleCourseMaterialDelete(material._id, material.material_url, material.title)} className="text-red-500 hover:text-red-600">
+                                                <button onClick={() => handleClassMaterialDelete(material._id, material.material_url, material.title)} className="text-red-500 hover:text-red-600">
                                                     <FiTrash2 />
                                                 </button>
                                             </th>

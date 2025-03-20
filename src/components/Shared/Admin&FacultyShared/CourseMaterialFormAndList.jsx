@@ -233,7 +233,7 @@ const CourseMaterialFormAndList = ({ course_id }) => {
                     });
                 }
             } catch (error) {
-                handleError(error, "Failed to create Course Material.");
+                handleError(error, "Failed to update Course Material.");
                 setFormSubmissionLoading(false);
                 toast.error("Failed to upload resource", {
                     duration: 2500,
