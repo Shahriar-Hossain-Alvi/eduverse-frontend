@@ -143,7 +143,7 @@ const ClassMaterialFormAndList = ({ class_id }) => {
     const handleCourseMaterialDelete = async (id, url, material_title) => {
 
         const swalResponse = await Swal.fire({
-            title: "Delete this Course Material?",
+            title: "Delete this Class Material?",
             text: "You won't be able to revert this!",
             icon: "warning",
             showCancelButton: true,
@@ -154,7 +154,7 @@ const ClassMaterialFormAndList = ({ class_id }) => {
 
         if (swalResponse.isConfirmed) {
             try {
-                const res = await axiosSecure.delete(`/courseMaterials/${id}`, {
+                const res = await axiosSecure.delete(`/classMaterials/${id}`, {
                     data: { material_title, material_url: url }
                 });
 
@@ -168,7 +168,7 @@ const ClassMaterialFormAndList = ({ class_id }) => {
                     });
                 }
             } catch (error) {
-                handleError(error, "Failed to delete Course Material.");
+                handleError(error, "Failed to delete Class Material.");
             }
         }
     }
@@ -411,7 +411,6 @@ const ClassMaterialFormAndList = ({ class_id }) => {
 
 
             {/* update course material form */}
-
             <div>
                 {/* toggle update schedule form */}
                 {
