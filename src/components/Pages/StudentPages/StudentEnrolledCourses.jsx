@@ -32,6 +32,10 @@ const StudentEnrolledCourses = () => {
 
             {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
+            {
+                singleStudentEnrolledCourses.length === 0 && <p className="text-error text-center font-medium text-lg">You hve not enrolled in any courses yet.</p>
+            }
+
             <div className="grid grid-cols-1 gap-6">
                 {singleStudentEnrolledCourses.map((enrolledCourse) => (
                     // card

@@ -10,22 +10,24 @@ const CourseCard = ({ singleCourseDetails }) => {
 
     const { user } = useAuth();
 
-    const { _id, title, description, cover_url, assigned_faculty, credits, end_date, prerequisites, start_date, total_available_seats
-    } = singleCourseDetails;
+    const { _id, title, description, cover_url, assigned_faculty, credits, end_date, prerequisites, start_date, total_available_seats} = singleCourseDetails;
+
+    const current_date = new Date();
+
 
     // Role-based theme colors
     const themeColors = {
         admin: {
             bg: "bg-indigo-600",
-            button: "bg-indigo-500 hover:bg-indigo-600 hover:border",
+            button: "bg-indigo-500 hover:bg-indigo-600 border hover:border",
         },
         faculty: {
             bg: "bg-green-600",
-            button: "bg-green-500 hover:bg-green-600 hover:border",
+            button: "bg-green-500 hover:bg-green-600 border hover:border",
         },
         student: {
             bg: "bg-eduverse_student_primary_color",
-            button: "bg-eduverse_student_primary_color_lite  hover:border",
+            button: "bg-eduverse_student_primary_color_lite hover:bg-eduverse_student_primary_color border hover:border",
         },
     }
 
@@ -44,6 +46,7 @@ const CourseCard = ({ singleCourseDetails }) => {
                     className="h-full w-full object-fill transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+
             </div>
 
 
@@ -108,13 +111,21 @@ const CourseCard = ({ singleCourseDetails }) => {
                     </span>
                 </div>
 
-                {/* Action Button */}
-                <Link
-                    to={`/${user.user_role}/courses/${_id}`}
-                    className={`inline-flex w-full items-center justify-center rounded-lg ${roleTheme.button} px-4 py-2 text-sm font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/20`}
-                >
-                    View Details
-                </Link>
+                <div className='relative pt-5'>
+                    {/* Action Button */}
+                    <Link
+                        to={`/${user.user_role}/courses/${_id}`}
+                        className={`btn btn-block rounded-lg ${roleTheme.button} font-medium text-white`}
+                    >
+                        View Details
+                    </Link>
+
+                    {(new Date(start_date)) > current_date ?
+                        <button className="badge badge-success rounded-full badge-lg text-white absolute top-2 right-0 animate-bounce">Enrollment Going on</button>
+                        :
+                        <button className="badge badge-error rounded-full badge-lg text-white  absolute top-2 right-0">Enrollment Closed</button>
+                    }
+                </div>
             </div>
         </div>
     );

@@ -43,6 +43,7 @@ const CourseDetails = () => {
 
 
     const { _id, assigned_faculty, cover_url, credits, description, end_date, is_active, prerequisites, start_date, title, total_available_seats } = getSingleCourseDetails;
+    
 
     const currentDate = new Date().toISOString().slice(0, 16);
 

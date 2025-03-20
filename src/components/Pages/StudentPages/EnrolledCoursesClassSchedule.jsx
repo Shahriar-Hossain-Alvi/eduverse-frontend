@@ -16,7 +16,7 @@ const EnrolledCoursesClassSchedule = ({ courseID }) => {
     const { data: enrolledCoursesClassSchedule = [], isPending, isError, error } = useQuery({
         queryKey: ["enrolledCoursesClassSchedule"],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/classes/${course_id}`);
+            const res = await axiosSecure.get(`/classes/courseId/${course_id}`);
 
             return res.data.data;
         },

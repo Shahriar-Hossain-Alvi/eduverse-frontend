@@ -36,6 +36,7 @@ const SingleAssignedCourseDetails = () => {
 
 
 
+
     if (isPending) return <LoadingSpinner />
 
 

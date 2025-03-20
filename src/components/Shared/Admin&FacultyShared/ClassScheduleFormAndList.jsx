@@ -39,7 +39,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
     const { data: classList = [], isPending, isError, error, refetch } = useQuery({
         queryKey: ["classList"],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/classes/${course_id}`);
+            const res = await axiosSecure.get(`/classes/courseId/${course_id}`);
 
             return res.data.data;
         },
@@ -229,7 +229,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
 
 
     return (
-        <div className="mb-10">
+        <div className="mb-10 mt-10">
             <Toaster />
             <SectionHeading title="Class Schedules" />
 
