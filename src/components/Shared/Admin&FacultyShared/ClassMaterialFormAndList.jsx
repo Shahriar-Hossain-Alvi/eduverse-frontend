@@ -51,8 +51,6 @@ const ClassMaterialFormAndList = ({ class_id }) => {
         }
     });
 
-    console.log(classMaterials);
-
     if (isPending) return <LoadingSpinner />
 
 

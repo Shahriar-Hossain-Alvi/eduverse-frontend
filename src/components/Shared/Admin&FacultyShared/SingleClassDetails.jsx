@@ -6,6 +6,7 @@ import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage
 import SectionHeading from "../../Utilities/SectionHeading";
 import { format } from "date-fns";
 import ClassMaterialFormAndList from "./ClassMaterialFormAndList";
+import EnrolledStudentsClassAttendanceForm from "./EnrolledStudentsClassAttendanceForm";
 
 
 
@@ -61,9 +62,10 @@ const SingleClassDetails = () => {
                 <p className="text-lg w-2/5"><span className="font-medium underline">Location:</span> {location}</p>
             </div>
 
+            <ClassMaterialFormAndList class_id={id} />
+
+            <EnrolledStudentsClassAttendanceForm course_id={course_id} class_id={id} />
             <div>
-                <ClassMaterialFormAndList class_id={id} />
-                Class Materials
 
                 Attendance
 

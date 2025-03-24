@@ -19,7 +19,7 @@ const EnrolledStudentList = ({ course_id }) => {
             return res.data.data;
         },
         enabled: !!course_id // Runs only when course_id is available
-    });
+    }); 
 
 
     if (isPending) return <LoadingSpinner />
