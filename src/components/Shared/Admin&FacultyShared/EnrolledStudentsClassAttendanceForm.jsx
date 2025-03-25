@@ -1,22 +1,23 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import SectionHeading from "../../Utilities/SectionHeading";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
 import PropTypes from 'prop-types';
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaMinus, FaPlus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import useAuth from "../../Hooks/useAuth";
 import toast from "react-hot-toast";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
 import { MdClose } from "react-icons/md";
 import { handleError } from "../../Utilities/handleError";
+import { format } from "date-fns";
+import LoadingSpinner from "../../Utilities/LoadingSpinner";
 
 
 
 
-const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id }) => {
-    console.log(class_id);
+const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_time }) => {
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
 
@@ -33,10 +34,14 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id }) => {
         queryFn: async () => {
             const res = await axiosSecure.get(`/classAttendance/${class_id}`);
 
+
             return res.data.data;
         },
         enabled: !!class_id
     });
+
+    console.log(studentsAttendanceRecord);
+
 
     // fetch enrolled student list
     const { data: studentListForAttendance = [], isError: studentListForAttendanceIsError, error: studentListForAttendanceError, isPending: studentListForAttendanceIsPending } = useQuery({
@@ -48,7 +53,6 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id }) => {
         },
         enabled: !!course_id // Runs only when course_id is available
     });
-    console.log(studentsAttendanceRecord);
 
 
     // Initialize attendance data when student list is loaded 
@@ -108,18 +112,18 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id }) => {
         }
 
         // Prepare data according to schema
+        const attendance_for = format(new Date(scheduled_time), "MMMM d, yyyy");
+
         const finalData = {
             class_id,
             created_by: user._id,
-            attendance_date: new Date(),
+            attendance_date: attendance_for,
             attendance_record: attendanceData
         };
 
         try {
             setFormSubmissionLoading(true);
             const res = await axiosSecure.post("/classAttendance", finalData);
-
-            console.log(res);
 
             if (res.data.success) {
                 toast.success(res.data.message, {
@@ -155,26 +159,33 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id }) => {
                 {studentListForAttendanceIsError && <TanstackQueryErrorMessage errorMessage={studentListForAttendanceError.message} />}
 
 
+                {/* loading if the student list is loading */}
+                {
+                    studentListForAttendanceIsPending ? <LoadingSpinner />
+                        :
+                        // show the create attendance button after student list is loaded
+                        <div className="mb-3">
+                            {
+                                showAttendanceForm ?
+                                    <button onClick={() => {
+                                        setShowAttendanceForm(!showAttendanceForm);
+                                        reset();
+                                    }} className="btn btn-error text-white">
+                                        <MdClose />
+                                        Cancel
+                                    </button>
+                                    :
+                                    <button onClick={() => setShowAttendanceForm(!showAttendanceForm)} className="btn btn-success text-white">
+                                        <FaPlus />
+                                        Add Attendance
+                                    </button>
 
-                <div className="mb-3">
-                    {
-                        showAttendanceForm ?
-                            <button onClick={() => {
-                                setShowAttendanceForm(!showAttendanceForm);
-                                reset();
-                            }} className="btn btn-error text-white">
-                                <MdClose />
-                                Cancel
-                            </button>
-                            :
-                            <button onClick={() => setShowAttendanceForm(!showAttendanceForm)} className="btn btn-success text-white">
-                                <FaPlus />
-                                Add Attendance
-                            </button>
 
+                            }
+                        </div>
+                }
 
-                    }
-                </div>
+                {/* attendance form starts here */}
                 {
                     showAttendanceForm &&
                     <form onSubmit={handleSubmit(handleAddClassAttendance)}>
@@ -239,16 +250,65 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id }) => {
             </div>
 
 
+            {/* show recorded attendance */}
+            <div>
+                {/* error message */}
+                {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
-            {/* error message */}
-            {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
+                {isPending && <LoadingSpinner />}
+
+                {(!isPending && Object.keys(studentsAttendanceRecord).length > 0) &&
+                    <div>
+                        <div className="grid grid-cols-2">
+                            <h2 className="text-lg font-medium">Attendance of: {format(new Date(studentsAttendanceRecord.attendance_date), "MMMM d, yyyy")}</h2>
+                            <h3 className="text-lg font-medium">Recorded By: {studentsAttendanceRecord.created_by.first_name} {studentsAttendanceRecord.created_by.last_name}</h3>
+                        </div>
+
+                        <div className="overflow-x-auto">
+                            <table className="table">
+                                {/* head */}
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Name</th>
+                                        <th>Attendance</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        studentsAttendanceRecord.attendance_record.map((singleRecord, index) => <tr key={singleRecord._id}>
+                                            <th>{index + 1}</th>
+
+                                            <td>{singleRecord.student_id.first_name} {singleRecord.student_id.last_name}</td>
+
+                                            <td className="capitalize flex items-center gap-2">
+                                                {singleRecord.is_present}
+                                                <div>
+                                                    {singleRecord.is_present === "present" && <div className="badge badge-success rounded-full badge-xs"></div>}
+                                                    {singleRecord.is_present === "absent" && <div className="badge badge-error rounded-full badge-xs"></div>}
+                                                    {singleRecord.is_present === "late" && <div className="badge badge-warning rounded-full badge-xs"></div>}
+                                                    {singleRecord.is_present === "early leave" && <div className="badge badge-info rounded-full badge-xs"></div>}
+                                                </div>
+                                            </td>
+
+                                            <td>{singleRecord.remarks}</td>
+                                        </tr>)
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>}
+
+            </div>
         </div>
     );
 };
 
 EnrolledStudentsClassAttendanceForm.propTypes = {
     course_id: PropTypes.string,
-    class_id: PropTypes.string
+    class_id: PropTypes.string,
+    scheduled_time: PropTypes.string
 }
 
 

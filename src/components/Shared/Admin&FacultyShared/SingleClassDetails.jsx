@@ -64,7 +64,7 @@ const SingleClassDetails = () => {
 
             <ClassMaterialFormAndList class_id={id} />
 
-            <EnrolledStudentsClassAttendanceForm course_id={course_id} class_id={id} />
+            <EnrolledStudentsClassAttendanceForm course_id={course_id} class_id={id} scheduled_time={scheduled_time} />
             <div>
 
                 Attendance
