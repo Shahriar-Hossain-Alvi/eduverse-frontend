@@ -16,7 +16,6 @@ import LoadingSpinner from "../../Utilities/LoadingSpinner";
 
 
 
-
 const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_time }) => {
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
@@ -40,7 +39,12 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
         enabled: !!class_id
     });
 
-    console.log(studentsAttendanceRecord);
+    const isRecordExists = studentsAttendanceRecord && (
+        (Array.isArray(studentsAttendanceRecord) && studentsAttendanceRecord.length > 0) ||
+        (typeof studentsAttendanceRecord === "object" && Object.keys(studentsAttendanceRecord).length > 0)
+    );
+
+    console.log(isRecordExists);
 
 
     // fetch enrolled student list
@@ -166,7 +170,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                         // show the create attendance button after student list is loaded
                         <div className="mb-3">
                             {
-                                showAttendanceForm ?
+                                !isRecordExists && showAttendanceForm ?
                                     <button onClick={() => {
                                         setShowAttendanceForm(!showAttendanceForm);
                                         reset();
@@ -175,12 +179,11 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                                         Cancel
                                     </button>
                                     :
+                                    !isRecordExists &&
                                     <button onClick={() => setShowAttendanceForm(!showAttendanceForm)} className="btn btn-success text-white">
                                         <FaPlus />
                                         Add Attendance
                                     </button>
-
-
                             }
                         </div>
                 }
