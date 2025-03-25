@@ -13,6 +13,8 @@ import { MdClose } from "react-icons/md";
 import { handleError } from "../../Utilities/handleError";
 import { format } from "date-fns";
 import LoadingSpinner from "../../Utilities/LoadingSpinner";
+import { FiEdit, FiTrash2 } from "react-icons/fi";
+import Swal from "sweetalert2";
 
 
 
@@ -44,7 +46,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
         (typeof studentsAttendanceRecord === "object" && Object.keys(studentsAttendanceRecord).length > 0)
     );
 
-    console.log(isRecordExists);
+    console.log(studentsAttendanceRecord);
 
 
     // fetch enrolled student list
@@ -144,13 +146,43 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
             reset();
             setFormSubmissionLoading(false);
             setShowAttendanceForm(false);
-            toast.error("Failed to save class attendance", {
-                duration: 2500,
-                position: "top-center"
-            })
         }
     }
 
+
+    // delete attendance table
+    const handleAttendanceDelete = async () => {
+        const attendance_id = studentsAttendanceRecord._id;
+
+        const swalResponse = await Swal.fire({
+            title: "Do you want to delete this attendance record?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#FF0000",
+            cancelButtonColor: "#16A34A",
+            confirmButtonText: "Yes, delete it!",
+        })
+        if (swalResponse.isConfirmed) {
+            try {
+                setFormSubmissionLoading(true);
+                const res = await axiosSecure.delete(`/classAttendance/${attendance_id}`);
+
+                if (res.data.success) {
+                    refetch();
+                    setFormSubmissionLoading(false);
+                    toast.success(res.data.message, {
+                        duration: 1500,
+                        position: "top-center"
+                    })
+                }
+            } catch (error) {
+                handleError(error, "Failed to delete class attendance");
+                refetch();
+                setFormSubmissionLoading(false);
+            }
+        }
+    }
 
     return (
         <div>
@@ -262,9 +294,22 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
 
                 {(!isPending && Object.keys(studentsAttendanceRecord).length > 0) &&
                     <div>
-                        <div className="grid grid-cols-2">
-                            <h2 className="text-lg font-medium">Attendance of: {format(new Date(studentsAttendanceRecord.attendance_date), "MMMM d, yyyy")}</h2>
-                            <h3 className="text-lg font-medium">Recorded By: {studentsAttendanceRecord.created_by.first_name} {studentsAttendanceRecord.created_by.last_name}</h3>
+                        <div className="grid grid-cols-5 items-center">
+                            <h2 className="col-span-2 text-lg font-medium">Attendance of: {format(new Date(studentsAttendanceRecord.attendance_date), "MMMM d, yyyy")}</h2>
+
+                            <h3 className="col-span-2 text-lg font-medium">Recorded By: {studentsAttendanceRecord.created_by.first_name} {studentsAttendanceRecord.created_by.last_name}</h3>
+
+                            {
+                                formSubmissionLoading
+                                    ?
+                                    <button className="btn btn-disabled">
+                                        <CgSpinnerTwoAlt className="animate-spin" />
+                                    </button>
+                                    :
+                                    <button onClick={() => handleAttendanceDelete()} className="btn btn-error text-white">
+                                        Delete Record
+                                    </button>
+                            }
                         </div>
 
                         <div className="overflow-x-auto">
@@ -276,6 +321,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                                         <th>Name</th>
                                         <th>Attendance</th>
                                         <th>Remarks</th>
+                                        {user.user_role !== "student" && <th>Action</th>}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -296,6 +342,18 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                                             </td>
 
                                             <td>{singleRecord.remarks}</td>
+
+                                            {
+                                                user.user_role !== "student" &&
+                                                <th>
+                                                    <button
+
+                                                        className="text-blue-500 hover:text-blue-600 mr-2"
+                                                    >
+                                                        <FiEdit />
+                                                    </button>
+                                                </th>
+                                            }
                                         </tr>)
                                     }
                                 </tbody>

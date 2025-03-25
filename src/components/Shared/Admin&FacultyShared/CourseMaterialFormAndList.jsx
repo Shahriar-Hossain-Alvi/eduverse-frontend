@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { FiEdit, FiPlus, FiTrash2 } from "react-icons/fi";
 import SectionHeading from "../../Utilities/SectionHeading";
 import { CgClose } from "react-icons/cg";
-import { handleError } from "../../Utilities/HandleError";
+import { handleError } from "../../Utilities/handleError";
 import useAuth from "../../Hooks/useAuth";
 import PropTypes from 'prop-types';
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
