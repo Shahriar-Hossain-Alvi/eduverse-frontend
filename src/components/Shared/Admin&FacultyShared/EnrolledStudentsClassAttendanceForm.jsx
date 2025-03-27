@@ -8,12 +8,12 @@ import { useForm } from "react-hook-form";
 import { FaPlus } from "react-icons/fa";
 import useAuth from "../../Hooks/useAuth";
 import toast from "react-hot-toast";
-import { CgSpinnerTwoAlt } from "react-icons/cg";
+import { CgClose, CgSpinnerTwoAlt } from "react-icons/cg";
 import { MdClose } from "react-icons/md";
 import { handleError } from "../../Utilities/handleError";
 import { format } from "date-fns";
 import LoadingSpinner from "../../Utilities/LoadingSpinner";
-import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { FiEdit, FiSave } from "react-icons/fi";
 import Swal from "sweetalert2";
 
 
@@ -25,6 +25,9 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
     const [attendanceData, setAttendanceData] = useState([]);
     const [showAttendanceForm, setShowAttendanceForm] = useState(false);
     const [formSubmissionLoading, setFormSubmissionLoading] = useState(false);
+    const [showAttendanceUpdate, setShowAttendanceUpdate] = useState(false);
+    const [editingStudent, setEditingStudent] = useState(null);
+    const [editingStudentData, setEditingStudentData] = useState({});
 
 
     const { reset, handleSubmit } = useForm();
@@ -46,7 +49,6 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
         (typeof studentsAttendanceRecord === "object" && Object.keys(studentsAttendanceRecord).length > 0)
     );
 
-    console.log(studentsAttendanceRecord);
 
 
     // fetch enrolled student list
@@ -100,6 +102,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                     remarks: field === "remarks" ? value : ""
                 });
             }
+
 
             return updatedData;
         });
@@ -183,6 +186,73 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
             }
         }
     }
+
+
+    // get edited data
+    const getEditedData = (student_id, field, value) => {
+        setEditingStudentData(prev => ({
+            ...prev,
+            [student_id]: {
+                ...prev[student_id],
+                [field]: value
+            }
+        }));
+    };
+
+
+    const handleSingleStudentUpdate = async (studentId) => {
+        // Find the current record for the specific student
+        const currentStudentRecord = studentsAttendanceRecord.attendance_record.find(
+            record => record.student_id._id === studentId
+        );
+
+
+        // Prepare the update data for the specific student
+        const updateData = {
+            student_id: studentId,
+            is_present: editingStudentData[studentId]?.is_present || currentStudentRecord.is_present,
+            remarks: editingStudentData[studentId]?.remarks || currentStudentRecord.remarks
+        };
+
+
+        try {
+            // Validate the update data
+            if (!updateData.is_present) {
+                toast.error("Please select attendance status", {
+                    duration: 2500,
+                    position: "top-center"
+                });
+                return;
+            }
+
+            // Prepare the full payload for update
+            const finalUpdateData = {
+                attendance_id: studentsAttendanceRecord._id,
+                attendance_record: [updateData]
+            };
+
+            console.log(finalUpdateData);
+
+            // Send update request
+            const res = await axiosSecure.patch(`/classAttendance/${studentsAttendanceRecord._id}`, finalUpdateData);
+
+            if (res.data.success) {
+                toast.success("Attendance updated successfully", {
+                    duration: 2500,
+                    position: "top-center"
+                });
+
+                // Reset editing states
+                setShowAttendanceUpdate(false);
+                setEditingStudentData({});
+
+                // Refetch the latest attendance data
+                refetch();
+            }
+        } catch (error) {
+            handleError(error, "Failed to update attendance");
+        }
+    };
 
     return (
         <div>
@@ -300,12 +370,12 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                             <h3 className="col-span-2 text-lg font-medium">Recorded By: {studentsAttendanceRecord.created_by.first_name} {studentsAttendanceRecord.created_by.last_name}</h3>
 
                             {
-                                formSubmissionLoading
+                                user.user_role !== "student" && formSubmissionLoading
                                     ?
                                     <button className="btn btn-disabled">
                                         <CgSpinnerTwoAlt className="animate-spin" />
                                     </button>
-                                    :
+                                    : user.user_role !== "student" &&
                                     <button onClick={() => handleAttendanceDelete()} className="btn btn-error text-white">
                                         Delete Record
                                     </button>
@@ -331,28 +401,109 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
 
                                             <td>{singleRecord.student_id.first_name} {singleRecord.student_id.last_name}</td>
 
-                                            <td className="capitalize flex items-center gap-2">
-                                                {singleRecord.is_present}
-                                                <div>
-                                                    {singleRecord.is_present === "present" && <div className="badge badge-success rounded-full badge-xs"></div>}
-                                                    {singleRecord.is_present === "absent" && <div className="badge badge-error rounded-full badge-xs"></div>}
-                                                    {singleRecord.is_present === "late" && <div className="badge badge-warning rounded-full badge-xs"></div>}
-                                                    {singleRecord.is_present === "early leave" && <div className="badge badge-info rounded-full badge-xs"></div>}
-                                                </div>
-                                            </td>
+                                            {
+                                                showAttendanceUpdate ?
+                                                    <td>
+                                                        {/* select attendance */}
+                                                        <label className="form-control w-full">
+                                                            <div className="label">
+                                                                <span className="label-text">Select Attendance</span>
+                                                            </div>
+                                                            <div>
+                                                                <select
+                                                                    disabled={editingStudent !== singleRecord.student_id._id}
+                                                                    defaultValue={singleRecord.is_present}
+                                                                    onChange={e => getEditedData(
+                                                                        singleRecord.student_id._id,
+                                                                        "is_present",
+                                                                        e.target.value
+                                                                    )}
+                                                                    className="select select-bordered w-full">
+                                                                    <option value="present" className="text-success font-bold">Present</option>
 
-                                            <td>{singleRecord.remarks}</td>
+                                                                    <option value="absent" className="text-error font-bold">Absent</option>
+
+                                                                    <option value="early leave" className="text-warning font-bold">Early Leave</option>
+
+                                                                    <option value="late" className="text-warning font-bold">Late</option>
+                                                                </select>
+                                                            </div>
+                                                        </label>
+                                                    </td>
+                                                    :
+                                                    <td className="capitalize flex items-center gap-2">
+                                                        {singleRecord.is_present}
+                                                        <div>
+                                                            {singleRecord.is_present === "present" && <div className="badge badge-success rounded-full badge-xs"></div>}
+                                                            {singleRecord.is_present === "absent" && <div className="badge badge-error rounded-full badge-xs"></div>}
+                                                            {singleRecord.is_present === "late" && <div className="badge badge-warning rounded-full badge-xs"></div>}
+                                                            {singleRecord.is_present === "early leave" && <div className="badge badge-info rounded-full badge-xs"></div>}
+                                                        </div>
+                                                    </td>}
 
                                             {
-                                                user.user_role !== "student" &&
-                                                <th>
-                                                    <button
+                                                showAttendanceUpdate ?
+                                                    <td>
+                                                        {/* remarks */}
+                                                        <label className="form-control w-full max-w-xs">
+                                                            <div className="label">
+                                                                <span className="label-text">Remarks</span>
+                                                            </div>
+                                                            <div>
+                                                                <input type="text"
+                                                                    disabled={editingStudent !== singleRecord.student_id._id}
+                                                                    onChange={e => getEditedData(
+                                                                        singleRecord.student_id._id,
+                                                                        "remarks",
+                                                                        e.target.value
+                                                                    )}
+                                                                    defaultValue={singleRecord.remarks}
+                                                                    placeholder="Type here" className="input input-bordered w-full" />
+                                                            </div>
+                                                        </label>
+                                                    </td>
+                                                    :
+                                                    <td>{singleRecord.remarks}</td>}
 
+                                            {
+                                                user.user_role !== "student" && !showAttendanceUpdate &&
+                                                <td>
+                                                    <button
+                                                        onClick={() => {
+                                                            setEditingStudent(singleRecord.student_id._id);
+                                                            setShowAttendanceUpdate(true);
+                                                        }}
                                                         className="text-blue-500 hover:text-blue-600 mr-2"
                                                     >
                                                         <FiEdit />
                                                     </button>
-                                                </th>
+                                                </td>
+                                            }
+                                            {
+                                                user.user_role !== "student" && showAttendanceUpdate &&
+                                                editingStudent === singleRecord.student_id._id &&
+                                                (
+                                                    <td>
+                                                        <button
+                                                            className="text-lg bg-success text-white btn-sm mr-1"
+                                                            onClick={() => handleSingleStudentUpdate(singleRecord.student_id._id)}
+                                                        >
+                                                            <FiSave />
+                                                        </button>
+
+
+                                                        <button
+                                                            onClick={() => {
+                                                                setShowAttendanceUpdate(false);
+                                                                setEditingStudentData({});
+                                                                setEditingStudent(null);
+                                                            }}
+                                                            className="text-lg bg-error text-white btn-sm mr-1"
+                                                        >
+                                                            <CgClose />
+                                                        </button>
+                                                    </td>
+                                                )
                                             }
                                         </tr>)
                                     }
@@ -362,7 +513,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                     </div>}
 
             </div>
-        </div>
+        </div >
     );
 };
 
