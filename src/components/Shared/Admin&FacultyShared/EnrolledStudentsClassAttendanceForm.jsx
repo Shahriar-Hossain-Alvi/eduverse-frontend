@@ -10,17 +10,26 @@ import useAuth from "../../Hooks/useAuth";
 import toast from "react-hot-toast";
 import { CgClose, CgSpinnerTwoAlt } from "react-icons/cg";
 import { MdClose } from "react-icons/md";
-import { handleError } from "../../Utilities/handleError";
-import { format } from "date-fns";
+import { format, isAfter, parseISO, startOfDay } from "date-fns";
 import LoadingSpinner from "../../Utilities/LoadingSpinner";
 import { FiEdit, FiSave } from "react-icons/fi";
 import Swal from "sweetalert2";
+import { handleError } from "../../Utilities/handleError";
+import { isEqual } from "lodash";
 
 
 
 const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_time }) => {
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
+
+    const current_date = startOfDay(new Date());
+    const class_date = startOfDay(parseISO(scheduled_time));
+
+    // Check if current date is on or after the class date
+    const isDateAllowed = isEqual(current_date, class_date) || isAfter(current_date, class_date);
+
+    console.log(isDateAllowed);
 
     const [attendanceData, setAttendanceData] = useState([]);
     const [showAttendanceForm, setShowAttendanceForm] = useState(false);
@@ -231,8 +240,6 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                 attendance_record: [updateData]
             };
 
-            console.log(finalUpdateData);
-
             // Send update request
             const res = await axiosSecure.patch(`/classAttendance/${studentsAttendanceRecord._id}`, finalUpdateData);
 
@@ -273,16 +280,19 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                         <div className="mb-3">
                             {
                                 !isRecordExists && showAttendanceForm ?
-                                    <button onClick={() => {
-                                        setShowAttendanceForm(!showAttendanceForm);
-                                        reset();
-                                    }} className="btn btn-error text-white">
+                                    <button
+                                        onClick={() => {
+                                            setShowAttendanceForm(!showAttendanceForm);
+                                            reset();
+                                        }} className="btn btn-error text-white">
                                         <MdClose />
                                         Cancel
                                     </button>
                                     :
                                     !isRecordExists &&
-                                    <button onClick={() => setShowAttendanceForm(!showAttendanceForm)} className="btn btn-success text-white">
+                                    <button
+                                        disabled={!isDateAllowed}
+                                        onClick={() => setShowAttendanceForm(!showAttendanceForm)} className="btn btn-success text-white">
                                         <FaPlus />
                                         Add Attendance
                                     </button>
