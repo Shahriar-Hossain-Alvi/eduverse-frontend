@@ -4,7 +4,8 @@ import useAuth from "./useAuth";
 
 
 const axiosSecure = axios.create({
-    baseURL: "http://localhost:5000/api"
+    baseURL: "http://localhost:5000/api",
+    // baseURL: "https://eduverse-tc-web-wizards-backend.vercel.app/api",
 })
 
 

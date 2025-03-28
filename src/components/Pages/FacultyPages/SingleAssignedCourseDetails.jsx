@@ -46,9 +46,10 @@ const SingleAssignedCourseDetails = () => {
             {/* Error messages */}
             {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
+            <h1 className="text-center font-semibold text-4xl mb-8 underline">COURSE DETAILS</h1>
 
             {/* title and description */}
-            <SectionHeading title={course_id.title} />
+            <SectionHeading title={`Title: ${course_id.title}`} />
 
             <p className="font-medium text-lg mb-5">{course_id.description}</p>
 

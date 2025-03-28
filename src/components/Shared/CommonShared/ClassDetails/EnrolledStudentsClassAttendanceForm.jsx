@@ -1,20 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
-import SectionHeading from "../../Utilities/SectionHeading";
-import useAxiosSecure from "../../Hooks/useAxiosSecure";
-import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
+import SectionHeading from "../../../Utilities/SectionHeading";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import TanstackQueryErrorMessage from "../../../Utilities/TanstackQueryErrorMessage";
 import PropTypes from 'prop-types';
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaPlus } from "react-icons/fa";
-import useAuth from "../../Hooks/useAuth";
+import useAuth from "../../../Hooks/useAuth";
 import toast from "react-hot-toast";
 import { CgClose, CgSpinnerTwoAlt } from "react-icons/cg";
 import { MdClose } from "react-icons/md";
 import { format, isAfter, parseISO, startOfDay } from "date-fns";
-import LoadingSpinner from "../../Utilities/LoadingSpinner";
+import LoadingSpinner from "../../../Utilities/LoadingSpinner";
 import { FiEdit, FiSave } from "react-icons/fi";
 import Swal from "sweetalert2";
-import { handleError } from "../../Utilities/handleError";
+import { handleError } from "../../../Utilities/handleError";
 import { isEqual } from "lodash";
 
 
@@ -29,7 +29,6 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
     // Check if current date is on or after the class date
     const isDateAllowed = isEqual(current_date, class_date) || isAfter(current_date, class_date);
 
-    console.log(isDateAllowed);
 
     const [attendanceData, setAttendanceData] = useState([]);
     const [showAttendanceForm, setShowAttendanceForm] = useState(false);
@@ -68,7 +67,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
 
             return res.data.data;
         },
-        enabled: !!course_id // Runs only when course_id is available
+        enabled: !!course_id && user.user_role !=="student" // Runs only when course_id is available
     });
 
 

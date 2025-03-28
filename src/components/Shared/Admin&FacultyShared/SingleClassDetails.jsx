@@ -5,8 +5,8 @@ import LoadingSpinner from "../../Utilities/LoadingSpinner";
 import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
 import SectionHeading from "../../Utilities/SectionHeading";
 import { format } from "date-fns";
-import ClassMaterialFormAndList from "./ClassMaterialFormAndList";
-import EnrolledStudentsClassAttendanceForm from "./EnrolledStudentsClassAttendanceForm";
+import ClassMaterialFormAndList from "../CommonShared/ClassDetails/ClassMaterialFormAndList";
+import EnrolledStudentsClassAttendanceForm from "../CommonShared/ClassDetails/EnrolledStudentsClassAttendanceForm";
 
 
 
@@ -34,8 +34,10 @@ const SingleClassDetails = () => {
             {/* error message */}
             {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
+            <h1 className="text-center font-semibold text-4xl mb-8 underline">CLASS DETAILS</h1>
+
             {/* title and description */}
-            <SectionHeading title={title} />
+            <SectionHeading title={`Title: ${title}`} />
 
             <p className="font-medium text-lg mb-5">{description}</p>
 
@@ -65,6 +67,8 @@ const SingleClassDetails = () => {
             <ClassMaterialFormAndList class_id={id} />
 
             <EnrolledStudentsClassAttendanceForm course_id={course_id} class_id={id} scheduled_time={scheduled_time}  />
+
+            
             <div>
 
                 Attendance

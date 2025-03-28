@@ -28,7 +28,7 @@ const StudentEnrolledCourses = () => {
     return (
         <div className="flex-1 p-3 md:p-8">
 
-            <SectionHeading title="My Assigned Courses" />
+            <SectionHeading title="My Enrolled Courses" />
 
             {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 

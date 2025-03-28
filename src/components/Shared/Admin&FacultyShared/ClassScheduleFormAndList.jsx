@@ -516,7 +516,8 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
 
                             <div className="space-y-1">
                                 {/* title */}
-                                <h3 className="font-semibold">{singleClass.title}</h3>
+                                <h3 className="font-semibold">
+                                    <span className="underline mr-1">Title:</span> {singleClass.title}</h3>
 
                                 {/* description */}
                                 <p className="text-sm">{singleClass.description}</p>

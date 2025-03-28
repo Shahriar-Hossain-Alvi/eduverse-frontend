@@ -25,6 +25,7 @@ import StudentAcademicInfo from "../Shared/CommonShared/StudentAcademicInfo/Stud
 import StudentEnrolledCourses from "../Pages/StudentPages/StudentEnrolledCourses";
 import SingleEnrolledCourseDetails from "../Pages/StudentPages/SingleEnrolledCourseDetails";
 import SingleClassDetails from "../Shared/Admin&FacultyShared/SingleClassDetails";
+import EnrolledCoursesClassDetails from "../Pages/StudentPages/EnrolledCoursesClassDetails";
 
 
 const router = createBrowserRouter(
@@ -268,7 +269,7 @@ const router = createBrowserRouter(
                 />
 
 
-                <Route 
+                <Route
                     path="myEnrolledCourses"
                     element={
                         <PrivateRoute role="student">
@@ -278,7 +279,7 @@ const router = createBrowserRouter(
 
                 />
 
-                <Route 
+                <Route
                     path="myEnrolledCourses/:id"
                     element={
                         <PrivateRoute role="student">
@@ -286,6 +287,15 @@ const router = createBrowserRouter(
                         </PrivateRoute>
                     }
 
+                />
+
+                <Route
+                    path="myEnrolledCourses/classDetails/:id"
+                    element={
+                        <PrivateRoute role="student">
+                            <EnrolledCoursesClassDetails />
+                        </PrivateRoute>
+                    }
                 />
 
 

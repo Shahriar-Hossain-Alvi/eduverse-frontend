@@ -6,6 +6,7 @@ import TanstackQueryErrorMessage from '../../Utilities/TanstackQueryErrorMessage
 import SectionHeading from '../../Utilities/SectionHeading';
 import { format } from 'date-fns';
 import { BiError } from "react-icons/bi";
+import { Link } from 'react-router';
 
 // todo: crate class details btn functionality
 
@@ -43,7 +44,8 @@ const EnrolledCoursesClassSchedule = ({ courseID }) => {
                         <div className="space-y-1">
 
                             {/* title */}
-                            <h3 className="font-semibold">{singleClass.title}</h3>
+                            <h3 className="font-semibold">
+                             <span className='underline mr-1'>Title:</span>   {singleClass.title}</h3>
 
                             {/* description */}
                             <p className="text-sm">{singleClass.description}</p>
@@ -81,7 +83,7 @@ const EnrolledCoursesClassSchedule = ({ courseID }) => {
                             </div>
                         </div>
 
-                        <button className="btn btn-success text-white">Details</button>
+                        <Link to={`/student/myEnrolledCourses/classDetails/${singleClass._id}`} className="btn btn-success text-white">Details</Link>
                     </div>
                 ))}
             </div>

@@ -16,6 +16,8 @@ const SignIn = () => {
     const [showPassword, setShowPassword] = useState(false);
     const from = location?.state?.from?.pathname || "/";
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
+    const [logInLoading, setLogInLoading] = useState(false);
+
 
 
 
@@ -35,10 +37,12 @@ const SignIn = () => {
         }
 
         try {
+            setLogInLoading(true);
             const loggedInUser = await login(email, password);
 
             if (loggedInUser) {
                 reset();
+                setLogInLoading(false);
                 toast.success('Login Successful!', {
                     duration: 1500,
                     position: 'top-center',
@@ -58,6 +62,7 @@ const SignIn = () => {
             }
         }
         catch (error) {
+            setLogInLoading(false);
             toast.error(`${error}`, {
                 duration: 1500,
                 position: 'top-center',
@@ -130,7 +135,8 @@ const SignIn = () => {
 
                                      :
 
-                                    <button type="submit" className="btn btn-primary text-white ">Login</button>
+                                    <button type="submit"
+                                    disabled={logInLoading} className="btn btn-primary text-white ">Login</button>
                             }
                         </div>
                     </form>

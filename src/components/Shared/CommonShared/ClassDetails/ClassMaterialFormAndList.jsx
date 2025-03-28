@@ -1,19 +1,19 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiEdit, FiPlus, FiTrash2 } from "react-icons/fi";
-import SectionHeading from "../../Utilities/SectionHeading";
+import SectionHeading from "../../../Utilities/SectionHeading";
 import { CgClose } from "react-icons/cg";
-import { handleError } from "../../Utilities/HandleError";
-import useAuth from "../../Hooks/useAuth";
+import { handleError } from "../../../Utilities/HandleError";
+import useAuth from "../../../Hooks/useAuth";
 import PropTypes from 'prop-types';
 import axios from "axios";
 import { CgSpinnerTwoAlt } from "react-icons/cg";
 import toast, { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
-import LoadingSpinner from "../../Utilities/LoadingSpinner";
-import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
-import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import LoadingSpinner from "../../../Utilities/LoadingSpinner";
+import TanstackQueryErrorMessage from "../../../Utilities/TanstackQueryErrorMessage";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 
 
 
@@ -287,19 +287,21 @@ const ClassMaterialFormAndList = ({ class_id }) => {
 
 
             {/* toggle form button */}
-            <button
-                onClick={() => setShowMaterialForm(!showMaterialForm)}
-                className={`mb-4 ${showMaterialForm ? "bg-error" : "bg-blue-500 hover:bg-blue-600"} text-white font-bold py-2 px-4 rounded inline-flex items-center`}
-            >
-                {
-                    showMaterialForm ?
-                        <>
-                            <CgClose className="mr-2" /> Cancel</>
-                        :
-                        <>
-                            <FiPlus className="mr-2" /> Add New Material</>
-                }
-            </button>
+            {user.user_role !== "student" &&
+                <button
+                    onClick={() => setShowMaterialForm(!showMaterialForm)}
+                    className={`mb-4 ${showMaterialForm ? "bg-error" : "bg-blue-500 hover:bg-blue-600"} text-white font-bold py-2 px-4 rounded inline-flex items-center`}
+                >
+                    {
+                        showMaterialForm ?
+                            <>
+                                <CgClose className="mr-2" /> Cancel</>
+                            :
+                            <>
+                                <FiPlus className="mr-2" /> Add New Material</>
+                    }
+                </button>
+            }
 
 
 
