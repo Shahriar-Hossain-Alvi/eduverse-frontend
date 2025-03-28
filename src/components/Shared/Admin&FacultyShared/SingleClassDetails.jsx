@@ -25,7 +25,9 @@ const SingleClassDetails = () => {
     })
 
 
-    const { course_id, description, faculty_id, is_active, location, scheduled_time, title } = singleClassDetails
+    const { course_id, description, faculty_id, is_active, location, scheduled_time, title } = singleClassDetails;
+
+    console.log(singleClassDetails);
 
     if (isPending) return <LoadingSpinner />
 

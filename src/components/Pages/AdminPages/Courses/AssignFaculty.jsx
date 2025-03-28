@@ -91,8 +91,8 @@ const AssignFaculty = ({ assigned_faculty, courseId, setShowFacultyAssignmentFor
                 text: "Do you want to continue without assigning any faculty? This will remove all the currently assigned faculties from the course.",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
+                confirmButtonColor: "#FF0000",
+                cancelButtonColor: "#16A34A",
                 confirmButtonText: "Yes, remove all faculty!"
             }).then(async (result) => {
                 if (result.isConfirmed) {

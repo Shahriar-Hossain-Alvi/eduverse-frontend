@@ -73,7 +73,7 @@ const SignIn = () => {
 
 
     return (
-        <div className="min-h-screen py-20 px-20 md:px-28 lg:px-44">
+        <div className="min-h-screen py-10 px-4 md:px-28 lg:px-44">
             <div className="flex-col">
                 <div className="text-center">
                     <Toaster />
@@ -84,13 +84,15 @@ const SignIn = () => {
                 </div>
 
                 <div className="bg-base-200 rounded-lg w-full mx-auto shadow-2xl">
-                    <form onSubmit={handleSubmit(handleLogin)} className="px-5 pt-5 mb-3 space-y-4">
+                    <form onSubmit={handleSubmit(handleLogin)} className="px-3 md:px-5 pt-5 mb-3 space-y-4">
+
+                        {/* email */}
                         <div className="grid grid-cols-12">
-                            <label className="label col-span-2">
+                            <label className="label col-span-3 md:col-span-2">
                                 <span className="label-text ">Email:</span>
                             </label>
 
-                            <div className="col-span-10">
+                            <div className="col-span-9 md:col-span-10">
                                 <input type="email" placeholder="Enter your email" className="input w-full input-bordered"
                                     {...register("email", { required: "Email Address is required" })} />
                                 {errors.email && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.email.message}</p>}
@@ -98,11 +100,11 @@ const SignIn = () => {
                         </div>
 
                         <div className="grid grid-cols-12">
-                            <label className="label col-span-2">
+                            <label className="label col-span-3 md:col-span-2">
                                 <span className="label-text">Password:</span>
                             </label>
 
-                            <div className="col-span-10 relative">
+                            <div className="col-span-9 md:col-span-10 relative">
                                 {
                                     showPassword ?
                                         <button type="button" onClick={() => setShowPassword(false)} className="btn absolute right-3 btn-sm top-1/2 btn-ghost hover:bg-transparent -translate-y-1/2">

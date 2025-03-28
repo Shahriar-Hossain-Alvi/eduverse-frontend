@@ -22,7 +22,7 @@ const EnrolledCoursesClassDetails = () => {
         enabled: !!id
     })
 
-    const { course_id, description, faculty_id, is_active, location, scheduled_time, title } = singleClassDetails;
+    const { description, location, scheduled_time, title } = singleClassDetails;
 
 
 
@@ -40,7 +40,7 @@ const EnrolledCoursesClassDetails = () => {
 
     if (isPending) return <LoadingSpinner />
 
-    console.log(studentsClassAttendanceRecord);
+    console.log(singleClassDetails);
 
 
     return (

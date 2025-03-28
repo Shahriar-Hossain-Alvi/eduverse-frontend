@@ -8,12 +8,13 @@ import SectionHeading from "../../../Utilities/SectionHeading";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import TanstackQueryErrorMessage from "../../../Utilities/TanstackQueryErrorMessage";
+import Swal from "sweetalert2";
+import { handleError } from "../../../Utilities/HandleError";
 
 
 const EditUserDetails = () => {
     const { id } = useParams();
     const [isEditing, setIsEditing] = useState(false);
-    const [showDeleteButton, setShowDeleteButton] = useState(false);
     const navigate = useNavigate();
 
     // react hook form
@@ -100,22 +101,33 @@ const EditUserDetails = () => {
     // delete user function
     const handleDeleteUser = async () => {
 
-        try {
-            const res = await axiosSecure.delete(`/users/${id}`);
+        const swalResponse = await Swal.fire({
+            title: "Are you sure?",
+            text: "It can't be undone",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#FF0000",
+            cancelButtonColor: "#16A34A",
+            confirmButtonText: "Yes, delete it!"
+        });
 
-            if(res.data.success === true){
-                refetch();
-                navigate("/admin/users", {replace: true})
+        if (swalResponse.isConfirmed) {
+            try {
+                const res = await axiosSecure.delete(`/users/${id}`);
+
+                if (res.data.success === true) {
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "This class schedule has been deleted.",
+                        icon: "success",
+                        confirmButtonColor: "#16A34A",
+                    });
+                    refetch();
+                    navigate("/admin/users", { replace: true })
+                }
+            } catch (error) {
+                handleError(error, "Something went wrong! Please try again.")
             }
-        } catch (error) {
-            console.log(error);
-            const errorMessage =
-                error.response?.data?.message || "Something went wrong! Please try again.";
-
-            toast.error(errorMessage, {
-                duration: 3000,
-                position: "top-center"
-            });
         }
     }
 
@@ -350,17 +362,10 @@ const EditUserDetails = () => {
             <div className="mb-10">
                 <div className="flex gap-3">
                     <h1 className="text-lg font-medium">Do you want to Delete This User?</h1>
-                    <button onClick={() => setShowDeleteButton(!showDeleteButton)} className={`btn btn-sm text-white ${showDeleteButton ? "btn-success " : "btn-error"}`}>{showDeleteButton ? "Cancel" : "Yes"}</button>
+                    <button onClick={() => handleDeleteUser()} className="btn btn-sm text-white btn-error">
+                        Yes
+                    </button>
                 </div>
-
-                {
-                    showDeleteButton && <div className="mt-5 text-center">
-                        <p className="text-error animate-pulse font-medium text-lg">WARNING: It can&apos;t be undone</p>
-
-                        <button onClick={handleDeleteUser} className="text-white btn-error btn mt-2">Click here to Delete</button>
-                    </div>
-                }
-
             </div>
         </div>
     );

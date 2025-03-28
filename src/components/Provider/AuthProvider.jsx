@@ -48,7 +48,7 @@ const AuthProvider = ({ children }) => {
             return response.data.data; // Returns the full user object from the backend
         } catch (error) {
             console.error("Error fetching user info:", error);
-            throw error;
+            return null;
         }
     }, [axiosPublic])
 
