@@ -43,7 +43,7 @@ const CourseDetails = () => {
 
 
     const { _id, assigned_faculty, cover_url, credits, description, end_date, is_active, prerequisites, start_date, title, total_available_seats } = getSingleCourseDetails;
-    
+
 
     const currentDate = new Date().toISOString().slice(0, 16);
 
@@ -116,7 +116,7 @@ const CourseDetails = () => {
     if (isPending) return <LoadingSpinner />
 
     return (
-        <div className="flex-1 p-3 md:p-8 mb-5">
+        <div className="flex-1 p-3 md:p-8 mb-5 overflow-hidden">
             <Toaster />
             <SectionHeading title="Course Details" />
 
@@ -140,8 +140,8 @@ const CourseDetails = () => {
                 </figure>
 
 
-                {/* marquee text */}
                 <div className="lg:col-span-2">
+                    {/* marquee text */}
                     {
                         (total_available_seats > 0 && is_active && start_date > currentDate) &&
                         <div className="text-success">
@@ -377,10 +377,9 @@ const CourseDetails = () => {
 
             {/* show a list of enrolled student for this course */}
             {
-                user.user_role !== "student" && 
+                user.user_role !== "student" &&
                 <SingleCourseEnrollmentList id={id} />
-            }   
-
+            }
         </div>
     );
 };

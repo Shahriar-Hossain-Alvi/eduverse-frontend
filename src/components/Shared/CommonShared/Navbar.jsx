@@ -18,7 +18,7 @@ const Navbar = () => {
 
     return (
         <div>
-            <div className="hidden md:flex md:justify-between navbar bg-base-100">
+            <div className="hidden lg:flex md:justify-between navbar bg-base-100">
                 <a className="btn btn-ghost text-xl">EduVerse</a>
                 <div>
                     <label className="flex cursor-pointer gap-2 mr-2">
@@ -43,7 +43,7 @@ const Navbar = () => {
 
 
             {/* navbar for small screen */}
-            <div className="md:hidden navbar flex-col">
+            <div className="lg:hidden navbar flex-col">
                 <div className="">
                     <Link to="/" className="btn btn-ghost text-xl">EduVerse</Link>
                 </div>

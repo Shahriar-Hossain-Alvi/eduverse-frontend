@@ -5,11 +5,14 @@ import { TbFidgetSpinner } from "react-icons/tb";
 import toast, { Toaster } from 'react-hot-toast';
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import useTheme from "../../Hooks/useTheme";
+import themeStyles from "../../Utilities/themeStyles";
 
 
 
 
 const SignIn = () => {
+    const {theme} = useTheme();
     const { user, login, loading } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
@@ -19,7 +22,7 @@ const SignIn = () => {
     const [logInLoading, setLogInLoading] = useState(false);
 
 
-
+    console.log(theme);
 
     // login function
     const handleLogin = async (data) => {
@@ -83,7 +86,7 @@ const SignIn = () => {
                     </p>
                 </div>
 
-                <div className="bg-base-200 rounded-lg w-full mx-auto shadow-2xl">
+                <div className={`${themeStyles.background[theme]} rounded-lg w-full mx-auto shadow-2xl`}>
                     <form onSubmit={handleSubmit(handleLogin)} className="px-3 md:px-5 pt-5 mb-3 space-y-4">
 
                         {/* email */}
@@ -135,10 +138,10 @@ const SignIn = () => {
                                 loading ?
                                     <button type="submit" className="btn btn-primary btn-disabled" ><TbFidgetSpinner className="animate-spin text-lg" /></button>
 
-                                     :
+                                    :
 
                                     <button type="submit"
-                                    disabled={logInLoading} className="btn btn-primary text-white ">Login</button>
+                                        disabled={logInLoading} className="btn btn-primary text-white ">Login</button>
                             }
                         </div>
                     </form>

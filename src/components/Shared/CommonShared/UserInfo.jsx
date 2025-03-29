@@ -129,7 +129,7 @@ const UserInfo = () => {
                 {!isEditing ? (
                     <button
                         onClick={() => setIsEditing(true)}
-                        className="btn bg-eduverse_student_primary_color_lite hover:bg-eduverse_student_primary_color btn-xs md:btn-md mt-2 md:mt-0 text-white"
+                        className="btn bg-success btn-xs md:btn-md mt-2 md:mt-0 text-white"
                     >
                         <FiEdit2 className="mr-2" /> Edit Profile
                     </button>
@@ -212,7 +212,7 @@ const UserInfo = () => {
                         </div>
                     </div>
 
-                    <button type="submit" className="btn btn-primary mt-4">
+                    <button type="submit" className="btn btn-success text-white mt-4">
                         <FiSave className="mr-2" /> Update Password
                     </button>
                 </form>
@@ -220,7 +220,7 @@ const UserInfo = () => {
 
 
             {/* show and update user info form */}
-            <form className="divide-y divide-gray-200">
+            <form className="divide-y mt-5 divide-gray-200">
 
                 {/* Email */}
                 <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">

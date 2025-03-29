@@ -342,10 +342,10 @@ const EditUserDetails = () => {
 
                 {isEditing && (
                     <div className="mt-6 flex justify-end space-x-3">
-                        <button type="button" onClick={toggleEdit} className="btn btn-ghost">
+                        <button type="button" onClick={toggleEdit} className="btn btn-error text-white">
                             Cancel
                         </button>
-                        <button type="submit" className="btn btn-primary">
+                        <button type="submit" className="btn btn-success text-white">
                             <FiSave className="mr-2" />
                             Save Changes
                         </button>

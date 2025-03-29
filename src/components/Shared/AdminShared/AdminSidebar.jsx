@@ -11,7 +11,7 @@ const AdminSidebar = () => {
     return (
         <aside>
             {/* sidebar for large device */}
-            <div className="w-32 md:w-64 bg-indigo-700 text-white p-3 md:p-6 hidden lg:block min-h-screen">
+            <div className="w-32 md:w-64 bg-indigo-700 text-white p-3 md:p-6 hidden lg:block min-h-screen h-full">
                 <h1 className="text-lg md:text-2xl font-bold mb-8">Admin Portal</h1>
 
 
@@ -40,11 +40,11 @@ const AdminSidebar = () => {
 
             {/* sidebar toggle for small and medium devices */}
             <div className="drawer fixed top-3 left-1
-             lg:hidden z-50 text-white">
+             lg:hidden z-50 text-white w-10">
                 <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
                 <div className="drawer-content">
                     {/* Page content here */}
-                    <label htmlFor="my-drawer-4" className="drawer-button btn btn-primary btn-sm">
+                    <label htmlFor="my-drawer-4" className="drawer-button btn btn-primary btn-sm border border-gray-600">
                     <GiHamburgerMenu />
                     </label>
                 </div>
