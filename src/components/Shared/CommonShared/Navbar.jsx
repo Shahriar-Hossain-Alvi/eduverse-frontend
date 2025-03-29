@@ -1,7 +1,8 @@
 import { useContext } from "react";
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 import { ThemeContext } from "../../Provider/ThemeProvider";
 import useAuth from "../../Hooks/useAuth";
+import { FaSun, FaMoon } from "react-icons/fa";
 
 
 const Navbar = () => {
@@ -21,9 +22,13 @@ const Navbar = () => {
                 <a className="btn btn-ghost text-xl">EduVerse</a>
                 <div>
                     <label className="flex cursor-pointer gap-2 mr-2">
-                        <span className="label-text">Dark</span>
+                        <span className="self-center">
+                            <FaMoon />
+                        </span>
                         <input onChange={changeTheme} type="checkbox" value="light" className="toggle theme-controller" />
-                        <span className="label-text">Light</span>
+                        <span className="self-center">
+                            <FaSun />
+                        </span>
                     </label>
 
 
@@ -38,25 +43,33 @@ const Navbar = () => {
 
 
             {/* navbar for small screen */}
-            <div className="md:hidden navbar flex-col bg-base-100">
-                <div className="flex-1">
-                    <a className="btn btn-ghost text-xl">EduVerse</a>
+            <div className="md:hidden navbar flex-col">
+                <div className="">
+                    <Link to="/" className="btn btn-ghost text-xl">EduVerse</Link>
                 </div>
 
-                <label className="flex cursor-pointer gap-2 mr-2">
-                    <span className="label-text">Dark</span>
-                    <input onChange={changeTheme} type="checkbox" value="light" className="toggle theme-controller" />
-                    <span className="label-text">Light</span>
-                </label>
+                <div>
+                    <label className="flex cursor-pointer gap-2 mr-2">
+                        <span className="self-center">
+                            <FaMoon />
+                        </span>
+
+                        <input onChange={changeTheme} type="checkbox" value="light" className="toggle theme-controller" />
+
+                        <span className="self-center">
+                            <FaSun />
+                        </span>
+                    </label>
 
 
-                <div className="flex-none">
-                    <ul className="menu menu-horizontal px-1  items-center gap-2">
-                        <li><NavLink to="/contact">Contact Us</NavLink></li>
-                        {
-                            user && <button onClick={logout} className="btn btn-error btn-sm text-white">Logout</button>
-                        }
-                    </ul>
+                    <div className="flex-none">
+                        <ul className="menu menu-horizontal px-1  items-center gap-2">
+                            <li><NavLink to="/contact">Contact Us</NavLink></li>
+                            {
+                                user && <button onClick={logout} className="btn btn-error btn-sm text-white">Logout</button>
+                            }
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

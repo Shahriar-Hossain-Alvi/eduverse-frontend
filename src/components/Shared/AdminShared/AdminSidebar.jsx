@@ -39,8 +39,8 @@ const AdminSidebar = () => {
 
 
             {/* sidebar toggle for small and medium devices */}
-            <div className="drawer fixed top-3
-             lg:hidden z-50">
+            <div className="drawer fixed top-3 left-1
+             lg:hidden z-50 text-white">
                 <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
                 <div className="drawer-content">
                     {/* Page content here */}
