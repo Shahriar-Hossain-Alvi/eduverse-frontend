@@ -93,7 +93,7 @@ const SingleAssignedCourseDetails = () => {
 
 
             {/* enrolled student list */}
-            {/* <EnrolledStudentList course_id={course_id._id} /> */}
+            <EnrolledStudentList course_id={course_id._id} />
 
         </div>
     );

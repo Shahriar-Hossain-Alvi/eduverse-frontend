@@ -527,7 +527,7 @@ const ClassMaterialFormAndList = ({ class_id }) => {
             {/* table */}
             {classMaterials.length > 0 &&
                 <div className="overflow-x-auto">
-                    <table className="table">
+                    <table className="table table-xs md:table-md">
                         {/* head */}
                         <thead>
                             <tr>
@@ -547,7 +547,7 @@ const ClassMaterialFormAndList = ({ class_id }) => {
                         <tbody>
                             {
                                 classMaterials.map((material) =>
-                                    <tr key={material._id}>
+                                    <tr className="hover" key={material._id}>
 
                                         <td>{material.title}</td>
 
@@ -558,8 +558,8 @@ const ClassMaterialFormAndList = ({ class_id }) => {
                                         <td>
                                             <a href={material.material_url}
                                                 target="_blank" rel="noreferrer"
-                                                className="btn btn-success text-white text-sm">
-                                                Get Resource
+                                                className="btn btn-sm md:btn-md btn-success text-white text-xs md:text-base">
+                                                View
                                             </a>
                                         </td>
 

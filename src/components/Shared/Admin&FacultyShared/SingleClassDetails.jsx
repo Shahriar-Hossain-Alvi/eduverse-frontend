@@ -36,7 +36,7 @@ const SingleClassDetails = () => {
             {/* error message */}
             {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
-            <h1 className="text-center font-semibold text-4xl mb-8 underline">CLASS DETAILS</h1>
+            <h1 className="text-center font-semibold text-3xl md:text-4xl mb-8 underline">CLASS DETAILS</h1>
 
             {/* title and description */}
             <SectionHeading title={`Title: ${title}`} />

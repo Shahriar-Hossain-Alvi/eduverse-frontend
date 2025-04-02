@@ -5,7 +5,7 @@ import TanstackQueryErrorMessage from "../../../Utilities/TanstackQueryErrorMess
 import PropTypes from 'prop-types';
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaTrash } from "react-icons/fa";
 import useAuth from "../../../Hooks/useAuth";
 import toast from "react-hot-toast";
 import { CgClose, CgSpinnerTwoAlt } from "react-icons/cg";
@@ -14,8 +14,8 @@ import { format, isAfter, parseISO, startOfDay } from "date-fns";
 import LoadingSpinner from "../../../Utilities/LoadingSpinner";
 import { FiEdit, FiSave } from "react-icons/fi";
 import Swal from "sweetalert2";
-import { handleError } from "../../../Utilities/handleError";
 import { isEqual } from "lodash";
+import { handleError } from "../../../Utilities/HandleError";
 
 
 
@@ -67,7 +67,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
 
             return res.data.data;
         },
-        enabled: !!course_id && user.user_role !=="student" // Runs only when course_id is available
+        enabled: !!course_id && user.user_role !== "student" // Runs only when course_id is available
     });
 
 
@@ -373,10 +373,10 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
 
                 {(!isPending && Object.keys(studentsAttendanceRecord).length > 0) &&
                     <div>
-                        <div className="grid grid-cols-5 items-center">
-                            <h2 className="col-span-2 text-lg font-medium">Attendance of: {format(new Date(studentsAttendanceRecord.attendance_date), "MMMM d, yyyy")}</h2>
+                        <div className="grid grid-cols-5 items-center gap-1">
+                            <h2 className="col-span-2 text-sm md:text-lg font-medium">Attendance of: {format(new Date(studentsAttendanceRecord.attendance_date), "MMMM d, yyyy")}</h2>
 
-                            <h3 className="col-span-2 text-lg font-medium">Recorded By: {studentsAttendanceRecord.created_by.first_name} {studentsAttendanceRecord.created_by.last_name}</h3>
+                            <h3 className="col-span-2 md:text-lg text-sm font-medium">Recorded By: {studentsAttendanceRecord.created_by.first_name} {studentsAttendanceRecord.created_by.last_name}</h3>
 
                             {
                                 user.user_role !== "student" && formSubmissionLoading
@@ -384,15 +384,16 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                                     <button className="btn btn-disabled">
                                         <CgSpinnerTwoAlt className="animate-spin" />
                                     </button>
-                                    : user.user_role !== "student" &&
-                                    <button onClick={() => handleAttendanceDelete()} className="btn btn-error text-white">
-                                        Delete Record
+                                    :
+                                    user.user_role !== "student" &&
+                                    <button onClick={() => handleAttendanceDelete()} className="btn btn-error text-xs md:text-base btn-sm text-white p-0">
+                                        Delete <FaTrash />
                                     </button>
                             }
                         </div>
 
                         <div className="overflow-x-auto">
-                            <table className="table">
+                            <table className="table table-sm md:table-md">
                                 {/* head */}
                                 <thead>
                                     <tr>
@@ -406,9 +407,9 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                                 <tbody>
                                     {
                                         studentsAttendanceRecord.attendance_record.map((singleRecord, index) => <tr key={singleRecord._id}>
-                                            <th>{index + 1}</th>
+                                            <th className="text-xs md:text-base">{index + 1}</th>
 
-                                            <td>{singleRecord.student_id.first_name} {singleRecord.student_id.last_name}</td>
+                                            <td className="text-xs md:text-base">{singleRecord.student_id.first_name} {singleRecord.student_id.last_name}</td>
 
                                             {
                                                 showAttendanceUpdate ?
@@ -416,7 +417,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                                                         {/* select attendance */}
                                                         <label className="form-control w-full">
                                                             <div className="label">
-                                                                <span className="label-text">Select Attendance</span>
+                                                                <span className="text-xs md:label-text">Select Attendance</span>
                                                             </div>
                                                             <div>
                                                                 <select
@@ -427,7 +428,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                                                                         "is_present",
                                                                         e.target.value
                                                                     )}
-                                                                    className="select select-bordered w-full">
+                                                                    className="select select-sm md:select-md select-bordered w-full">
                                                                     <option value="present" className="text-success font-bold">Present</option>
 
                                                                     <option value="absent" className="text-error font-bold">Absent</option>
@@ -440,14 +441,14 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                                                         </label>
                                                     </td>
                                                     :
-                                                    <td className="capitalize flex items-center gap-2">
+                                                    <td className="capitalize flex items-center gap-2 text-xs md:text-base">
                                                         {singleRecord.is_present}
-                                                        <div>
-                                                            {singleRecord.is_present === "present" && <div className="badge badge-success rounded-full badge-xs"></div>}
-                                                            {singleRecord.is_present === "absent" && <div className="badge badge-error rounded-full badge-xs"></div>}
-                                                            {singleRecord.is_present === "late" && <div className="badge badge-warning rounded-full badge-xs"></div>}
-                                                            {singleRecord.is_present === "early leave" && <div className="badge badge-info rounded-full badge-xs"></div>}
-                                                        </div>
+
+                                                        {singleRecord.is_present === "present" && <div className="badge badge-success rounded-full badge-xs"></div>}
+                                                        {singleRecord.is_present === "absent" && <div className="badge badge-error rounded-full badge-xs"></div>}
+                                                        {singleRecord.is_present === "late" && <div className="badge badge-warning rounded-full badge-xs"></div>}
+                                                        {singleRecord.is_present === "early leave" && <div className="badge badge-info rounded-full badge-xs"></div>}
+
                                                     </td>}
 
                                             {
@@ -467,7 +468,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                                                                         e.target.value
                                                                     )}
                                                                     defaultValue={singleRecord.remarks}
-                                                                    placeholder="Type here" className="input input-bordered w-full" />
+                                                                    placeholder="Type here" className="input input-bordered input-sm md:input-md w-full" />
                                                             </div>
                                                         </label>
                                                     </td>
@@ -494,7 +495,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                                                 (
                                                     <td>
                                                         <button
-                                                            className="text-lg bg-success text-white btn-sm mr-1"
+                                                            className="text-sm md:text-lg bg-success text-white btn-sm md:mr-1"
                                                             onClick={() => handleSingleStudentUpdate(singleRecord.student_id._id)}
                                                         >
                                                             <FiSave />
@@ -507,7 +508,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                                                                 setEditingStudentData({});
                                                                 setEditingStudent(null);
                                                             }}
-                                                            className="text-lg bg-error text-white btn-sm mr-1"
+                                                            className="text-sm md:text-lg bg-error text-white btn-sm md:mr-1"
                                                         >
                                                             <CgClose />
                                                         </button>
