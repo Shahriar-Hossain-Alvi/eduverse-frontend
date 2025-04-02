@@ -86,7 +86,7 @@ const SignIn = () => {
                     </p>
                 </div>
 
-                <div className={`${themeStyles.background[theme]} rounded-lg w-full mx-auto shadow-2xl`}>
+                <div className={`${themeStyles.background[theme]} rounded-lg w-full md:max-w-lg lg:max-w-xl mx-auto shadow-2xl`}>
                     <form onSubmit={handleSubmit(handleLogin)} className="px-3 md:px-5 pt-5 mb-3 space-y-4">
 
                         {/* email */}
