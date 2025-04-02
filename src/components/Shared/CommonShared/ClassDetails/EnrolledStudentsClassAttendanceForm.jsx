@@ -15,7 +15,7 @@ import LoadingSpinner from "../../../Utilities/LoadingSpinner";
 import { FiEdit, FiSave } from "react-icons/fi";
 import Swal from "sweetalert2";
 import { isEqual } from "lodash";
-import { handleError } from "../../../Utilities/HandleError";
+import { handleError } from "../../../Utilities/handleError";
 
 
 

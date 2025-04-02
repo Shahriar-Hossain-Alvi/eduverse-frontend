@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../../Utilities/LoadingSpinner";
 import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
 import Swal from "sweetalert2";
-import { handleError } from "../../Utilities/HandleError";
+import { handleError } from "../../Utilities/handleError";
 
 
 // handle is_active field for admin

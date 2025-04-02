@@ -14,7 +14,7 @@ const AdminDashboard = () => {
     const { data: quickOverview, isPending, isError, error } = useQuery({
         queryKey: ["quickOverview"],
         queryFn: async () => {
-            const res = await axiosSecure("/adminQuickOverview");
+            const res = await axiosSecure("/quickOverview/admin");
             if (res.data.success) return res.data.data
         }
     })

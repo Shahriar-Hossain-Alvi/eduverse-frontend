@@ -4,7 +4,7 @@ import { FiEdit, FiPlus, FiTrash2 } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns"
 import toast, { Toaster } from "react-hot-toast";
-import { handleError } from "../../Utilities/HandleError";
+import { handleError } from "../../Utilities/handleError";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import PropTypes from "prop-types";
 import { CgClose, CgSpinnerTwoAlt } from "react-icons/cg";

@@ -9,7 +9,7 @@ import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import TanstackQueryErrorMessage from "../../../Utilities/TanstackQueryErrorMessage";
 import Swal from "sweetalert2";
-import { handleError } from "../../../Utilities/HandleError";
+import { handleError } from "../../../Utilities/handleError";
 
 
 const EditUserDetails = () => {
