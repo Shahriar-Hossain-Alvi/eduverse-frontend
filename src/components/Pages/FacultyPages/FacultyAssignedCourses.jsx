@@ -6,9 +6,13 @@ import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage
 import { format } from "date-fns"
 import SectionHeading from "../../Utilities/SectionHeading";
 import { Link } from "react-router";
+import useTheme from "../../Hooks/useTheme";
+import themeStyles from "../../Utilities/themeStyles";
+
+
 
 const FacultyAssignedCourses = () => {
-
+    const {theme} = useTheme();
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
@@ -36,20 +40,20 @@ const FacultyAssignedCourses = () => {
                 <div className="grid grid-cols-1 gap-6">
                     {singleFacultyAssignedCoursesData.map((assignedCourse) => (
                         // card
-                        <div key={assignedCourse._id} className="bg-green-700 overflow-hidden shadow-lg rounded-lg grid grid-cols-6 gap-3 p-3">
+                        <div key={assignedCourse._id} className={`${themeStyles.background[theme]} overflow-hidden shadow-lg rounded-lg grid md:grid-cols-6 gap-3 p-3`}>
 
                             {/* cover image */}
-                            <div className="flex rounded-md col-span-2">
+                            <div className="md:flex rounded-md md:col-span-2 bg-red-400">
                                 <img
-                                    className="w-full rounded-md object-fill"
+                                    className="w-full rounded-md object-fill bg-red-400"
                                     src={assignedCourse.course_id.cover_url}
                                     alt={assignedCourse.course_id.title}
                                 />
                             </div>
 
 
-                            <div className="col-span-4">
-                                <h2 className="text-xl font-bold text-white mb-2">{assignedCourse.course_id.title}</h2>
+                            <div className="md:col-span-4">
+                                <h2 className="text-xl font-bold  mb-2">{assignedCourse.course_id.title}</h2>
 
                                 {/* three badges */}
                                 <div className="flex flex-wrap gap-2 mb-4">
@@ -58,7 +62,7 @@ const FacultyAssignedCourses = () => {
                                     <div className="badge badge-secondary text-white font-medium">{assignedCourse.course_id.total_available_seats} Seats</div>
 
                                     {assignedCourse.course_id.is_active ? (
-                                        <div className="badge badge-success text-white font-medium">Active</div>
+                                        <div className="badge bg-green-600 text-white font-medium border-none">Active</div>
                                     ) : (
                                         <div className="badge badge-error text-white font-medium">Inactive</div>
                                     )}
@@ -67,7 +71,7 @@ const FacultyAssignedCourses = () => {
                                 {/* Date and co-faculty */}
                                 <div className="flex gap-5">
                                     {/* Dates */}
-                                    <div className="mb-4 text-white">
+                                    <div className="mb-4 ">
                                         <h3 className="text-lg font-semibold mb-2 ">Course Dates</h3>
 
                                         <p className="text-sm">
@@ -80,7 +84,7 @@ const FacultyAssignedCourses = () => {
                                     </div>
 
                                     {/* Co-Faculty */}
-                                    <div className="mb-4 text-white">
+                                    <div className="mb-4">
                                         <h3 className="text-lg font-semibold mb-2">Faculty</h3>
 
                                         <ul className="space-y-1">
@@ -95,7 +99,7 @@ const FacultyAssignedCourses = () => {
 
                                 {/* view details button */}
                                 <div className="flex justify-end">
-                                    <Link to={`/faculty/myCourses/${assignedCourse._id}`} className="btn btn-block">View </Link>
+                                    <Link to={`/faculty/myCourses/${assignedCourse._id}`} className={`btn border btn-block ${themeStyles.button[theme]}`}>View </Link>
                                 </div>
                             </div>
                         </div>

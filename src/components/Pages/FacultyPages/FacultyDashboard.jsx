@@ -29,7 +29,6 @@ const FacultyDashboard = () => {
     enabled: !!user
   })
 
-  console.log(facultyOverview);
 
   const formatClassTime = (timestamp) => {
     const date = new Date(timestamp);
@@ -55,7 +54,7 @@ const FacultyDashboard = () => {
       <SectionHeading title={`Welcome, ${user?.first_name} ${user?.last_name}`} />
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
 
         {/* course teaching */}
         <div className={`p-3 md:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow ${themeStyles.background[theme]}`}>
@@ -93,9 +92,11 @@ const FacultyDashboard = () => {
 
         <ul className="space-y-4 text-sm md:text-base">
           {
-            facultyOverview.upcoming_Class_Schedules.map(classSchedule => <li key={classSchedule._id} className="flex flex-col md:flex-row text-center md:text-left items-center justify-between">
-              <span className="font-medium">{classSchedule.title}</span>
-              <span className="text-sm text-gray-500">{formatClassTime(classSchedule.scheduled_time)}</span>
+            facultyOverview.upcoming_Class_Schedules.map(classSchedule => <li key={classSchedule._id} className="grid grid-cols-1 md:grid-cols-6 text-center md:text-left items-center justify-between space-y-2 md:space-y-0 border md:border-none p-2 md:p-0">
+              <span className="font-medium md:col-span-3">{classSchedule.title}</span>
+
+              <span className="text-sm md:col-span-2">{formatClassTime(classSchedule.scheduled_time)}</span>
+
               <Link to={`/faculty/myCourses/classDetails/${classSchedule._id}`} className={`btn btn-sm md:btn-md ${themeStyles.button[theme]}`}>Details</Link>
             </li>)
           }

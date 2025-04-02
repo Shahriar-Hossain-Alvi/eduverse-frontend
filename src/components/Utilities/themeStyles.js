@@ -10,4 +10,6 @@ const themeStyles = {
     },
 };
 
+// how to use ${themeStyles.background[theme]}
+
 export default themeStyles;
