@@ -563,7 +563,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
 
 
                             {/* edit and delete button */}
-                            <div className="flex md:block text-center items-center md:space-y-3 mt-2 md:mt-0 space-x-3 md:space-x-0">
+                            <div className="flex md:block text-center items-center md:space-y-3 mt-4 md:mt-0 space-x-3 md:space-x-0">
                                 <div>
                                     {/* edit button */}
                                     <button

@@ -46,7 +46,7 @@ const SingleAssignedCourseDetails = () => {
             {/* Error messages */}
             {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
-            <h1 className="text-center font-semibold text-4xl mb-8 underline">COURSE DETAILS</h1>
+            <h1 className="text-center font-semibold text-3xl md:text-4xl mb-8 underline">COURSE DETAILS</h1>
 
             {/* title and description */}
             <SectionHeading title={`Title: ${course_id.title}`} />
@@ -86,7 +86,9 @@ const SingleAssignedCourseDetails = () => {
 
 
             {/* upload course materials */}
-            {/* <CourseMaterialFormAndList course_id={course_id._id} /> */}
+            <div className="overflow-hidden">
+                <CourseMaterialFormAndList course_id={course_id._id} />
+            </div>
 
 
 
