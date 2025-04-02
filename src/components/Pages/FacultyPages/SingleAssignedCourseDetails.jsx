@@ -51,9 +51,9 @@ const SingleAssignedCourseDetails = () => {
             {/* title and description */}
             <SectionHeading title={`Title: ${course_id.title}`} />
 
-            <p className="font-medium text-lg mb-5">{course_id.description}</p>
+            <p className="font-medium md:text-lg mb-5">{course_id.description}</p>
 
-            <div className="flex gap-3 mt-5">
+            <div className="flex md:gap-3 mt-5">
                 <h4>
                     <span className="font-medium mr-1">
                         Start:
@@ -61,7 +61,7 @@ const SingleAssignedCourseDetails = () => {
                     {format(new Date(course_id.start_date), "MMMM d, yyyy")}
                 </h4>
 
-                <div className="divider divider-horizontal divider-primary"></div>
+                <div className="divider divider-horizontal"></div>
 
                 <h4>
                     <span className="font-medium mr-1">
@@ -70,13 +70,14 @@ const SingleAssignedCourseDetails = () => {
                     {format(new Date(course_id.end_date), "MMMM d, yyyy")}
                 </h4>
 
-                <div className="divider divider-horizontal divider-primary"></div>
+                <div className="divider divider-horizontal"></div>
 
                 <h4>
                     <span className="font-medium mr-1">
-                    Credits:
+                        Credits:
                     </span>
-                     {course_id.credits}</h4>
+                    {course_id.credits}
+                </h4>
             </div>
 
 
@@ -85,12 +86,12 @@ const SingleAssignedCourseDetails = () => {
 
 
             {/* upload course materials */}
-            <CourseMaterialFormAndList course_id={course_id._id} />
+            {/* <CourseMaterialFormAndList course_id={course_id._id} /> */}
 
 
 
             {/* enrolled student list */}
-            <EnrolledStudentList course_id={course_id._id} />
+            {/* <EnrolledStudentList course_id={course_id._id} /> */}
 
         </div>
     );

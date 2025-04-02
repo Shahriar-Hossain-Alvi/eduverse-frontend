@@ -15,12 +15,15 @@ import Swal from "sweetalert2";
 import { BiError } from "react-icons/bi";
 import { Link } from "react-router";
 import useAuth from "../../Hooks/useAuth";
+import useTheme from "../../Hooks/useTheme";
+import themeStyles from "../../Utilities/themeStyles";
+
 
 
 // handle is_active field for admin
-// handle details button of class schedule
 
 const ClassScheduleForm = ({ course_id, faculty }) => {
+    const {theme} = useTheme();
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
 
@@ -229,7 +232,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
 
 
     return (
-        <div className="mb-10 mt-10">
+        <div className="my-10">
             <Toaster />
             <SectionHeading title="Class Schedules" />
 
@@ -512,9 +515,9 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
 
                 <ul className="space-y-2">
                     {classList.map((singleClass) => (
-                        <li key={singleClass._id} className="flex justify-between items-center bg-base-300 border p-3 rounded">
+                        <li key={singleClass._id} className={`${themeStyles.background[theme]} flex flex-col md:flex-row justify-between items-center border p-3 rounded`}>
 
-                            <div className="space-y-1">
+                            <div className="space-y-2 md:space-y-1">
                                 {/* title */}
                                 <h3 className="font-semibold">
                                     <span className="underline mr-1">Title:</span> {singleClass.title}</h3>
@@ -525,7 +528,9 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
 
                                 {/* time */}
                                 <p className="text-sm">
+                                    <span className="font-semibold underline">
                                     Class Time:
+                                    </span>
 
                                     <button className="badge badge-success text-white ml-2 rounded">
                                         {format(singleClass.scheduled_time, "yyyy-MM-dd, hh:mm a")}
@@ -535,7 +540,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
 
                                 {/* location */}
                                 <p className="text-sm">
-                                    <span className="mr-1">
+                                    <span className="mr-1 underline font-semibold">
                                         Location:
                                     </span>
                                     {singleClass.location}
@@ -549,7 +554,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
 
                                 {/* faculty */}
                                 <div className='flex gap-1'>
-                                    <h2>Faculties: </h2>
+                                    <h2 className="underline font-semibold mr-1">Faculties: </h2>
                                     {(singleClass.faculty_id).map(singleFaculty =>
                                         <p key={singleFaculty._id} className='badge badge-outline'>{singleFaculty.first_name} {singleFaculty.last_name}</p>
                                     )}
@@ -558,7 +563,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
 
 
                             {/* edit and delete button */}
-                            <div className="text-center space-y-3">
+                            <div className="flex md:block text-center items-center md:space-y-3 mt-2 md:mt-0 space-x-3 md:space-x-0">
                                 <div>
                                     {/* edit button */}
                                     <button
@@ -584,7 +589,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
                                 {/* class details button */}
                                 {
                                     user.user_role === "faculty" &&
-                                    <Link to={`/faculty/myCourses/classDetails/${singleClass._id}`} className="btn btn-success text-white ">Details</Link>
+                                    <Link to={`/faculty/myCourses/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-sm md:btn-md`}>Details</Link>
                                 }
                             </div>
                         </li>
