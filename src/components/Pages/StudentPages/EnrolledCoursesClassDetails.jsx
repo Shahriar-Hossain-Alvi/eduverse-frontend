@@ -40,8 +40,6 @@ const EnrolledCoursesClassDetails = () => {
 
     if (isPending) return <LoadingSpinner />
 
-    console.log(singleClassDetails);
-
 
     return (
         <div className="flex-1 p-3 md:p-8">
