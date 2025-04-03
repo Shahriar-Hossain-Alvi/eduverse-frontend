@@ -22,8 +22,6 @@ const SignIn = () => {
     const [logInLoading, setLogInLoading] = useState(false);
 
 
-    console.log(theme);
-
     // login function
     const handleLogin = async (data) => {
         const email = data.email;
