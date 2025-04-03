@@ -33,13 +33,19 @@ const Schedules = () => {
 
                 return res.data.data;
             }
+            
+            if(userRole === "student"){
+                const res = await axiosSecure.get(`/classes/allEnrolledCourseClasses/${user._id}`);
+    
+                return res.data.data;
+            }
 
 
         },
         enabled: !!user
     });
 
-    console.log(allClassList);
+
 
     if (isPending) return <LoadingSpinner />
 
@@ -113,6 +119,10 @@ const Schedules = () => {
                             <div className="flex md:block text-center items-center md:space-y-3 mt-4 md:mt-0 space-x-3 md:space-x-0">
 
                                 {/* class details button */}
+                                {
+                                    user.user_role === "student" &&
+                                    <Link to={`/student/myEnrolledCourses/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-sm md:btn-md`}>Details</Link>
+                                }
                                 {
                                     user.user_role === "faculty" &&
                                     <Link to={`/faculty/myCourses/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-sm md:btn-md`}>Details</Link>
