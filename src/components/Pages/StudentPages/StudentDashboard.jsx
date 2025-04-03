@@ -25,8 +25,6 @@ const StudentDashboard = () => {
         enabled: user?.user_role === "student"
     });
 
-    console.log(studentOverview);
-
 
     const formatClassTime = (timestamp) => {
         const date = new Date(timestamp);

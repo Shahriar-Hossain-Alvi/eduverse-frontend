@@ -128,6 +128,15 @@ const router = createBrowserRouter(
                     }
                 />
 
+<Route
+                    path="classDetails/:id"
+                    element={
+                        <PrivateRoute role="admin">
+                            <SingleClassDetails />
+                        </PrivateRoute>
+                    }
+                />
+
                 <Route
                     path="schedules"
                     element={
