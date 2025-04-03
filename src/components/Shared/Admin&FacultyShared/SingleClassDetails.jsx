@@ -32,7 +32,7 @@ const SingleClassDetails = () => {
     if (isPending) return <LoadingSpinner />
 
     return (
-        <div className="flex-1 p-3 md:p-8">
+        <div className="flex-1 p-3 md:p-8 overflow-hidden">
             {/* error message */}
             {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
@@ -73,11 +73,8 @@ const SingleClassDetails = () => {
             
             <div>
 
-                Attendance
 
                 Grades
-
-
             </div>
 
         </div>

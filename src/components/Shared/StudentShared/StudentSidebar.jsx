@@ -35,7 +35,7 @@ const StudentSidebar = () => {
 
         <div className="drawer-content">
           {/* Page content here */}
-          <label htmlFor="my-drawer-4" className="drawer-button rounded-none text-white btn bg-indigo-600 btn-sm border border-gray-600">
+          <label htmlFor="my-drawer-4" className="drawer-button rounded-none text-white btn bg-eduverse_student_primary_color_lite btn-sm border border-gray-600">
             <FaAnglesRight />
           </label>
         </div>
@@ -43,17 +43,17 @@ const StudentSidebar = () => {
         <div className="drawer-side">
           <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
 
-          <div className='min-h-full w-80 p-4 menu text-white  bg-indigo-700'>
+          <div className='min-h-full w-80 p-4 menu text-white  bg-eduverse_student_primary_color'>
 
             {/* sidebar close button */}
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Faculty Portal</h2>
+              <h2 className="text-xl font-bold">Student Portal</h2>
               <label htmlFor="my-drawer-4" className="btn btn-sm btn-circle text-white btn-error">
                 <FaAnglesLeft className="text-xl" />
               </label>
             </div>
 
-            <ul id="adminSideBar" className="space-y-4 text-sm text-center md:text-base">
+            <ul id="studentSideBar" className="space-y-4 text-sm text-center md:text-base">
 
               <li><NavLink to="/student/dashboard" className="flex items-center space-x-2 hover:bg-eduverse_student_primary_color_lite p-2 rounded"><GrOverview className="text-xl" /> <span>Overview</span></NavLink></li>
 
