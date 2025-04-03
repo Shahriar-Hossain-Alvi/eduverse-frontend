@@ -26,7 +26,7 @@ const FacultyDashboard = () => {
 
       return res.data.data;
     },
-    enabled: !!user
+    enabled: user?.user_role === "faculty"
   })
 
 

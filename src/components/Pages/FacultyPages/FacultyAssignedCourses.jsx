@@ -43,9 +43,9 @@ const FacultyAssignedCourses = () => {
                         <div key={assignedCourse._id} className={`${themeStyles.background[theme]} overflow-hidden shadow-lg rounded-lg grid md:grid-cols-6 gap-3 p-3`}>
 
                             {/* cover image */}
-                            <div className="md:flex rounded-md md:col-span-2 bg-red-400">
+                            <div className="md:flex rounded-md md:col-span-2">
                                 <img
-                                    className="w-full rounded-md object-fill bg-red-400"
+                                    className="w-full rounded-md object-fill"
                                     src={assignedCourse.course_id.cover_url}
                                     alt={assignedCourse.course_id.title}
                                 />

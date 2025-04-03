@@ -39,7 +39,7 @@ const SingleEnrolledCourseMaterials = ({ courseID }) => {
             {/* table */}
             {enrolledCoursesMaterials.length > 0 &&
                 <div className="overflow-x-auto">
-                    <table className="table">
+                    <table className="table table-sm md:table-md">
                         {/* head */}
                         <thead>
                             <tr>
@@ -55,16 +55,16 @@ const SingleEnrolledCourseMaterials = ({ courseID }) => {
                                 enrolledCoursesMaterials.map((material) =>
                                     <tr key={material._id}>
 
-                                        <td>{material.title}</td>
+                                        <td className="text-xs md:text-base">{material.title}</td>
 
-                                        <td>{material.description}</td>
+                                        <td className="text-xs md:text-base">{material.description}</td>
 
-                                        <td>{material.created_by.first_name} {material.created_by.last_name}</td>
+                                        <td className="text-xs md:text-base">{material.created_by.first_name} {material.created_by.last_name}</td>
 
                                         <td>
                                             <a href={material.material_url}
                                                 target="_blank" rel="noreferrer"
-                                                className="btn btn-success text-white text-sm">
+                                                className="btn btn-sm md:btn-md text-xs btn-success text-white md:text-sm">
                                                 Get Resource
                                             </a>
                                         </td>

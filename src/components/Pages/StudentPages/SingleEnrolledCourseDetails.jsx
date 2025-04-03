@@ -10,7 +10,6 @@ import SingleEnrolledCourseMaterials from "./SingleEnrolledCourseMaterials";
 
 
 
-
 const SingleEnrolledCourseDetails = () => {
     const { id } = useParams(); // course student enrollment id
     const axiosSecure = useAxiosSecure();
@@ -36,17 +35,17 @@ const SingleEnrolledCourseDetails = () => {
 
 
     return (
-        <div className="flex-1 p-3 md:p-8">
+        <div className="flex-1 p-3 md:p-8 overflow-hidden">
 
             {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
-            <h1 className="text-center font-semibold text-4xl mb-8 underline">COURSE DETAILS</h1>
+            <h1 className="text-center font-semibold text-3xl md:text-4xl mb-8 underline">COURSE DETAILS</h1>
 
             <SectionHeading title={`Title: ${course_id.title}`} />
 
-            <p className="text-lg font-medium">{course_id.description}</p>
+            <p className="md:text-lg font-medium">{course_id.description}</p>
 
-            <div className="flex gap-3 mt-5">
+            <div className="flex items-center md:gap-3 mt-5">
                 <h4>
                     <span className="font-medium mr-1">
                         Start:
@@ -54,7 +53,7 @@ const SingleEnrolledCourseDetails = () => {
                     {format(new Date(course_id.start_date), "MMMM d, yyyy")}
                 </h4>
 
-                <div className="divider divider-horizontal divider-primary"></div>
+                <div className="divider divider-horizontal"></div>
 
                 <h4>
                     <span className="font-medium mr-1">
@@ -63,7 +62,7 @@ const SingleEnrolledCourseDetails = () => {
                     {format(new Date(course_id.end_date), "MMMM d, yyyy")}
                 </h4>
 
-                <div className="divider divider-horizontal divider-primary"></div>
+                <div className="divider divider-horizontal"></div>
 
                 <h4>
                     <span className="font-medium mr-1">

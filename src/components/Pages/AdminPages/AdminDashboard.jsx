@@ -6,18 +6,22 @@ import SectionHeading from "../../Utilities/SectionHeading";
 import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
 import useTheme from "../../Hooks/useTheme";
 import themeStyles from "../../Utilities/themeStyles";
+import useAuth from "../../Hooks/useAuth";
 
 
 const AdminDashboard = () => {
     const { theme } = useTheme();
+    const {user} = useAuth();
     const axiosSecure = useAxiosSecure();
-    const { data: quickOverview, isPending, isError, error } = useQuery({
+    const { data: quickOverview={}, isPending, isError, error } = useQuery({
         queryKey: ["quickOverview"],
         queryFn: async () => {
             const res = await axiosSecure("/quickOverview/admin");
             if (res.data.success) return res.data.data
-        }
+        },
+        enabled: user?.user_role === "admin"
     })
+
 
     const logTimeInWords = (timestamp) => {
         return formatDistanceToNow(new Date(timestamp), { addSuffix: true })

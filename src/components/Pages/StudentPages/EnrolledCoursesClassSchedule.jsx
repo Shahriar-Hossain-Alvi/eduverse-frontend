@@ -7,11 +7,14 @@ import SectionHeading from '../../Utilities/SectionHeading';
 import { format } from 'date-fns';
 import { BiError } from "react-icons/bi";
 import { Link } from 'react-router';
+import useTheme from "../../Hooks/useTheme";
+import themeStyles from "../../Utilities/themeStyles";
 
 // todo: crate class details btn functionality
 
 const EnrolledCoursesClassSchedule = ({ courseID }) => {
-    const course_id = courseID
+    const course_id = courseID;
+    const {theme} = useTheme();
     const axiosSecure = useAxiosSecure();
 
     const { data: enrolledCoursesClassSchedule = [], isPending, isError, error } = useQuery({
@@ -40,8 +43,9 @@ const EnrolledCoursesClassSchedule = ({ courseID }) => {
 
             <div className="space-y-2">
                 {enrolledCoursesClassSchedule.map((singleClass) => (
-                    <div key={singleClass._id} className="flex justify-between items-center bg-base-200 border p-3 rounded">
-                        <div className="space-y-1">
+                    <div key={singleClass._id} className={`flex flex-col md:flex-row justify-between items-center ${themeStyles.background[theme]} border p-3 rounded`}>
+
+                        <div className="space-y-2 md:space-y-1">
 
                             {/* title */}
                             <h3 className="font-semibold">
@@ -53,7 +57,9 @@ const EnrolledCoursesClassSchedule = ({ courseID }) => {
 
                             {/* time */}
                             <p className="text-sm">
+                                <span className='underline font-semibold'>
                                 Class Time:
+                                </span>
 
                                 <button className="badge badge-success text-white ml-2 rounded">
                                     {format(singleClass.scheduled_time, "yyyy-MM-dd, hh:mm a")}
@@ -62,7 +68,7 @@ const EnrolledCoursesClassSchedule = ({ courseID }) => {
 
                             {/* location */}
                             <p className="text-sm">
-                                <span className="mr-1">
+                                <span className="mr-1 font-semibold underline">
                                     Location:
                                 </span>
                                 {singleClass.location}
@@ -83,7 +89,7 @@ const EnrolledCoursesClassSchedule = ({ courseID }) => {
                             </div>
                         </div>
 
-                        <Link to={`/student/myEnrolledCourses/classDetails/${singleClass._id}`} className="btn btn-success text-white">Details</Link>
+                        <Link to={`/student/myEnrolledCourses/classDetails/${singleClass._id}`} className={`btn btn-sm ${themeStyles.button[theme]} md:btn-md mt-3`}>Details</Link>
                     </div>
                 ))}
             </div>

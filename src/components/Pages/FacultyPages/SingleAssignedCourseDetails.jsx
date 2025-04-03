@@ -53,7 +53,7 @@ const SingleAssignedCourseDetails = () => {
 
             <p className="font-medium md:text-lg mb-5">{course_id.description}</p>
 
-            <div className="flex md:gap-3 mt-5">
+            <div className="flex md:gap-3 items-center mt-5">
                 <h4>
                     <span className="font-medium mr-1">
                         Start:

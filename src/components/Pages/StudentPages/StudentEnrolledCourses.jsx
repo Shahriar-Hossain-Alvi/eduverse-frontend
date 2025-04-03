@@ -6,9 +6,13 @@ import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage
 import SectionHeading from "../../Utilities/SectionHeading";
 import { Link } from "react-router";
 import { format } from "date-fns";
+import useTheme from "../../Hooks/useTheme";
+import themeStyles from "../../Utilities/themeStyles";
+
 
 
 const StudentEnrolledCourses = () => {
+    const {theme} = useTheme();
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
@@ -39,10 +43,10 @@ const StudentEnrolledCourses = () => {
             <div className="grid grid-cols-1 gap-6">
                 {singleStudentEnrolledCourses.map((enrolledCourse) => (
                     // card
-                    <div key={enrolledCourse._id} className="border border-gray-200 overflow-hidden shadow-lg rounded-lg grid grid-cols-6 gap-3 p-3">
+                    <div key={enrolledCourse._id} className={`${themeStyles.background[theme]} overflow-hidden shadow-lg rounded-lg grid md:grid-cols-6 gap-3 p-3`}>
 
                         {/* cover image */}
-                        <div className="flex rounded-md col-span-2">
+                        <div className="md:flex rounded-md md:col-span-2">
                             <img
                                 className="w-full rounded-md object-fill"
                                 src={enrolledCourse.course_id.cover_url}
@@ -51,7 +55,7 @@ const StudentEnrolledCourses = () => {
                         </div>
 
 
-                        <div className="col-span-4">
+                        <div className="md:col-span-4">
                             <h2 className="text-xl font-bold mb-2">{enrolledCourse.course_id.title}</h2>
 
                             {/* three badges */}
