@@ -52,7 +52,7 @@ const ManageUsers = () => {
 
             {/* Table */}
             <div className="overflow-x-auto">
-                <table className="table">
+                <table className="table table-sm md:table-md">
                     {/* head */}
                     <thead>
                         <tr>

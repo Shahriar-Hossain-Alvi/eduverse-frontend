@@ -22,7 +22,7 @@ const FacultySidebar = () => {
 
             <li><NavLink to="/faculty/myCourses" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><FiBook className="text-xl" /> <span>My Courses</span></NavLink></li>
 
-            <li><NavLink to="/faculty/schedule" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><FiCalendar className="text-xl" /> <span>Schedule</span></NavLink></li>
+            <li><NavLink to="/faculty/schedules" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><FiCalendar className="text-xl" /> <span>Schedules</span></NavLink></li>
 
             <li><NavLink to="/faculty/students" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><FiUsers className="text-xl" /> <span>Students</span></NavLink></li>
 
@@ -74,7 +74,7 @@ const FacultySidebar = () => {
 
               <li><NavLink to="/faculty/myCourses" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><FiBook className="text-xl" /> <span>My Courses</span></NavLink></li>
 
-              <li><NavLink to="/faculty/schedule" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><FiCalendar className="text-xl" /> <span>Schedule</span></NavLink></li>
+              <li><NavLink to="/faculty/schedules" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><FiCalendar className="text-xl" /> <span>Schedules</span></NavLink></li>
 
               <li><NavLink to="/faculty/students" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><FiUsers className="text-xl" /> <span>Students</span></NavLink></li>
 

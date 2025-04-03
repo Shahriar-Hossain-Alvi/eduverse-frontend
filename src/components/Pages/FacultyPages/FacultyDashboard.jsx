@@ -29,6 +29,8 @@ const FacultyDashboard = () => {
     enabled: user?.user_role === "faculty"
   })
 
+  console.log(facultyOverview);
+
 
   const formatClassTime = (timestamp) => {
     const date = new Date(timestamp);
@@ -59,13 +61,13 @@ const FacultyDashboard = () => {
         {/* course teaching */}
         <div className={`p-3 md:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow ${themeStyles.background[theme]}`}>
           <h3 className="text-xl font-semibold mb-2">Courses Teaching</h3>
-          <p className="text-3xl font-bold text-green-600">{facultyOverview.total_courses_teaching}</p>
+          <p className="text-3xl font-bold text-green-600">{facultyOverview?.total_courses_teaching}</p>
         </div>
 
         {/* total students */}
         <div className={`p-3 md:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow ${themeStyles.background[theme]}`}>
           <h3 className="text-xl font-semibold mb-2">Total Students</h3>
-          <p className="text-3xl font-bold text-green-600">{facultyOverview.total_enrolled_students_for_this_faculty}</p>
+          <p className="text-3xl font-bold text-green-600">{facultyOverview?.total_enrolled_students_for_this_faculty}</p>
         </div>
       </div>
 
@@ -74,13 +76,21 @@ const FacultyDashboard = () => {
       <div className={`p-3 md:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow ${themeStyles.background[theme]} mb-8`}>
         <h3 className="text-xl font-semibold mb-4 text-center md:text-left">Recently Assigned Courses</h3>
 
-        <div className="flex flex-col md:flex-row items-center justify-between text-center space-y-1 md:space-y-0">
-          <span className="font-medium">{facultyOverview?.latest_Assigned_Course?.latest_Assigned_Course_title}</span>
+        {
+          Object.keys(facultyOverview.latest_Assigned_Course).length === 0 ?
+            <div className="flex flex-col md:flex-row items-center justify-between text-center space-y-1 md:space-y-0">
+              No courses assigned
+            </div>
+            :
+            <div className="flex flex-col md:flex-row items-center justify-between text-center space-y-1 md:space-y-0">
 
-          <span className="text-sm text-gray-500 mr-4">Starts : {format(new Date(facultyOverview.latest_Assigned_Course.latest_Assigned_Course_start_date), "MMMM d, yyyy")}</span>
+              <span className="font-medium">{facultyOverview?.latest_Assigned_Course?.latest_Assigned_Course_title}</span>
 
-          <Link to={`/faculty/myCourses/${facultyOverview?.latest_Assigned_Course?.latest_Assigned_Course_Id}`} className={`btn btn-sm md:btn-md ${themeStyles.button[theme]}`}>View</Link>
-        </div>
+              <span className="text-sm text-gray-500 mr-4">Starts : {format(new Date(facultyOverview.latest_Assigned_Course.latest_Assigned_Course_start_date), "MMMM d, yyyy")}</span>
+
+              <Link to={`/faculty/myCourses/${facultyOverview?.latest_Assigned_Course?.latest_Assigned_Course_Id}`} className={`btn btn-sm md:btn-md ${themeStyles.button[theme]}`}>View</Link>
+            </div>
+        }
       </div>
 
 
@@ -89,18 +99,25 @@ const FacultyDashboard = () => {
       <div className={`${themeStyles.background[theme]} p-3 md:p-6 rounded-lg shadow-md`}>
         <h3 className="text-xl font-semibold mb-4 text-center md:text-left">Upcoming Schedule</h3>
 
+        {
+          (facultyOverview.upcoming_Class_Schedules).length === 0 
+          ? 
+            <h1>No Class Schedules</h1>
+          :
+            <ul className="space-y-4 text-sm md:text-base">
+              {
+                facultyOverview.upcoming_Class_Schedules.map(classSchedule => <li key={classSchedule._id} className="grid grid-cols-1 md:grid-cols-6 text-center md:text-left items-center justify-between space-y-2 md:space-y-0 border md:border-none p-2 md:p-0">
+                  <span className="font-medium md:col-span-3">{classSchedule.title}</span>
 
-        <ul className="space-y-4 text-sm md:text-base">
-          {
-            facultyOverview.upcoming_Class_Schedules.map(classSchedule => <li key={classSchedule._id} className="grid grid-cols-1 md:grid-cols-6 text-center md:text-left items-center justify-between space-y-2 md:space-y-0 border md:border-none p-2 md:p-0">
-              <span className="font-medium md:col-span-3">{classSchedule.title}</span>
+                  <span className="text-sm md:col-span-2">{formatClassTime(classSchedule.scheduled_time)}</span>
 
-              <span className="text-sm md:col-span-2">{formatClassTime(classSchedule.scheduled_time)}</span>
+                  <Link to={`/faculty/myCourses/classDetails/${classSchedule._id}`} className={`btn btn-sm md:btn-md ${themeStyles.button[theme]}`}>Details</Link>
+                </li>)
+              }
+            </ul>
+        }
 
-              <Link to={`/faculty/myCourses/classDetails/${classSchedule._id}`} className={`btn btn-sm md:btn-md ${themeStyles.button[theme]}`}>Details</Link>
-            </li>)
-          }
-        </ul>
+
       </div>
     </div>
   );

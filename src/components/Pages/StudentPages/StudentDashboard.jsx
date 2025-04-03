@@ -30,16 +30,16 @@ const StudentDashboard = () => {
 
     const formatClassTime = (timestamp) => {
         const date = new Date(timestamp);
-    
+
         // check if the date prefix
         const dayPrefix = isToday(date) ? "Today" : format(date, "MMMM d, yyyy");
-    
-    
+
+
         // formate the time
         const timeString = format(date, "h:mm a");
-    
+
         return `${dayPrefix}, ${timeString}`;
-      }
+    }
 
 
     if (isPending) return <LoadingSpinner />
@@ -57,7 +57,7 @@ const StudentDashboard = () => {
         <div className="flex-1 p-3 md:p-8">
             <SectionHeading title={`Welcome, ${user?.first_name}`} />
 
-            {isError && <TanstackQueryErrorMessage error={error.message} /> }
+            {isError && <TanstackQueryErrorMessage error={error.message} />}
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
@@ -91,37 +91,22 @@ const StudentDashboard = () => {
 
 
             {/* Upcoming Schedule */}
-            <div className={`${themeStyles.background[theme]} p-3 md:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow mt-8`}>
+            <div className={`${themeStyles.background[theme]} p-3 md:p-6 rounded-lg shadow-md`}>
                 <h3 className="text-xl font-semibold mb-4 text-center md:text-left">Upcoming Schedule</h3>
 
-                <ul className="space-y-4">
-                    <li className="flex flex-col md:flex-row text-center md:text-left items-center justify-between">
-                        <span className="font-medium">Introduction to Computer Science</span>
-                        <span className="text-sm text-gray-500">Today, 2:00 PM - 3:30 PM</span>
-                    </li>
-                    <li className="flex flex-col md:flex-row text-center md:text-left items-center justify-between">
-                        <span className="font-medium">Data Structures and Algorithms</span>
-                        <span className="text-sm text-gray-500">Tomorrow, 10:00 AM - 11:30 AM</span>
-                    </li>
+
+                <ul className="space-y-4 text-sm md:text-base">
+                    {
+                        studentOverview.upcoming_classes.map(classSchedule => <li key={classSchedule._id} className="grid grid-cols-1 md:grid-cols-6 text-center md:text-left items-center justify-between space-y-2 md:space-y-0 border md:border-none p-2 md:p-0">
+                            <span className="font-medium md:col-span-3">{classSchedule.title}</span>
+
+                            <span className="text-sm md:col-span-2">{formatClassTime(classSchedule.scheduled_time)}</span>
+
+                            <Link to={`/student/myEnrolledCourses/classDetails/${classSchedule._id}`} className={`btn btn-sm md:btn-md ${themeStyles.button[theme]}`}>Details</Link>
+                        </li>)
+                    }
                 </ul>
             </div>
-
-            <div className={`${themeStyles.background[theme]} p-3 md:p-6 rounded-lg shadow-md`}>
-        <h3 className="text-xl font-semibold mb-4 text-center md:text-left">Upcoming Schedule</h3>
-
-
-        <ul className="space-y-4 text-sm md:text-base">
-          {
-            studentOverview.upcoming_classes.map(classSchedule => <li key={classSchedule._id} className="grid grid-cols-1 md:grid-cols-6 text-center md:text-left items-center justify-between space-y-2 md:space-y-0 border md:border-none p-2 md:p-0">
-              <span className="font-medium md:col-span-3">{classSchedule.title}</span>
-
-              <span className="text-sm md:col-span-2">{formatClassTime(classSchedule.scheduled_time)}</span>
-
-              <Link to={`/student/myEnrolledCourses/classDetails/${classSchedule._id}`} className={`btn btn-sm md:btn-md ${themeStyles.button[theme]}`}>Details</Link>
-            </li>)
-          }
-        </ul>
-      </div>
         </div>
     );
 };

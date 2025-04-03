@@ -22,7 +22,7 @@ import themeStyles from "../../Utilities/themeStyles";
 
 // handle is_active field for admin
 
-const ClassScheduleForm = ({ course_id, faculty }) => {
+const ClassScheduleFormAndList = ({ course_id, faculty }) => {
     const {theme} = useTheme();
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
@@ -38,7 +38,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
     const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
 
 
-    // fetch all the classes of a course
+    // fetch all the classes of a course for a faculty
     const { data: classList = [], isPending, isError, error, refetch } = useQuery({
         queryKey: ["classList"],
         queryFn: async () => {
@@ -48,6 +48,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
         },
         enabled: !!course_id
     });
+
 
 
     // create new class schedule
@@ -588,7 +589,7 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
 
                                 {/* class details button */}
                                 {
-                                    user.user_role === "faculty" &&
+                                    user.user_role !== "student" &&
                                     <Link to={`/faculty/myCourses/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-sm md:btn-md`}>Details</Link>
                                 }
                             </div>
@@ -600,9 +601,9 @@ const ClassScheduleForm = ({ course_id, faculty }) => {
     );
 };
 
-ClassScheduleForm.propTypes = {
+ClassScheduleFormAndList.propTypes = {
     course_id: PropTypes.string,
     faculty: PropTypes.array
 }
 
-export default ClassScheduleForm;
+export default ClassScheduleFormAndList;

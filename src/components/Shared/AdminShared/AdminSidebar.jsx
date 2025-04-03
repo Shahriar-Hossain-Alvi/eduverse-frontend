@@ -23,7 +23,7 @@ const AdminSidebar = () => {
 
                         <li><NavLink to="/admin/courses" className="flex items-center space-x-2 hover:bg-indigo-600 p-2 rounded"><FiBook className="text-xl" /> <span>Courses</span></NavLink></li>
 
-                        <li><NavLink to="/admin/schedule" className="flex items-center space-x-2 hover:bg-indigo-600 p-2 rounded"><FiCalendar className="text-xl" /> <span>Schedule</span></NavLink></li>
+                        <li><NavLink to="/admin/schedules" className="flex items-center space-x-2 hover:bg-indigo-600 p-2 rounded"><FiCalendar className="text-xl" /> <span>Schedules</span></NavLink></li>
 
                         <li><NavLink to="/admin/reports" className="flex items-center space-x-2 hover:bg-indigo-600 p-2 rounded"><FiPieChart className="text-xl" /> <span>Reports</span></NavLink></li>
 
@@ -57,7 +57,7 @@ const AdminSidebar = () => {
 
                         {/* sidebar close button */}
                         <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-bold">Faculty Portal</h2>
+                            <h2 className="text-xl font-bold">Admin Portal</h2>
                             <label htmlFor="my-drawer-4" className="btn btn-sm btn-circle text-white btn-error">
                                 <FaAnglesLeft className="text-xl" />
                             </label>
@@ -70,7 +70,7 @@ const AdminSidebar = () => {
 
                             <li><NavLink to="/admin/courses" className="flex items-center space-x-2 hover:bg-indigo-600 p-2 rounded"><FiBook className="text-xl" /> <span>Courses</span></NavLink></li>
 
-                            <li><NavLink to="/admin/schedule" className="flex items-center space-x-2 hover:bg-indigo-600 p-2 rounded"><FiCalendar className="text-xl" /> <span>Schedule</span></NavLink></li>
+                            <li><NavLink to="/admin/schedules" className="flex items-center space-x-2 hover:bg-indigo-600 p-2 rounded"><FiCalendar className="text-xl" /> <span>Schedules</span></NavLink></li>
 
                             <li><NavLink to="/admin/reports" className="flex items-center space-x-2 hover:bg-indigo-600 p-2 rounded"><FiPieChart className="text-xl" /> <span>Reports</span></NavLink></li>
 

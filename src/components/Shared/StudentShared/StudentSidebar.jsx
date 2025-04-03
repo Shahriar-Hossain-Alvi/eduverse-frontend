@@ -18,7 +18,7 @@ const StudentSidebar = () => {
 
             <li><NavLink to="/student/myEnrolledCourses" className="flex items-center space-x-2 hover:bg-eduverse_student_primary_color_lite p-2 rounded"><FiBook className="text-xl" /> <span>My Courses</span></NavLink></li>
 
-            <li><NavLink to="/student/schedule" className="flex items-center space-x-2 hover:bg-eduverse_student_primary_color_lite p-2 rounded"><FiCalendar className="text-xl" /> <span>Schedule</span></NavLink></li>
+            <li><NavLink to="/student/schedules" className="flex items-center space-x-2 hover:bg-eduverse_student_primary_color_lite p-2 rounded"><FiCalendar className="text-xl" /> <span>Schedules</span></NavLink></li>
 
             <li><NavLink to="/student/grades" className="flex items-center space-x-2 hover:bg-eduverse_student_primary_color_lite p-2 rounded"><FiFileText className="text-xl" /> <span>Grades</span></NavLink></li>
 
@@ -61,7 +61,7 @@ const StudentSidebar = () => {
 
               <li><NavLink to="/student/myEnrolledCourses" className="flex items-center space-x-2 hover:bg-eduverse_student_primary_color_lite p-2 rounded"><FiBook className="text-xl" /> <span>My Courses</span></NavLink></li>
 
-              <li><NavLink to="/student/schedule" className="flex items-center space-x-2 hover:bg-eduverse_student_primary_color_lite p-2 rounded"><FiCalendar className="text-xl" /> <span>Schedule</span></NavLink></li>
+              <li><NavLink to="/student/schedules" className="flex items-center space-x-2 hover:bg-eduverse_student_primary_color_lite p-2 rounded"><FiCalendar className="text-xl" /> <span>Schedules</span></NavLink></li>
 
               <li><NavLink to="/student/grades" className="flex items-center space-x-2 hover:bg-eduverse_student_primary_color_lite p-2 rounded"><FiFileText className="text-xl" /> <span>Grades</span></NavLink></li>
 
