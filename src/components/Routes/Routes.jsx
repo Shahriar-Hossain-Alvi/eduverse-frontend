@@ -56,6 +56,10 @@ const router = createBrowserRouter(
             />
 
 
+
+
+
+
             {/* Role-Based Protected Routes */}
 
             {/* admin routes start */}
@@ -138,6 +142,17 @@ const router = createBrowserRouter(
                         </PrivateRoute>
                     }
                 />
+
+
+                <Route
+                    path="assignedCourses/:id"
+                    element={
+                        <PrivateRoute role="admin">
+                            <SingleAssignedCourseDetails />
+                        </PrivateRoute>
+                    }
+                />
+
 
                 <Route
                     path="classDetails/:id"

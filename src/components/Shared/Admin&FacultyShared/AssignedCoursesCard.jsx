@@ -3,13 +3,15 @@ import themeStyles from '../../Utilities/themeStyles';
 import { Link } from 'react-router';
 import { format } from 'date-fns';
 import PropTypes from 'prop-types';
+import useAuth from "../../Hooks/useAuth";
 
 
 
 const AssignedCoursesCard = ({ assignedCourses }) => {
-    console.log(assignedCourses);
-
     const { theme } = useTheme();
+    const { user } = useAuth();
+
+    const userRole = user?.user_role
 
     return (
         <div>
@@ -75,7 +77,15 @@ const AssignedCoursesCard = ({ assignedCourses }) => {
 
                             {/* view details button */}
                             <div className="flex justify-end">
-                                <Link to={`/faculty/myCourses/${assignedCourse._id}`} className={`btn border btn-block ${themeStyles.button[theme]}`}>View </Link>
+                                {
+                                    userRole === "faculty" &&
+                                    <Link to={`/faculty/myCourses/${assignedCourse._id}`} className={`btn border btn-block ${themeStyles.button[theme]}`}>View </Link>
+                                }
+
+                                {
+                                    userRole === "admin" &&
+                                    <Link to={`/admin/assignedCourses/${assignedCourse._id}`} className={`btn border btn-block ${themeStyles.button[theme]}`}>View </Link>
+                                }
                             </div>
                         </div>
                     </div>
