@@ -4,21 +4,77 @@ import { Link } from 'react-router';
 import { format } from 'date-fns';
 import PropTypes from 'prop-types';
 import useAuth from "../../Hooks/useAuth";
+import { MdDeleteForever } from "react-icons/md";
+import { handleError } from "../../Utilities/handleError";
+import Swal from "sweetalert2";
+import { useState } from "react";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 
 
-const AssignedCoursesCard = ({ assignedCourses }) => {
+const AssignedCoursesCard = ({ refetch, assignedCourses }) => {
     const { theme } = useTheme();
     const { user } = useAuth();
+    const [buttonLoading, setButtonLoading] = useState(false);
+    const axiosSecure = useAxiosSecure();
 
-    const userRole = user?.user_role
+    const userRole = user?.user_role;
+
+    console.log(assignedCourses);
+
+    const deleteAssignedCourse = async (id) => {
+
+        try {
+            const swalResponse = await Swal.fire({
+                title: `Delete this assigned Course?`,
+                text: "This can not be reversed!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#FF0000",
+                cancelButtonColor: "#16A34A",
+                confirmButtonText: "Yes"
+            });
+
+            if (swalResponse.isConfirmed) {
+                try {
+                    setButtonLoading(true);
+                    const res = await axiosSecure.delete(`/courseFacultyAssignments/${id}`);
+
+                    if (res.data.success === true) {
+                        setButtonLoading(false);
+                        refetch();
+                        Swal.fire({
+                            title: "Deleted",
+                            text: `${res.data.message}`,
+                            icon: "success",
+                            confirmButtonColor: "#16A34A",
+                        });
+                    }
+                } catch (error) {
+                    handleError(error, "Something went wrong! Please try again.");
+                    setButtonLoading(false);
+                    refetch();
+                }
+            }
+        } catch (error) {
+            handleError(error, "Assigned course could not be deleted")
+        }
+
+    }
 
     return (
         <div>
             <div className="grid grid-cols-1 gap-6">
                 {assignedCourses.map((assignedCourse) => (
                     // card
-                    <div key={assignedCourse._id} className={`${themeStyles.background[theme]} overflow-hidden shadow-lg rounded-lg grid md:grid-cols-6 gap-3 p-3`}>
+                    <div key={assignedCourse._id} className={`${themeStyles.background[theme]} overflow-hidden shadow-lg rounded-lg grid md:grid-cols-6 gap-3 p-3 relative`}>
+
+                        {user.user_role === "admin" && <button
+                            disabled={buttonLoading}
+                            onClick={() => deleteAssignedCourse(assignedCourse._id)}
+                            className="btn btn-error text-white btn-sm absolute top-1 right-1 text-xs">
+                            <MdDeleteForever /> Delete
+                        </button>}
 
                         {/* cover image */}
                         <div className="md:flex rounded-md md:col-span-2">
@@ -96,7 +152,9 @@ const AssignedCoursesCard = ({ assignedCourses }) => {
 };
 
 AssignedCoursesCard.propTypes = {
-    assignedCourses: PropTypes.array
+    assignedCourses: PropTypes.array,
+    refetch: PropTypes.func,
+
 }
 
 export default AssignedCoursesCard;

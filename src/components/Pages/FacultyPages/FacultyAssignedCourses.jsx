@@ -12,7 +12,7 @@ const FacultyAssignedCourses = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
-    const { data: singleFacultyAssignedCoursesData = [], isPending, isError, error } = useQuery({
+    const { data: singleFacultyAssignedCoursesData = [], isPending, isError, error, refetch } = useQuery({
         queryKey: ["singleFacultyAssignedCoursesData", user._id],
         queryFn: async () => {
             const res = await axiosSecure.get(`/courseFacultyAssignments/myAssignedCourses/${user._id}`);
@@ -38,7 +38,7 @@ const FacultyAssignedCourses = () => {
                     singleFacultyAssignedCoursesData.length === 0 ?
                         <h2 className="text-error text-3xl text-center font-medium">No Courses Assigned to you yet</h2>
                         :
-                        <AssignedCoursesCard assignedCourses={singleFacultyAssignedCoursesData} />
+                        <AssignedCoursesCard refetch={refetch} assignedCourses={singleFacultyAssignedCoursesData} />
                 }
 
 

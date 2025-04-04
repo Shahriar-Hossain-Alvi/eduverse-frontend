@@ -22,7 +22,7 @@ import themeStyles from "../../../Utilities/themeStyles";
 
 
 const ClassScheduleFormAndList = ({ course_id, faculty, isCourseAssignmentActive }) => {
-    const {theme} = useTheme();
+    const { theme } = useTheme();
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
 
@@ -530,7 +530,7 @@ const ClassScheduleFormAndList = ({ course_id, faculty, isCourseAssignmentActive
                                 {/* time */}
                                 <p className="text-sm">
                                     <span className="font-semibold underline">
-                                    Class Time:
+                                        Class Time:
                                     </span>
 
                                     <button className="badge badge-success text-white ml-2 rounded">
@@ -589,8 +589,12 @@ const ClassScheduleFormAndList = ({ course_id, faculty, isCourseAssignmentActive
 
                                 {/* class details button */}
                                 {
-                                    user.user_role !== "student" &&
+                                    user.user_role === "faculty" &&
                                     <Link to={`/faculty/myCourses/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-sm md:btn-md`}>Details</Link>
+                                }
+                                {
+                                    user.user_role === "admin" &&
+                                    <Link to={`/admin/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-sm md:btn-md`}>Details</Link>
                                 }
                             </div>
                         </li>

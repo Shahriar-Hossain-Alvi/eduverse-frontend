@@ -47,7 +47,8 @@ const CourseMaterialFormAndList = ({ course_id, isCourseAssignmentActive }) => {
             const res = await axiosSecure.get(`courseMaterials/getMaterialByCourseId/${course_id}`);
 
             return res.data.data;
-        }
+        },
+        enabled: !!course_id
     })
 
     if (isPending) return <LoadingSpinner />

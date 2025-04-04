@@ -10,7 +10,7 @@ const AllAssignedCourses = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
-    const { data: allAssignedCourses = [], isError, isPending, error } = useQuery({
+    const { data: allAssignedCourses = [], isError, isPending, error, refetch } = useQuery({
         queryKey: ["allAssignedCourses", user._id],
         queryFn: async () => {
             const res = await axiosSecure.get("/courseFacultyAssignments");
@@ -32,7 +32,7 @@ const AllAssignedCourses = () => {
                 allAssignedCourses.length === 0 ?
                     <h2 className="text-error text-3xl text-center font-medium">No Courses are Assigned yet</h2>
                     :
-                    <AssignedCoursesCard assignedCourses={allAssignedCourses} />
+                    <AssignedCoursesCard refetch={refetch} assignedCourses={allAssignedCourses} />
             }
         </div>
     );
