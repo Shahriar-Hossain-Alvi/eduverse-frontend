@@ -5,9 +5,9 @@ import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import SectionHeading from "../../Utilities/SectionHeading";
 import EnrolledStudentList from "../../Shared/Admin&FacultyShared/EnrolledStudentList";
-import ClassScheduleFormAndList from "../../Shared/Admin&FacultyShared/ClassScheduleFormAndList"
 import CourseMaterialFormAndList from "../../Shared/Admin&FacultyShared/CourseMaterialFormAndList";
 import { format } from "date-fns";
+import ClassScheduleFormAndList from "./Classes/ClassScheduleFormAndList";
 
 
 

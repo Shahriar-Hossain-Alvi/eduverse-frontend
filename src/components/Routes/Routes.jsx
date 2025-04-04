@@ -27,6 +27,7 @@ import SingleEnrolledCourseDetails from "../Pages/StudentPages/SingleEnrolledCou
 import SingleClassDetails from "../Shared/Admin&FacultyShared/SingleClassDetails";
 import EnrolledCoursesClassDetails from "../Pages/StudentPages/EnrolledCoursesClassDetails";
 import Schedules from "../Shared/CommonShared/Schedules";
+import AllAssignedCourses from "../Pages/AdminPages/Courses/AllAssignedCourses";
 
 
 const router = createBrowserRouter(
@@ -128,7 +129,17 @@ const router = createBrowserRouter(
                     }
                 />
 
-<Route
+
+                <Route
+                    path="assignedCourses"
+                    element={
+                        <PrivateRoute role="admin">
+                            <AllAssignedCourses />
+                        </PrivateRoute>
+                    }
+                />
+
+                <Route
                     path="classDetails/:id"
                     element={
                         <PrivateRoute role="admin">

@@ -1,26 +1,25 @@
 import { useState } from "react";
-import SectionHeading from "../../Utilities/SectionHeading";
+import SectionHeading from "../../../Utilities/SectionHeading";
 import { FiEdit, FiPlus, FiTrash2 } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns"
 import toast, { Toaster } from "react-hot-toast";
-import { handleError } from "../../Utilities/handleError";
-import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { handleError } from "../../../Utilities/handleError";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import PropTypes from "prop-types";
 import { CgClose, CgSpinnerTwoAlt } from "react-icons/cg";
 import { useQuery } from "@tanstack/react-query";
-import LoadingSpinner from "../../Utilities/LoadingSpinner";
-import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
+import LoadingSpinner from "../../../Utilities/LoadingSpinner";
+import TanstackQueryErrorMessage from "../../../Utilities/TanstackQueryErrorMessage";
 import Swal from "sweetalert2";
 import { BiError } from "react-icons/bi";
 import { Link } from "react-router";
-import useAuth from "../../Hooks/useAuth";
-import useTheme from "../../Hooks/useTheme";
-import themeStyles from "../../Utilities/themeStyles";
+import useAuth from "../../../Hooks/useAuth";
+import useTheme from "../../../Hooks/useTheme";
+import themeStyles from "../../../Utilities/themeStyles";
 
 
 
-// handle is_active field for admin
 
 const ClassScheduleFormAndList = ({ course_id, faculty }) => {
     const {theme} = useTheme();
