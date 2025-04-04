@@ -20,8 +20,6 @@ const AllAssignedCourses = () => {
         enabled: user.user_role === "admin"
     });
 
-    console.log(allAssignedCourses);
-
     if (isPending) return <LoadingSpinner />
 
     return (

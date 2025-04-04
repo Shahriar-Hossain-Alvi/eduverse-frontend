@@ -100,9 +100,3 @@ AssignedCoursesCard.propTypes = {
 }
 
 export default AssignedCoursesCard;
-
-
-// **
-//
-//
-// * /

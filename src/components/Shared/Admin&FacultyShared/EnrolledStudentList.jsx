@@ -33,7 +33,7 @@ const EnrolledStudentList = ({ course_id }) => {
 
 
             {/* table */}
-            <div className="overflow-x-auto mb-20">
+            <div className="overflow-x-auto">
                 <table className="table table-xs md:table-md">
                     {/* head */}
                     <thead>

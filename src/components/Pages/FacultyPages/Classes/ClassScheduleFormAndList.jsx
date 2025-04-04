@@ -48,8 +48,6 @@ const ClassScheduleFormAndList = ({ course_id, faculty }) => {
         enabled: !!course_id
     });
 
-    console.log(faculty);
-
 
 
     // create new class schedule
