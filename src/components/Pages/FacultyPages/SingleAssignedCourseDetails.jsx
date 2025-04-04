@@ -19,7 +19,7 @@ import { useState } from "react";
 const SingleAssignedCourseDetails = () => {
 
     const { id } = useParams(); // courseFacultyAssignments id
-    const { user, loading } = useAuth();
+    const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
     const [buttonLoading, setButtonLoading] = useState(false);
 
@@ -44,6 +44,7 @@ const SingleAssignedCourseDetails = () => {
 
 
 
+    // handle is_active field
     const handleCourseDisableButton = async () => {
         let updatedDoc = {};
 
@@ -133,12 +134,12 @@ const SingleAssignedCourseDetails = () => {
 
 
             {/* class schedules form*/}
-            <ClassScheduleFormAndList course_id={course_id?._id} faculty={users_id} />
+            <ClassScheduleFormAndList course_id={course_id?._id} faculty={users_id} isCourseAssignmentActive={is_active} />
 
 
             {/* upload course materials */}
             <div className="overflow-hidden">
-                <CourseMaterialFormAndList course_id={course_id?._id} />
+                <CourseMaterialFormAndList course_id={course_id?._id} isCourseAssignmentActive={is_active} />
             </div>
 
 
@@ -147,6 +148,8 @@ const SingleAssignedCourseDetails = () => {
             <EnrolledStudentList course_id={course_id?._id} />
 
 
+
+            {/* disable button */}
             {
                 user.user_role === "admin" &&
                 <div className="mt-10">

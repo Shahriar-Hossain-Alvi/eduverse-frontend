@@ -18,7 +18,7 @@ import { handleError } from "../../Utilities/handleError";
 
 // handle is_active field for admin
 
-const CourseMaterialFormAndList = ({ course_id }) => {
+const CourseMaterialFormAndList = ({ course_id, isCourseAssignmentActive }) => {
     const myCloudName = import.meta.env.VITE_Cloudinary_Cloud_Name;
     const myUploadPreset = import.meta.env.VITE_Cloudinary_Upload_Preset;
 
@@ -133,7 +133,6 @@ const CourseMaterialFormAndList = ({ course_id }) => {
 
         refetch();
     }
-
 
 
     // delete course material
@@ -277,8 +276,6 @@ const CourseMaterialFormAndList = ({ course_id }) => {
     }
 
 
-
-
     return (
         <div>
             <div className="mb-20">
@@ -288,8 +285,9 @@ const CourseMaterialFormAndList = ({ course_id }) => {
 
                 {/* toggle form button */}
                 <button
+                    disabled={!isCourseAssignmentActive}
                     onClick={() => setShowMaterialForm(!showMaterialForm)}
-                    className={`mb-4 ${showMaterialForm ? "bg-error" : "bg-blue-500 hover:bg-blue-600"} text-white font-bold py-2 px-4 rounded inline-flex items-center`}
+                    className={`mb-4 ${showMaterialForm ? "bg-error" : "bg-blue-500 hover:bg-blue-600"} text-white font-bold py-2 px-4 inline-flex items-center rounded-lg btn`}
                 >
                     {
                         showMaterialForm ?
@@ -596,7 +594,8 @@ const CourseMaterialFormAndList = ({ course_id }) => {
 };
 
 CourseMaterialFormAndList.propTypes = {
-    course_id: PropTypes.string
+    course_id: PropTypes.string,
+    isCourseAssignmentActive: PropTypes.bool,
 }
 
 export default CourseMaterialFormAndList;

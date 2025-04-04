@@ -21,7 +21,7 @@ import themeStyles from "../../../Utilities/themeStyles";
 
 
 
-const ClassScheduleFormAndList = ({ course_id, faculty }) => {
+const ClassScheduleFormAndList = ({ course_id, faculty, isCourseAssignmentActive }) => {
     const {theme} = useTheme();
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
@@ -241,6 +241,7 @@ const ClassScheduleFormAndList = ({ course_id, faculty }) => {
             <div>
                 {/* toggle schedule form */}
                 <button
+                    disabled={!isCourseAssignmentActive}
                     onClick={() => {
                         setShowScheduleForm(!showScheduleForm);
 
@@ -602,7 +603,8 @@ const ClassScheduleFormAndList = ({ course_id, faculty }) => {
 
 ClassScheduleFormAndList.propTypes = {
     course_id: PropTypes.string,
-    faculty: PropTypes.array
+    faculty: PropTypes.array,
+    isCourseAssignmentActive: PropTypes.bool,
 }
 
 export default ClassScheduleFormAndList;
