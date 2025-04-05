@@ -53,7 +53,7 @@ const SingleCourseEnrollmentList = ({ id }) => {
                                     <td>{singleStudent.users_id.email}</td>
                                     {
                                         user.user_role === "admin" && <td>
-                                        <Link to={`/admin/users/${singleStudent.users_id._id}`} className="btn btn-sm btn-primary">View</Link>
+                                        <Link to={`/admin/users/${singleStudent.users_id._id}`} className="btn btn-sm btn-success text-white">View Profile</Link>
                                     </td>
                                     }
                                 </tr>

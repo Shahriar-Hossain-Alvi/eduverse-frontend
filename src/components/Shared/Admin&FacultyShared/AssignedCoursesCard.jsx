@@ -20,7 +20,6 @@ const AssignedCoursesCard = ({ refetch, assignedCourses }) => {
 
     const userRole = user?.user_role;
 
-    console.log(assignedCourses);
 
     const deleteAssignedCourse = async (id) => {
 

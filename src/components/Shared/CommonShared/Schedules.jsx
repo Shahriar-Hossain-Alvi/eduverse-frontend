@@ -106,7 +106,7 @@ const Schedules = () => {
 
 
                                 {/* faculty */}
-                                <div className='flex gap-1'>
+                                <div className='flex flex-wrap items-center gap-1'>
                                     <h2 className="underline font-semibold mr-1">Faculties: </h2>
                                     {(singleClass.faculty_id).map(singleFaculty =>
                                         <p key={singleFaculty._id} className='badge badge-outline'>{singleFaculty.first_name} {singleFaculty.last_name}</p>
