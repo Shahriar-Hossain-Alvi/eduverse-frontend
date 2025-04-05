@@ -5,19 +5,20 @@ import SectionHeading from "../../Utilities/SectionHeading";
 import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
 import { useState } from "react";
 import { format } from 'date-fns';
-import useTheme from "../../Hooks/useTheme"
-import themeStyles from "../../Utilities/themeStyles";
-
+import { MdDeleteForever } from "react-icons/md";
+import { handleError } from "../../Utilities/handleError";
+import Swal from "sweetalert2";
+import { Link } from "react-router";
 
 
 
 const AllClassAttendance = () => {
     const axiosSecure = useAxiosSecure();
-    const { theme } = useTheme();
     const [expandedClass, setExpandedClass] = useState(null);
+    const [buttonLoading, setButtonLoading] = useState(false);
 
 
-    const { data: allClassAttendance = [], isError, isPending, error } = useQuery({
+    const { data: allClassAttendance = [], isError, isPending, error, refetch } = useQuery({
         queryKey: ["allClassAttendance"],
         queryFn: async () => {
             const res = await axiosSecure.get("/classAttendance");
@@ -51,20 +52,59 @@ const AllClassAttendance = () => {
     const getStatusBadge = (status) => {
         switch (status) {
             case 'present':
-                return 'badge-success text-white';
+                return 'badge-success text-xs md:text-base text-white';
             case 'absent':
-                return 'badge-error text-white';
+                return 'badge-error text-xs md:text-base text-white';
             case 'early leave':
-                return 'badge-warning text-black';
+                return 'badge-warning text-xs md:text-base text-black';
             case 'late':
-                return 'badge-warning text-black';
+                return 'badge-warning text-xs md:text-base text-black';
             default:
-                return 'badge-primary text-white';
+                return 'badge-primary text-xs md:text-base text-white';
         }
     };
 
+    const handleAttendanceDelete = async (id) => {
+        console.log(id);
+        try {
+            const swalResponse = await Swal.fire({
+                title: `Delete this attendance?`,
+                text: "This can not be reversed!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#FF0000",
+                cancelButtonColor: "#16A34A",
+                confirmButtonText: "Yes"
+            });
+
+            if (swalResponse.isConfirmed) {
+                try {
+                    setButtonLoading(true);
+                    const res = await axiosSecure.delete(`/classAttendance/${id}`);
+
+                    if (res.data.success === true) {
+                        setButtonLoading(false);
+                        refetch();
+                        Swal.fire({
+                            title: "Deleted",
+                            text: `${res.data.message}`,
+                            icon: "success",
+                            confirmButtonColor: "#16A34A",
+                        });
+                    }
+                } catch (error) {
+                    handleError(error, "Something went wrong! Please try again.");
+                    setButtonLoading(false);
+                    refetch();
+                }
+            }
+        } catch (error) {
+            handleError(error, "Assigned course could not be deleted")
+        }
+    }
+
     return (
-        <div className="flex-1 p-3 md:p-8">
+        <div className="flex-1 p-3 md:p-8 overflow-hidden">
             <SectionHeading title="All Attendance" />
 
             {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
@@ -76,22 +116,30 @@ const AllClassAttendance = () => {
                 </div>
             ) : (
                 <div className="space-y-4">
-                    {allClassAttendance.map((classRecord, index) => (
-                        <div key={index} className={`border rounded-lg overflow-hidden shadow-sm ${themeStyles.background[theme]}`}>
+                    {allClassAttendance.map((classRecord) => (
+                        <div key={classRecord._id} className="border rounded-lg overflow-hidden shadow-sm">
+
+
+
                             {/* Class info header */}
                             <div
                                 className="p-4 cursor-pointer flex justify-between items-center"
                                 onClick={() => toggleExpand(classRecord.class_id)}
                             >
+                                {/* title and date */}
                                 <div>
-                                    <h3 className="font-medium text-lg">{classRecord?.class_id?.title}</h3>
+                                    <h3 className="font-medium md:text-lg">{classRecord?.class_id?.title}</h3>
+
                                     <p className="text-sm">{formatDate(classRecord?.attendance_date)}</p>
                                 </div>
 
+                                {/* delete button */}
+
+
 
                                 {/* student count and arrow */}
-                                <div className="flex items-center">
-                                    <span className="text-sm mr-2">
+                                <div className="flex items-center mr-4">
+                                    <span className="text-xs text-center md:text-left md:text-sm mr-2">
                                         {classRecord.attendance_record.length} students
                                     </span>
                                     <svg
@@ -106,25 +154,20 @@ const AllClassAttendance = () => {
                             </div>
 
 
-
-
-
-
-
                             {/* Attendance details */}
                             {expandedClass === classRecord.class_id && (
                                 <div className="border-t">
                                     <div className="overflow-x-auto">
-                                        <table className="min-w-full divide-y">
-                                            <thead className={`${themeStyles.background[theme]}`}>
+                                        <table className="table table-sm md:table-md">
+                                            <thead>
                                                 <tr>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                                                    <th className="px-2 md:px-6 py-2 md:py-4 font-medium uppercase tracking-wider">
                                                         Student
                                                     </th>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                                                    <th className="px-2 md:px-6 py-2 md:py-4 font-medium uppercase tracking-wider">
                                                         Status
                                                     </th>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                                                    <th className="px-2 md:px-6 py-2 md:py-4 font-medium uppercase tracking-wider">
                                                         Remarks
                                                     </th>
                                                 </tr>
@@ -132,11 +175,11 @@ const AllClassAttendance = () => {
 
 
 
-                                            <tbody className={`${themeStyles.background[theme]} divide-y`}>
+                                            <tbody>
                                                 {classRecord.attendance_record.map((record) => (
                                                     <tr key={record._id} className="hover">
                                                         {/* name and email */}
-                                                        <td className="px-6 py-4">
+                                                        <td className="px-2 md:px-6 py-2 md:py-4">
                                                             <h2 className="text-sm font-medium">
                                                                 {record.student_id.first_name} {record.student_id.last_name}
                                                             </h2>
@@ -146,13 +189,13 @@ const AllClassAttendance = () => {
                                                         </td>
 
 
-                                                        <td className="px-6 py-4">
+                                                        <td className="px-2 md:px-6 py-2 md:py-4">
                                                             <span className={`badge ${getStatusBadge(record.is_present)}`}>
                                                                 {record.is_present}
                                                             </span>
                                                         </td>
 
-                                                        <td className="px-6 py-4 text-sm">
+                                                        <td className="px-2 md:px-6 py-2 md:py-4 text-sm text-center md:text-left">
                                                             {record.remarks || '-'}
                                                         </td>
                                                     </tr>
@@ -165,6 +208,24 @@ const AllClassAttendance = () => {
                                     <div className="px-4 py-3 text-xs border-t">
                                         <div className="flex justify-between items-center">
                                             <span>Created by: {classRecord?.created_by.first_name} {classRecord?.created_by.last_name}</span>
+
+
+                                            <div className="space-y-1 md:space-x-2">
+                                                <Link
+                                                    to={`/admin/classDetails/${classRecord.class_id._id}`}
+                                                    className="btn btn-success text-xs md:text-sm btn-xs md:btn-sm text-white">
+                                                    View Class Details
+                                                </Link>
+
+                                                <button
+                                                    disabled={buttonLoading}
+                                                onClick={() => handleAttendanceDelete(classRecord._id)} className="btn btn-xs md:btn-sm text-xs md:text-sm btn-error text-white">
+                                                    Delete <MdDeleteForever className="text-" />
+                                                </button>
+                                            </div>
+
+
+
                                             <span>Created: {formatDate(classRecord.createdAt)}</span>
                                         </div>
                                     </div>

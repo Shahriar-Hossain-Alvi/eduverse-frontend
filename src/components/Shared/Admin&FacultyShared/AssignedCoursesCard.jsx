@@ -58,7 +58,6 @@ const AssignedCoursesCard = ({ refetch, assignedCourses }) => {
         } catch (error) {
             handleError(error, "Assigned course could not be deleted")
         }
-
     }
 
     return (
