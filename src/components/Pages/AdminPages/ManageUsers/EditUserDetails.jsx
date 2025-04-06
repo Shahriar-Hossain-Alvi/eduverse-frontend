@@ -83,17 +83,12 @@ const EditUserDetails = () => {
                     position: "top-center"
                 })
                 refetch();
+                reset();
                 setIsEditing(false);
             }
         } catch (error) {
             console.log(error);
-            const errorMessage =
-                error.response?.data?.message || "Something went wrong! Please try again.";
-
-            toast.error(errorMessage, {
-                duration: 3000,
-                position: "top-center"
-            });
+            handleError(error, "Something went wrong! Please try again.")
         }
     }
 

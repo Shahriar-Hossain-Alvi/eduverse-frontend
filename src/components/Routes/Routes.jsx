@@ -29,6 +29,7 @@ import EnrolledCoursesClassDetails from "../Pages/StudentPages/EnrolledCoursesCl
 import Schedules from "../Shared/CommonShared/Schedules";
 import AllAssignedCourses from "../Pages/AdminPages/Courses/AllAssignedCourses";
 import AllClassAttendance from "../Pages/AdminPages/AllClassAttendance";
+import AssignedCoursesAllStudentList from "../Pages/FacultyPages/AssignedCoursesAllStudentList";
 
 
 const router = createBrowserRouter(
@@ -197,6 +198,10 @@ const router = createBrowserRouter(
 
 
 
+
+
+
+
             {/* =============== faculty routes ========= */}
             < Route path="faculty" element={< FacultyLayout />} errorElement={< ErrorPage />}>
 
@@ -276,6 +281,15 @@ const router = createBrowserRouter(
                     element={
                         <PrivateRoute role="faculty">
                             <Schedules />
+                        </PrivateRoute>
+                    }
+                />
+
+                <Route
+                    path="students"
+                    element={
+                        <PrivateRoute role="faculty">
+                            <AssignedCoursesAllStudentList />
                         </PrivateRoute>
                     }
                 />
