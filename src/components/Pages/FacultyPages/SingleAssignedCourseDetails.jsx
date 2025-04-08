@@ -13,6 +13,7 @@ import { handleError } from "../../Utilities/handleError";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import StudentGradeFormAndList from "../../Shared/Admin&FacultyShared/StudentGradeFormAndList ";
 
 
 
@@ -147,6 +148,10 @@ const SingleAssignedCourseDetails = () => {
             {/* enrolled student list */}
             <EnrolledStudentList course_id={course_id?._id} />
 
+
+
+            {/* student grade form and list */}
+            <StudentGradeFormAndList course_id={course_id?._id} />
 
 
             {/* disable button */}

@@ -44,11 +44,8 @@ const AssignedCoursesAllStudentList = () => {
 
     const handleInputChange = (e) => {
         setSearchedCourseTitle(e.target.value);
-        // refetch()
     }
 
-
-    console.log(assignedCoursesAllStudentList);
 
 
     return (
@@ -56,13 +53,13 @@ const AssignedCoursesAllStudentList = () => {
             <SectionHeading title="Enrolled Students by Assigned Courses" />
 
             {/* search field for course title */}
-            <div className="flex items-center gap-2 mb-5">
-                <label className="label label-text">
+            <div className="flex items-center gap-2 mb-5 flex-row-reverse">
+                <label className="label label-text max-w-28">
                     Search By Title:
                 </label>
                 <input
                     onChange={handleInputChange} type="text"
-                    className="grow input input-bordered" placeholder="Search"
+                    className="grow input input-bordered max-w-72" placeholder="Search"
                     value={searchedCourseTitle}
                 />
             </div>
