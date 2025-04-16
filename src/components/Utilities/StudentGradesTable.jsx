@@ -163,7 +163,7 @@ const StudentGradesTable = ({ course_id, refetchGrades }) => {
                                 <h2>Student Name</h2>
                                 {!isEditing && <>
                                     <h2>Student Email</h2>
-                                    <h2>Add Grade</h2>
+                                    <h2 className="text-center">Add Grade</h2>
                                 </>}
                                 {
                                     isEditing && <>
@@ -189,7 +189,7 @@ const StudentGradesTable = ({ course_id, refetchGrades }) => {
 
                                             {editingRows[singleStudent._id] && isEditing && <form onSubmit={handleSubmit(handleGradeSave)} className="col-span-4 grid grid-cols-4 gap-2">
 
-                                                {/* ✅ Hidden input to pass user ID */}
+                                                {/* Hidden input to pass user ID */}
                                                 <input
                                                     type="hidden"
                                                     value={singleStudent.users_id._id}
