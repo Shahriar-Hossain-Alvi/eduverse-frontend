@@ -7,6 +7,7 @@ import SectionHeading from "../../Utilities/SectionHeading";
 import { format } from "date-fns";
 import EnrolledCoursesClassSchedule from "./EnrolledCoursesClassSchedule";
 import SingleEnrolledCourseMaterials from "./SingleEnrolledCourseMaterials";
+import StudentGradeFormAndList from "../../Shared/CommonShared/StudentGradeFormAndList ";
 
 
 
@@ -29,7 +30,6 @@ const SingleEnrolledCourseDetails = () => {
 
 
     const { course_id } = singleEnrolledCourseObject;
-
 
     if (isPending) return <LoadingSpinner />
 
@@ -78,6 +78,10 @@ const SingleEnrolledCourseDetails = () => {
 
             {/* Course Materials */}
             <SingleEnrolledCourseMaterials courseID={course_id._id} />
+
+
+            {/* student grades */}
+            <StudentGradeFormAndList course_id={course_id?._id} />
         </div>
     );
 };
