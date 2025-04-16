@@ -131,7 +131,7 @@ const StudentGradesTable = ({ course_id, refetchGrades }) => {
 
     
     return (
-        <div className="mb-10">
+        <div className="my-5">
             <Toaster />
             {isEnrolledStudentsError && (
                 <TanstackQueryErrorMessage errorMessage={enrolledStudentsError.message} />

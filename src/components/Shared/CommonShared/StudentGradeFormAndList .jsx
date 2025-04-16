@@ -9,6 +9,8 @@ import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 import { handleError } from "../../Utilities/handleError";
 import StudentGradesTable from "../../Utilities/StudentGradesTable";
+import { MdDelete } from "react-icons/md";
+import Swal from "sweetalert2";
 
 
 const StudentGradeFormAndList = ({ course_id }) => {
@@ -33,9 +35,44 @@ const StudentGradeFormAndList = ({ course_id }) => {
     enabled: !!course_id,
   });
 
+console.log(existingGrades);
 
+  const handleGradesTableDelete = async ()=>{
+    const allGradesIds = existingGrades.map(id=> id._id);
 
-  console.log(existingGrades);
+    try {
+      const swalResponse = await Swal.fire({
+          title: `Delete All the grades at Once?`,
+          text: "This can not be reversed!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#FF0000",
+          cancelButtonColor: "#16A34A",
+          confirmButtonText: "Yes"
+      });
+
+      if (swalResponse.isConfirmed) {
+          try {
+              const res = await axiosSecure.delete(`/studentGrades/deleteAllGrades/${course_id}`, {data: {allGradesIds}});
+
+              if (res.data.success === true) {
+                refetchGrades();
+                  Swal.fire({
+                      title: "Deleted",
+                      text: `${res.data.message}`,
+                      icon: "success",
+                      confirmButtonColor: "#16A34A",
+                  });
+              }
+          } catch (error) {
+              handleError(error, "Something went wrong! Please try again.");
+          }
+      }
+  } catch (error) {
+      handleError(error, "Assigned course could not be deleted")
+  }
+  }
+
 
 
   return (
@@ -43,66 +80,75 @@ const StudentGradeFormAndList = ({ course_id }) => {
       <SectionHeading title="Student Grade Management" />
       <Toaster />
 
+
+      {/* grades table */}
+      <div>
+        {gradesError && (
+          <TanstackQueryErrorMessage errorMessage={gradesErrorData.message} />
+        )}
+
+
+        {gradesLoading && <LoadingSpinner />}
+
+        {
+          existingGrades.length === 0 ?
+            <div>
+              <h1 className="text-lg text-error font-medium text-center">Grades are not added yet</h1>
+            </div>
+
+            :
+
+            <div>
+              <div className="flex justify-between">
+                <SectionHeading title="Final Marks for this course" />
+
+                <button onClick={()=>handleGradesTableDelete()} className={`btn btn-error ${existingGrades.length > 0 ? "block" : "hidden"} text-white flex`}><MdDelete /> Delete</button>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="table">
+                  {/* head */}
+                  <thead>
+                    <tr>
+                      <th>No.</th>
+                      <th>Username</th>
+                      <th>Name</th>
+                      <th>Marks</th>
+                      <th>Percentage</th>
+                      <th>Remarks</th>
+                      <th>Graded By</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {existingGrades.map((singleGrade, idx) =>
+                      <tr key={singleGrade._id}>
+                        <th>{idx + 1}</th>
+
+                        <td>{singleGrade.student_id.user_name}</td>
+
+                        <td>{singleGrade.student_id.first_name} {singleGrade.student_id.last_name}</td>
+
+                        <td>{singleGrade.obtained_marks}/{singleGrade.full_marks}</td>
+
+                        <td>{singleGrade.percentage}%</td>
+                        <td>{singleGrade.remarks}</td>
+
+                        <td>{singleGrade.faculty_id.first_name} {singleGrade.faculty_id.last_name}</td>
+                      </tr>)}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+        }
+      </div>
+
+
+
       {/* grades form */}
       {
         user?.user_role === "faculty" && <StudentGradesTable course_id={course_id} refetchGrades={refetchGrades} existingGradesLength={existingGrades.length} />
       }
-
-
-
-
-      {/* grades table */}
-      {gradesError && (
-        <TanstackQueryErrorMessage errorMessage={gradesErrorData.message} />
-      )}
-
-
-      {gradesLoading && <LoadingSpinner />}
-
-      {
-        existingGrades.length === 0 ?
-          <div>
-            <h1>Grades are not added yet</h1>
-          </div>
-
-          :
-
-          <div className="overflow-x-auto">
-            <table className="table">
-              {/* head */}
-              <thead>
-                <tr>
-                  <th>No.</th>
-                  <th>Username</th>
-                  <th>Name</th>
-                  <th>Marks</th>
-                  <th>Percentage</th>
-                  <th>Remarks</th>
-                  <th>Graded By</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {existingGrades.map((singleGrade, idx) =>
-                  <tr key={singleGrade._id}>
-                    <th>{idx+1}</th>
-
-                    <td>{singleGrade.student_id.user_name}</td>
-
-                    <td>{singleGrade.student_id.first_name} {singleGrade.student_id.last_name}</td>
-
-                    <td>{singleGrade.obtained_marks}/{singleGrade.full_marks}</td>
-
-                    <td>{singleGrade.percentage}%</td>
-                    <td>{singleGrade.remarks}</td>
-
-                    <td>{singleGrade.faculty_id.first_name} {singleGrade.faculty_id.last_name}</td>
-                  </tr>)}
-              </tbody>
-            </table>
-          </div>
-      }
-
     </div>
   );
 };
