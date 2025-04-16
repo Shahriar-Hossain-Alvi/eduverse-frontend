@@ -5,14 +5,14 @@ import LoadingSpinner from "../../Utilities/LoadingSpinner";
 import SectionHeading from "../../Utilities/SectionHeading";
 import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
 import PropTypes from 'prop-types';
-import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 import { handleError } from "../../Utilities/handleError";
 import StudentGradesTable from "../../Utilities/StudentGradesTable";
 import { MdCancel, MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
-import { FaEdit, FaPlus, FaSave } from "react-icons/fa";
+import { FaEdit, FaSave } from "react-icons/fa";
 import { useState } from "react";
+
 
 
 const StudentGradeFormAndList = ({ course_id }) => {
@@ -177,11 +177,11 @@ const StudentGradeFormAndList = ({ course_id }) => {
               <div className="flex justify-between">
                 <SectionHeading title="Final Marks for this course" />
 
-                <button onClick={() => handleGradesTableDelete()} className={`btn btn-error ${existingGrades.length > 0 ? "block" : "hidden"} text-white flex`}><MdDelete /> Delete</button>
+                {user.user_role !== "student" && <button onClick={() => handleGradesTableDelete()} className={`btn btn-error btn-xs md:btn-sm lg:btn-md ${existingGrades.length > 0 ? "block" : "hidden"} text-white flex`}><MdDelete /> Delete</button>}
               </div>
 
               <div className="overflow-x-auto">
-                <table className="table table-sm md:table-md">
+                <table className="table table-xs md:table-md">
                   {/* head */}
                   <thead>
                     <tr>
@@ -213,18 +213,18 @@ const StudentGradeFormAndList = ({ course_id }) => {
                             <td><input
                               onChange={(e) => setUpdatedMarks(e.target.value)}
                               defaultValue={singleGrade.obtained_marks}
-                              type="number" className="input input-bordered input-sm" placeholder={singleGrade.obtained_marks} /></td>
+                              type="number" className="input input-bordered input-xs md:input-sm" placeholder={singleGrade.obtained_marks} /></td>
                             :
                             <td>{singleGrade.obtained_marks}/{singleGrade.full_marks}</td>
                         }
 
-                        <td>{singleGrade.percentage}%</td>
+                        <td className="text-center">{singleGrade.percentage}%</td>
 
 
                         {/* remarks */}
                         {
                           (editGrade && editingRows[singleGrade._id]) ?
-                            <td><input onChange={(e) => setUpdatedRemarks(e.target.value)} type="text" className="input input-bordered input-sm" placeholder={singleGrade.remarks || "Update remarks"} /></td>
+                            <td><input onChange={(e) => setUpdatedRemarks(e.target.value)} type="text" className="input input-bordered input-xs md:input-sm" placeholder={singleGrade.remarks || "Update remarks"} /></td>
                             :
                             <td>{singleGrade.remarks}</td>
                         }
@@ -239,13 +239,13 @@ const StudentGradeFormAndList = ({ course_id }) => {
                               onClick={() => {
                                 toggleEdit(singleGrade._id)
                               }}
-                              className="btn text-center mx-auto bg-blue-500 hover:bg-blue-600 text-white btn-sm"><FaEdit /></button>}
+                              className="btn text-center mx-auto bg-blue-500 hover:bg-blue-600 text-white btn-xs md:btn-sm"><FaEdit /></button>}
 
                             {
                               (editGrade && editingRows[singleGrade._id]) && <>
                                 <button
                                   onClick={() => handleSingleGradeUpdate(singleGrade._id)}
-                                  className="btn btn-sm btn-success text-white"><FaSave className="text-md" /></button>
+                                  className="btn btn-xs md:btn-sm btn-success text-white"><FaSave className="text-md" /></button>
 
 
                                 <button type="button"
@@ -256,7 +256,7 @@ const StudentGradeFormAndList = ({ course_id }) => {
                                     setUpdatedRemarks("");
                                     setUpdatedMarks(null);
                                   }}
-                                  className="btn btn-sm btn-error text-white"><MdCancel className="text-md" /></button>
+                                  className="btn btn-xs md:btn-sm btn-error text-white"><MdCancel className="text-md" /></button>
                               </>
                             }
                           </td>}
