@@ -12,6 +12,7 @@ import { MdCancel, MdDelete } from "react-icons/md";
 import Swal from "sweetalert2";
 import { FaEdit, FaSave } from "react-icons/fa";
 import { useState } from "react";
+import { Link } from "react-router";
 
 
 
@@ -25,13 +26,7 @@ const StudentGradeFormAndList = ({ course_id }) => {
 
 
   // Fetch existing grades for the selected course
-  const {
-    data: existingGrades = [],
-    isPending: gradesLoading,
-    isError: gradesError,
-    error: gradesErrorData,
-    refetch: refetchGrades,
-  } = useQuery({
+  const { data: existingGrades = [], isPending: gradesLoading, isError: gradesError, error: gradesErrorData, refetch: refetchGrades } = useQuery({
     queryKey: ["existingGrades", course_id],
     queryFn: async () => {
       if (!course_id) return [];
@@ -95,33 +90,33 @@ const StudentGradeFormAndList = ({ course_id }) => {
     const updateDoc = {};
     const gradeId = id;
 
-    const matchedGrade = existingGrades.find(grade=> grade._id === gradeId);
+    const matchedGrade = existingGrades.find(grade => grade._id === gradeId);
 
     const getFullMarks = matchedGrade.full_marks;
     const getObtainedMarks = matchedGrade.obtained_marks;
-    const getRemarks= matchedGrade.remarks;
+    const getRemarks = matchedGrade.remarks;
 
 
     const updatedMarksNum = parseFloat(updatedMarks);
 
 
-    if(updatedMarksNum > getFullMarks) {
+    if (updatedMarksNum > getFullMarks) {
       return toast.error("Obtained Marks can not exceed Full marks", {
         duration: 1500,
         position: "top-center"
       })
     }
 
-    if(updatedMarks !== null && (updatedMarksNum !== getObtainedMarks)){
+    if (updatedMarks !== null && (updatedMarksNum !== getObtainedMarks)) {
       updateDoc.obtained_marks = updatedMarksNum;
     }
 
 
-    if(updatedRemarks !=="" && updatedRemarks !== getRemarks){
+    if (updatedRemarks !== "" && updatedRemarks !== getRemarks) {
       updateDoc.remarks = updatedRemarks;
     }
-    
-    if(Object.keys(updateDoc).length === 0){
+
+    if (Object.keys(updateDoc).length === 0) {
       return toast.error("Nothing to update", {
         duration: 1500,
         position: "top-center"
@@ -131,7 +126,7 @@ const StudentGradeFormAndList = ({ course_id }) => {
     try {
       const res = await axiosSecure.patch(`/studentGrades/${gradeId}`, updateDoc);
 
-      if(res?.data?.success){
+      if (res?.data?.success) {
         toast.success("Grades Updated", {
           duration: 1500,
           position: "top-center"
@@ -144,11 +139,11 @@ const StudentGradeFormAndList = ({ course_id }) => {
       }
 
     } catch (error) {
-        handleError(error, "Failed to update grades");
+      handleError(error, "Failed to update grades");
     }
   }
 
-
+  console.log(existingGrades);
 
   return (
     <div className="mt-10 overflow-hidden">
@@ -192,6 +187,7 @@ const StudentGradeFormAndList = ({ course_id }) => {
                       <th>Percentage</th>
                       <th>Remarks</th>
                       <th>Graded By</th>
+                      <th>View</th>
                       {
                         user.user_role !== "student" && <th>Action</th>
                       }
@@ -218,7 +214,9 @@ const StudentGradeFormAndList = ({ course_id }) => {
                             <td>{singleGrade.obtained_marks}/{singleGrade.full_marks}</td>
                         }
 
-                        <td className="text-center">{singleGrade.percentage}%</td>
+
+                        {/* percentage */}
+                        <td className="text-center">{singleGrade.percentage.toFixed(2)}%</td>
 
 
                         {/* remarks */}
@@ -231,6 +229,12 @@ const StudentGradeFormAndList = ({ course_id }) => {
 
                         <td>{singleGrade.faculty_id.first_name} {singleGrade.faculty_id.last_name}</td>
 
+                        {/* profile view */}
+                        <td>
+                          <Link to={`/StudentAcademicInfo/${singleGrade.student_id._id}`} className="btn btn-success btn-sm text-white">Profile</Link>
+                        </td>
+
+                        {/* action */}
                         {
                           user.user_role !== "student" &&
                           <td className="flex gap-1">
