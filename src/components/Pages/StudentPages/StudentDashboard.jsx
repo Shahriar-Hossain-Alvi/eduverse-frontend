@@ -43,6 +43,8 @@ const StudentDashboard = () => {
     if (isPending) return <LoadingSpinner />
 
 
+    console.log(studentOverview);
+
     // todo:
     // show attendance percentage
 
@@ -64,7 +66,14 @@ const StudentDashboard = () => {
                 {/* average grade */}
                 <div className={`${themeStyles.background[theme]} p-3 md:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow`}>
                     <h3 className="text-xl font-semibold mb-2">Average Grade</h3>
-                    <p className="text-3xl font-bold text-blue-600">kagdyaadadjaoid o uwoiasd</p>
+                    <p className="text-3xl font-bold text-blue-600">{studentOverview.avgPercentage}</p>
+                </div>
+
+
+                {/* average attendance */}
+                <div className={`${themeStyles.background[theme]} p-3 md:p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow`}>
+                    <h3 className="text-xl font-semibold mb-2">Average Grade</h3>
+                    <p className="text-3xl font-bold text-blue-600">{studentOverview.avgAttendance}</p>
                 </div>
             </div>
 
