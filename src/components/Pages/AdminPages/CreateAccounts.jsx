@@ -6,11 +6,14 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import SectionHeading from "../../Utilities/SectionHeading";
 import toast, { Toaster } from "react-hot-toast";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { useState } from "react";
+import { handleError } from "../../Utilities/handleError";
 
 
 const CreateAccounts = () => {
     const axiosSecure = useAxiosSecure();
     const { register, reset, formState: { errors }, handleSubmit } = useForm();
+    const [buttonLoading, setButtonLoading] = useState(false);
 
 
     const handleCreateAccounts = async (data) => {
@@ -33,25 +36,22 @@ const CreateAccounts = () => {
         }
 
         try {
+            setButtonLoading(true);
             const res = await axiosSecure.post("/users", newUserInfo);
 
             if (res.data.success === true) {
-                toast.success(`New ${user_role} created successfully.`,{
+                toast.success(res.data.message,{
                     duration: 1500,
                     position: "top-center"
                 });
                 reset();
+                setButtonLoading(false);
             }
 
         } catch (error) {
             console.log(error);
-            const errorMessage =
-                error.response?.data?.message || "Something went wrong! Please try again.";
-
-            toast.error(errorMessage, {
-                duration: 3000,
-                position: "top-center"
-            });
+            setButtonLoading(false);
+            handleError(error, "Account creation failed");
         }
     }
 
@@ -129,7 +129,9 @@ const CreateAccounts = () => {
 
                 {/* submit button */}
                 <div className="py-4 sm:py-5 sm:gap-4">
-                    <button className="btn bg-indigo-700 text-white hover:bg-indigo-600 w-full">Create</button>
+                    <button
+                    disabled={buttonLoading}
+                    className="btn bg-indigo-700 text-white hover:bg-indigo-600 w-full">Create</button>
                 </div>
             </form>
         </div>
