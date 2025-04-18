@@ -1,23 +1,28 @@
 import { useForm } from "react-hook-form";
 import SectionHeading from "../../Utilities/SectionHeading";
 import { handleError } from "../../Utilities/handleError";
-import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import toast, { Toaster } from "react-hot-toast";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 
 const PasswordReset = () => {
+    const navigate = useNavigate();
     const axiosPublic = useAxiosPublic();
-    const { register, reset, formState: { errors }, handleSubmit } = useForm();
+    const { register, formState: { errors }, handleSubmit } = useForm();
     const [buttonLoading, setButtonLoading] = useState(false);
-    const [emailForReset, setEmailForReset] = useState("");
+
     const [otpSent, setOtpSent] = useState(false);
 
+    const [enablePasswordField, setEnablePasswordField] = useState(false);
 
+
+    // send otp to user
     const handleGetOTP = async (data) => {
-        const email = data.email
-        setEmailForReset(email);
+        const email = data.email;
+        localStorage.setItem("emailForReset", email);
+
 
         try {
             setButtonLoading(true);
@@ -36,23 +41,31 @@ const PasswordReset = () => {
             handleError(error, "Failed to send otp");
             setButtonLoading(false);
             setOtpSent(false);
+            localStorage.removeItem("emailForReset");
         }
     }
 
 
 
-
+    // verify the otp
     const verifyOtp = async (data) => {
         const otp = data.otp;
+        const email = localStorage.getItem("emailForReset");
 
 
+
+        if (email === "" || otp === "") return toast.error("email or otp is missing.", {
+            duration: 1500,
+            position: "top-center"
+        });
 
         try {
             setButtonLoading(true);
-            const res = await axiosPublic.post("/otp/verify", { email: emailForReset, otp });
+            const res = await axiosPublic.post("/otp/verify", { email, otp });
 
             if (res.data.success) {
                 setButtonLoading(false);
+                setEnablePasswordField(true);
                 toast.success(res.data.message, {
                     duration: 1500,
                     position: "top-center"
@@ -62,11 +75,53 @@ const PasswordReset = () => {
         } catch (error) {
             handleError(error, "Failed to verify otp");
             setButtonLoading(false);
+            setOtpSent(false);
+            setEnablePasswordField(false);
         }
     }
 
 
-    console.log(emailForReset);
+    // update password
+    const handlePasswordUpdate = async (data) => {
+        const email = localStorage.getItem("emailForReset")
+        const newPassword = data.newPassword;
+
+        if (!email || email === "" || newPassword === "") {
+            return toast.error("Email or password is missing. Refresh the page and try again!", {
+                duration: 3000,
+                position: "top-center"
+            })
+        }
+
+        try {
+            setButtonLoading(true);
+            const res = await axiosPublic.post("/otp/updatePassword", { email, newPassword });
+
+            console.log(res);
+
+            if (res.data.success) {
+                toast.success(res.data.message, {
+                    duration: 1500,
+                    position: "top-center"
+                });
+                localStorage.removeItem("emailForReset");
+                setOtpSent(false);
+                setEnablePasswordField(false);
+                setButtonLoading(false);
+                setTimeout(() => {
+                    navigate("/", { replace: true });
+                }, 1600)
+            }
+
+        } catch (error) {
+            handleError(error, "Failed to update password");
+            localStorage.removeItem("emailForReset");
+            setOtpSent(false);
+            setEnablePasswordField(false);
+            setButtonLoading(false);
+        }
+    }
+
 
     return (
         <div className="min-h-screen p-3 md:p-8">
@@ -87,20 +142,19 @@ const PasswordReset = () => {
                             {...register("email", {
                                 required: "Email is required for password reset."
                             })} />
-                        <button disabled={buttonLoading} type="submit" className="btn btn-success text-white">Get OTP</button>
+                        <button disabled={buttonLoading} className="btn btn-success text-white">Get OTP</button>
                     </div>
+
                     {errors.email && <p className="text-error text-sm  pl-3 pt-1">{errors.email.message}</p>}
-
-
                 </form>}
 
 
 
                 {/* verify otp */}
                 {
-                    otpSent &&
+                    otpSent && !enablePasswordField &&
                     <div>
-                        <h2 className="text-xl font-medium mt-4 text-center">Verify your OTP</h2>
+                        <h2 className="text-xl font-medium mt-4 text-center mb-4">Verify your OTP</h2>
 
 
 
@@ -110,38 +164,99 @@ const PasswordReset = () => {
 
 
                             {/* email */}
-                            <div className="flex gap-2 my-4">
+                            <div className="flex gap-2">
                                 <label className="label">
-                                    <span className="label-text">Email:</span>
+                                    <span className="label-text">Email: </span>
                                 </label>
 
-                                <input
-                                    type="text"
-                                    placeholder="Email not available!!!" className="input input-bordered w-full read-only:input-disabled"
-                                    defaultValue={emailForReset}
-                                    readOnly
+                                <input type="email" placeholder="Enter your email" className="input input-bordered w-full"
+                                    defaultValue={localStorage.getItem("emailForReset") || ""}
                                 />
                             </div>
 
 
+
                             {/* otp */}
-                            <div className="flex gap-2 my-4">
+                            <div className=" my-4">
+                                <div className="flex gap-2">
+                                    <label className="label">
+                                        <span className="label-text">OTP:</span>
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        placeholder="Enter the otp" className="input input-bordered w-full"
+
+                                        {...register("otp", {
+                                            required: "OTP is required for password reset."
+                                        })} />
+
+                                    <button
+                                        disabled={buttonLoading} className="btn btn-success text-white">Verify</button>
+                                </div>
+
+                                {errors.otp && <p className="text-error text-sm  pl-3 pt-1">{errors.otp.message}</p>}
+                            </div>
+
+                        </form>
+                    </div>
+                }
+
+
+
+
+                {/* enable update password field */}
+                {
+                    otpSent && enablePasswordField &&
+                    <div>
+                        <h2 className="text-xl font-medium mt-4 text-center mb-4">Create new password</h2>
+
+
+
+
+                        {/* verify the otp */}
+                        <form onSubmit={handleSubmit(handlePasswordUpdate)} className="space-y-2">
+
+
+                            {/* email */}
+                            <div className="flex gap-2">
                                 <label className="label">
-                                    <span className="label-text">OTP:</span>
+                                    <span className="label-text">Email: </span>
                                 </label>
 
-                                <input
-                                    type="text"
-                                    placeholder="Enter the otp" className="input input-bordered w-full"
-
-                                    {...register("otp", {
-                                        required: "OTP is required for password reset."
-                                    })} />
-
-                                <button
-                                    disabled={buttonLoading} onClick={() => verifyOtp} className="btn btn-success text-white">Verify</button>
+                                <div className="w-full">
+                                    <input type="email" placeholder="Enter your email" className="input  read-only:input-disabled w-full"
+                                        readOnly
+                                        defaultValue={localStorage.getItem("emailForReset") || ""}
+                                    />
+                                </div>
                             </div>
-                            {errors.otp && <p className="text-error text-sm  pl-3 pt-1">{errors.otp.message}</p>}
+
+
+
+                            {/* new password */}
+                            <div className="flex my-4">
+                                <label className="label">
+                                    <span className="label-text">Password:</span>
+                                </label>
+
+                                <div className="w-full">
+                                    <input
+                                        type="password"
+                                        placeholder="Enter new password" className="input input-bordered w-full"
+
+                                        {...register("newPassword", {
+                                            required: "Password is required."
+                                        })} />
+
+                                    {errors.newPassword && <p className="text-error text-sm  pl-3 pt-1">{errors.newPassword.message}</p>}
+                                </div>
+                            </div>
+
+                            <button
+                                disabled={buttonLoading} className="btn btn-success text-white btn-block">
+                                Update Password
+                            </button>
                         </form>
                     </div>
                 }
