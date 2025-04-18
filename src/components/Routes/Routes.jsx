@@ -30,6 +30,7 @@ import Schedules from "../Shared/CommonShared/Schedules";
 import AllAssignedCourses from "../Pages/AdminPages/Courses/AllAssignedCourses";
 import AllClassAttendance from "../Pages/AdminPages/AllClassAttendance";
 import AssignedCoursesAllStudentList from "../Pages/FacultyPages/AssignedCoursesAllStudentList";
+import PasswordReset from "../Pages/Auth/PasswordReset";
 
 
 const router = createBrowserRouter(
@@ -39,6 +40,8 @@ const router = createBrowserRouter(
 
             {/* Public Routes */}
             <Route path="signin" element={<SignIn />} />
+
+            <Route path="passwordReset" element={<PasswordReset />} />
 
             {/* Conditional Redirect Route */}
             <Route
