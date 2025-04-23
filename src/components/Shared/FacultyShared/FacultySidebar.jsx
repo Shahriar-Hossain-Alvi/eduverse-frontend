@@ -1,4 +1,4 @@
-import { FiBook, FiCalendar, FiFileText, FiUser, FiUsers } from "react-icons/fi";
+import { FiBook, FiCalendar, FiUser, FiUsers } from "react-icons/fi";
 import { FaAnglesLeft, FaAnglesRight } from "react-icons/fa6";
 import { GrOverview } from "react-icons/gr";
 import { LuBookPlus } from "react-icons/lu";
@@ -25,8 +25,6 @@ const FacultySidebar = () => {
             <li><NavLink to="/faculty/schedules" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><FiCalendar className="text-xl" /> <span>Schedules</span></NavLink></li>
 
             <li><NavLink to="/faculty/students" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><FiUsers className="text-xl" /> <span>Students</span></NavLink></li>
-
-            <li><NavLink to="/faculty/grades" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><FiFileText className="text-xl" /> <span>Grades</span></NavLink></li>
 
             <li><NavLink to="/faculty/addNewCourse" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><LuBookPlus className="text-xl" /> <span>Add new Course</span></NavLink></li>
 
@@ -77,8 +75,6 @@ const FacultySidebar = () => {
               <li><NavLink to="/faculty/schedules" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><FiCalendar className="text-xl" /> <span>Schedules</span></NavLink></li>
 
               <li><NavLink to="/faculty/students" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><FiUsers className="text-xl" /> <span>Students</span></NavLink></li>
-
-              <li><NavLink to="/faculty/grades" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><FiFileText className="text-xl" /> <span>Grades</span></NavLink></li>
 
               <li><NavLink to="/faculty/addNewCourse" className="flex items-center space-x-2 hover:bg-green-600 p-2 rounded"><LuBookPlus className="text-xl" /> <span>Add new Course</span></NavLink></li>
 

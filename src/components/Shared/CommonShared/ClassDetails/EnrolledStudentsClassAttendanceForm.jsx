@@ -376,7 +376,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                         <div className="grid grid-cols-5 items-center gap-1">
                             <h2 className="col-span-2 text-sm md:text-lg font-medium">Attendance of: {format(new Date(studentsAttendanceRecord.attendance_date), "MMMM d, yyyy")}</h2>
 
-                            <h3 className="col-span-2 md:text-lg text-sm font-medium">Recorded By: {studentsAttendanceRecord.created_by.first_name} {studentsAttendanceRecord.created_by.last_name}</h3>
+                            <h3 className="col-span-2 md:text-lg text-sm font-medium">Recorded By: {studentsAttendanceRecord?.created_by?.first_name || "Deleted"} {studentsAttendanceRecord?.created_by?.last_name || "user"}</h3>
 
                             {
                                 user.user_role !== "student" && formSubmissionLoading
@@ -393,7 +393,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                         </div>
 
                         <div className="overflow-x-auto">
-                            <table className="table table-sm md:table-md">
+                            <table className="table table-sm md:table-mdz">
                                 {/* head */}
                                 <thead>
                                     <tr>

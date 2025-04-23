@@ -23,8 +23,8 @@ const ErrorPage = () => {
                 width={400}
             />
 
-            <p className="text-error text-3xl font-bold uppercase">Error!</p>
-            <Link to="/" className="btn btn-success mt-3">Back to Home</Link>
+            <p className="text-error text-3xl font-bold uppercase">Error 404!</p>
+            <Link to="/" className="btn btn-success mt-3 text-white">Back to Home</Link>
         </div>
     );
 };

@@ -27,7 +27,6 @@ const AllClassAttendance = () => {
         }
     });
 
-    console.log(allClassAttendance);
 
     if (isPending) return <LoadingSpinner />
 
@@ -64,6 +63,8 @@ const AllClassAttendance = () => {
         }
     };
 
+
+    // delete attendance of a class
     const handleAttendanceDelete = async (id) => {
         console.log(id);
         try {
@@ -102,6 +103,7 @@ const AllClassAttendance = () => {
             handleError(error, "Assigned course could not be deleted")
         }
     }
+
 
     return (
         <div className="flex-1 p-3 md:p-8 overflow-hidden">
@@ -207,7 +209,7 @@ const AllClassAttendance = () => {
                                     {/* Class info footer */}
                                     <div className="px-4 py-3 text-xs border-t">
                                         <div className="flex justify-between items-center">
-                                            <span>Created by: {classRecord?.created_by.first_name} {classRecord?.created_by.last_name}</span>
+                                            <span>Created by: {classRecord?.created_by?.first_name || "Deleted"} {classRecord?.created_by?.last_name || "user"}</span>
 
 
                                             <div className="space-y-1 md:space-x-2">
