@@ -1,21 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
-import SectionHeading from "../../../Utilities/SectionHeading";
-import useAxiosSecure from "../../../Hooks/useAxiosSecure";
-import TanstackQueryErrorMessage from "../../../Utilities/TanstackQueryErrorMessage";
+import SectionHeading from "../../Utilities/SectionHeading";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage";
 import PropTypes from 'prop-types';
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaPlus, FaTrash } from "react-icons/fa";
-import useAuth from "../../../Hooks/useAuth";
+import { FaDownload, FaPlus, FaTrash } from "react-icons/fa";
+import useAuth from "../../Hooks/useAuth";
 import toast from "react-hot-toast";
 import { CgClose, CgSpinnerTwoAlt } from "react-icons/cg";
 import { MdClose } from "react-icons/md";
 import { format, isAfter, parseISO, startOfDay } from "date-fns";
-import LoadingSpinner from "../../../Utilities/LoadingSpinner";
+import LoadingSpinner from "../../Utilities/LoadingSpinner";
 import { FiEdit, FiSave } from "react-icons/fi";
 import Swal from "sweetalert2";
 import { isEqual } from "lodash";
-import { handleError } from "../../../Utilities/handleError";
+import { handleError } from "../../Utilities/handleError";
+import jsPDF from "jspdf";
+import { autoTable } from 'jspdf-autotable'
 
 
 
@@ -67,7 +69,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
 
             return res.data.data;
         },
-        enabled: !!course_id && user.user_role !== "student" // Runs only when course_id is available
+        enabled: !!course_id && user?.user_role !== "student" // Runs only when course_id is available
     });
 
 
@@ -208,6 +210,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
     };
 
 
+    // handle attendance update
     const handleSingleStudentUpdate = async (studentId) => {
         // Find the current record for the specific student
         const currentStudentRecord = studentsAttendanceRecord.attendance_record.find(
@@ -259,6 +262,58 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
             handleError(error, "Failed to update attendance");
         }
     };
+
+
+    // create attendance pdf
+    const generatePDF = (attendanceData) => {
+
+        const doc = new jsPDF();
+
+        // title
+        doc.setFontSize(20);
+        doc.text("Attendance Report", 10, 10);
+
+        // faculty name
+        doc.setFontSize(12);
+        doc.text(`Recorded By: ${attendanceData.created_by.first_name || "Deleted"} ${attendanceData.created_by.last_name || "User"}`, 10, 17);
+
+        doc.setFontSize(8);
+        doc.text(`Email: ${attendanceData.created_by.email || "Not Found"}`, 10, 21);
+
+
+
+        // rows for attendance
+        const tableData = [];
+
+        const date = new Date(attendanceData.attendance_date).toLocaleDateString();
+
+
+        attendanceData.attendance_record.forEach((record) => {
+            const row = [
+                date,
+                record.student_id._id,
+                record.student_id.first_name + " " + record.student_id.last_name,
+                record.is_present,
+                record.remarks,
+            ];
+            tableData.push(row);
+        });
+
+
+        // Define the columns for the table
+        autoTable(doc, {
+            head: [["Date", "ID", "Student Name", "Attendance", "Remarks"]],
+            body: tableData,
+            startY: 30,
+            styles: {
+                fontSize: 10,
+                cellPadding: 2,
+            },
+        })
+
+        doc.save("attendance_report.pdf");
+    }
+
 
     return (
         <div>
@@ -373,11 +428,14 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
 
                 {(!isPending && Object.keys(studentsAttendanceRecord).length > 0) &&
                     <div>
-                        <div className="grid grid-cols-5 items-center gap-1">
-                            <h2 className="col-span-2 text-sm md:text-lg font-medium">Attendance of: {format(new Date(studentsAttendanceRecord.attendance_date), "MMMM d, yyyy")}</h2>
+                        <div className={`grid ${user.user_role === "admin" && "grid-cols-8"} ${user.user_role === "faculty" && "grid-cols-5"}  items-center gap-1`}>
 
-                            <h3 className="col-span-2 md:text-lg text-sm font-medium">Recorded By: {studentsAttendanceRecord?.created_by?.first_name || "Deleted"} {studentsAttendanceRecord?.created_by?.last_name || "user"}</h3>
+                            <h2 className={`${user.user_role === "admin" && "col-span-3"} ${user.user_role === "faculty" && "col-span-2"}  text-sm md:text-lg font-medium`}>Attendance of: {format(new Date(studentsAttendanceRecord.attendance_date), "MMMM d, yyyy")}</h2>
 
+                            <h3 className={`${user.user_role === "admin" && "col-span-3"} ${user.user_role === "faculty" && "col-span-2"}  md:text-lg text-sm font-medium`}>Recorded By: {studentsAttendanceRecord?.created_by?.first_name || "Deleted"} {studentsAttendanceRecord?.created_by?.last_name || "user"}</h3>
+
+
+                            {/* delete button */}
                             {
                                 user.user_role !== "student" && formSubmissionLoading
                                     ?
@@ -390,6 +448,13 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                                         Delete <FaTrash />
                                     </button>
                             }
+
+                            {
+                                user.user_role === "admin"
+                                && <button
+                                    onClick={() => generatePDF(studentsAttendanceRecord)}
+                                    className="btn btn-accent text-xs md:text-base btn-sm text-white p-0"><FaDownload /> PDF
+                                </button>}
                         </div>
 
                         <div className="overflow-x-auto">

@@ -43,6 +43,7 @@ const router = createBrowserRouter(
 
             <Route path="passwordReset" element={<PasswordReset />} />
 
+
             {/* Conditional Redirect Route */}
             <Route
                 index
@@ -50,18 +51,6 @@ const router = createBrowserRouter(
                     <RoleBasedRedirect />
                 }
             />
-
-
-            {/* visit users profile */}
-            <Route
-                path="StudentAcademicInfo/:id"
-                element={
-                    <StudentAcademicInfo />
-                }
-            />
-
-
-
 
 
 
@@ -386,6 +375,14 @@ const router = createBrowserRouter(
                         <PrivateRoute role="student">
                             <Schedules />
                         </PrivateRoute>
+                    }
+                />
+
+                {/* student grade */}
+                <Route
+                    path="studentAcademicInfo/:id"
+                    element={
+                        <StudentAcademicInfo />
                     }
                 />
 

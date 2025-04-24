@@ -2,9 +2,12 @@ import { FaAnglesLeft, FaAnglesRight } from "react-icons/fa6";
 import { FiBook, FiCalendar, FiFileText, FiUser } from "react-icons/fi";
 import { GrOverview } from "react-icons/gr";
 import { NavLink } from "react-router";
+import useAuth from "../../Hooks/useAuth";
 
 
 const StudentSidebar = () => {
+  const { user } = useAuth();
+
   return (
     <aside>
       {/* sidebar for large device */}
@@ -20,7 +23,7 @@ const StudentSidebar = () => {
 
             <li><NavLink to="/student/schedules" className="flex items-center space-x-2 hover:bg-eduverse_student_primary_color_lite p-2 rounded"><FiCalendar className="text-xl" /> <span>Schedules</span></NavLink></li>
 
-            <li><NavLink to="/student/grades" className="flex items-center space-x-2 hover:bg-eduverse_student_primary_color_lite p-2 rounded"><FiFileText className="text-xl" /> <span>Grades</span></NavLink></li>
+            <li><NavLink to={`/student/studentAcademicInfo/${user?._id}`} className="flex items-center space-x-2 hover:bg-eduverse_student_primary_color_lite p-2 rounded"><FiFileText className="text-xl" /> <span>Grades</span></NavLink></li>
 
             <li><NavLink to="/student/profile" className="flex items-center space-x-2 hover:bg-eduverse_student_primary_color_lite p-2 rounded"><FiUser className="text-xl" /> <span>Profile</span></NavLink></li>
           </ul>
@@ -63,7 +66,7 @@ const StudentSidebar = () => {
 
               <li><NavLink to="/student/schedules" className="flex items-center space-x-2 hover:bg-eduverse_student_primary_color_lite p-2 rounded"><FiCalendar className="text-xl" /> <span>Schedules</span></NavLink></li>
 
-              <li><NavLink to="/student/grades" className="flex items-center space-x-2 hover:bg-eduverse_student_primary_color_lite p-2 rounded"><FiFileText className="text-xl" /> <span>Grades</span></NavLink></li>
+              <li><NavLink to={`/student/studentAcademicInfo/${user?._id}`}  className="flex items-center space-x-2 hover:bg-eduverse_student_primary_color_lite p-2 rounded"><FiFileText className="text-xl" /> <span>Grades</span></NavLink></li>
 
               <li><NavLink to="/student/profile" className="flex items-center space-x-2 hover:bg-eduverse_student_primary_color_lite p-2 rounded"><FiUser className="text-xl" /> <span>Profile</span></NavLink></li>
             </ul>

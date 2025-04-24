@@ -6,7 +6,7 @@ import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage
 import SectionHeading from "../../Utilities/SectionHeading";
 import { format } from "date-fns";
 import ClassMaterialFormAndList from "../CommonShared/ClassDetails/ClassMaterialFormAndList";
-import EnrolledStudentsClassAttendanceForm from "../CommonShared/ClassDetails/EnrolledStudentsClassAttendanceForm";
+import EnrolledStudentsClassAttendanceForm from "../Admin&FacultyShared/EnrolledStudentsClassAttendanceForm";
 
 
 
@@ -34,7 +34,7 @@ const SingleClassDetails = () => {
         <div className="flex-1 p-3 md:p-8 overflow-hidden">
             {/* error message */}
             {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
-
+            z
             <h1 className="text-center font-semibold text-3xl md:text-4xl mb-8 underline">CLASS DETAILS</h1>
 
             {/* title and description */}
@@ -67,14 +67,7 @@ const SingleClassDetails = () => {
 
             <ClassMaterialFormAndList class_id={id} />
 
-            <EnrolledStudentsClassAttendanceForm course_id={course_id} class_id={id} scheduled_time={scheduled_time}  />
-
-            
-            <div>
-
-
-                Grades
-            </div>
+            <EnrolledStudentsClassAttendanceForm course_id={course_id} class_id={id} scheduled_time={scheduled_time} />
 
         </div>
     );
