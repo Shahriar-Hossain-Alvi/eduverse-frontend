@@ -84,7 +84,7 @@ const router = createBrowserRouter(
                     }
                 />
 
-                < Route
+                <Route
                     path="profile"
                     element={
                         < PrivateRoute role="admin" >
@@ -195,17 +195,17 @@ const router = createBrowserRouter(
 
 
             {/* =============== faculty routes ========= */}
-            < Route path="faculty" element={< FacultyLayout />} errorElement={< ErrorPage />}>
+            <Route path="faculty" element={< FacultyLayout />} errorElement={< ErrorPage />}>
 
                 {/* for auto redirects */}
-                < Route
+                <Route
                     index
                     element={
                         < RoleBasedRedirect />
                     }
                 />
 
-                < Route
+                <Route
                     path="dashboard"
                     element={
                         < PrivateRoute role="faculty" >
@@ -287,7 +287,7 @@ const router = createBrowserRouter(
                 />
 
 
-                < Route
+                <Route
                     path="profile"
                     element={
                         < PrivateRoute role="faculty" >
@@ -301,9 +301,9 @@ const router = createBrowserRouter(
 
 
             {/* ============ student routes =========== */}
-            < Route path="student" element={< StudentLayout />} errorElement={< ErrorPage />}>
+            <Route path="student" element={< StudentLayout />} errorElement={< ErrorPage />}>
                 {/* for auto redirects */}
-                < Route
+                <Route
                     index
                     element={
                         < RoleBasedRedirect />
@@ -311,7 +311,7 @@ const router = createBrowserRouter(
                 />
 
 
-                < Route
+                <Route
                     path="dashboard"
                     element={
                         < PrivateRoute role="student" >
@@ -387,7 +387,7 @@ const router = createBrowserRouter(
                 />
 
 
-                < Route
+                <Route
                     path="profile"
                     element={
                         < PrivateRoute role="student" >

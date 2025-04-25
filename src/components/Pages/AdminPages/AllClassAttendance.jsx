@@ -38,6 +38,7 @@ const AllClassAttendance = () => {
 
     // Format date function
     const formatDate = (dateString) => {
+        console.log(dateString);
         try {
             return format(new Date(dateString), 'MMM dd, yyyy');
         } catch (error) {

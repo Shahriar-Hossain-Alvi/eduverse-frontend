@@ -6,30 +6,33 @@ import useAuth from "./useAuth";
 const axiosSecure = axios.create({
     baseURL: "http://localhost:5000/api",
     // baseURL: "https://eduverse-tc-web-wizards-backend.vercel.app/api",
+});
+
+
+// List of API routes that should NOT trigger logout on 401
+const exceptionRoutes = [
+    "/users/updatePassword",
+];
+
+
+// REQUEST(request) INTERCEPTOR(interceptors) to add AUTHORIZATION(authorization) HEADER(headers) for every secure call USING(use) function
+axiosSecure.interceptors.request.use((config) => {
+    // get token from local storage
+    const token = localStorage.getItem("access-token");
+    // add "Bearer " in front of the token header
+    config.headers.authorization = `Bearer ${token}`;
+    return config;
+}, (error) => {
+    return Promise.reject(error)
 })
+
+
 
 
 const useAxiosSecure = () => {
     const navigate = useNavigate();
     const { setLoading, logout } = useAuth();
 
-    // REQUEST(request) INTERCEPTOR(interceptors) to add AUTHORIZATION(authorization) HEADER(headers) for every secure call USING(use) function
-    axiosSecure.interceptors.request.use((config) => {
-        // get token from local storage
-        const token = localStorage.getItem("access-token");
-        // add "Bearer " in front of the token header
-        config.headers.authorization = `Bearer ${token}`;
-        return config;
-    }, (error) => {
-        return Promise.reject(error)
-    })
-
-
-
-    // List of API routes that should NOT trigger logout on 401
-    const exceptionRoutes = [
-        "/users/updatePassword",
-    ];
 
 
     // after intercepting generate a response or what to do next
@@ -50,24 +53,19 @@ const useAxiosSecure = () => {
 
 
         // logout user for 401 but not for the exceptionRoutes api errors
-        if (status === 401 && !isException) {
+        if ((status === 401 && !isException) || status === 403) {
             await logout();
             localStorage.removeItem("access-token")
-            console.log("logout user from axiosSecure for 401");
+            console.log(`logout user from axiosSecure for ${status}`);
             setLoading(false);
-            navigate('/signin');
+            navigate('/signin', {replace: true});
         }
 
 
-        if (status === 403) {
-            await logout();
-            localStorage.removeItem("access-token");
-            console.log("logout user from axiosSecure for 403");
-            setLoading(false);
-            navigate('/signin');
-        }
         return Promise.reject(error);
     });
+
+
 
     return axiosSecure;
 };

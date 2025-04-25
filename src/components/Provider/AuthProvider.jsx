@@ -33,7 +33,6 @@ const AuthProvider = ({ children }) => {
             return userData;
         } catch (error) {
             console.log("Login failed ", error);
-            setLoading(false);
             throw new Error(error?.response?.data?.message)
         }
         finally {
