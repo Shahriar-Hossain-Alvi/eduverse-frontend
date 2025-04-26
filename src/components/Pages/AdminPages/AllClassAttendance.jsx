@@ -38,12 +38,19 @@ const AllClassAttendance = () => {
 
     // Format date function
     const formatDate = (dateString) => {
-        console.log(dateString);
+        if (!dateString) {
+            return dateString; // Return the original value if invalid
+        }
+
         try {
-            return format(new Date(dateString), 'MMM dd, yyyy');
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) {
+                throw new Error('Invalid date');
+            }
+            return format(date, 'MMM dd, yyyy') || "Invalid Date";
         } catch (error) {
             console.log(error);
-            return dateString;
+            return dateString; // Return the original value if there's an error
         }
     };
 
@@ -133,7 +140,7 @@ const AllClassAttendance = () => {
                                 <div>
                                     <h3 className="font-medium md:text-lg">{classRecord?.class_id?.title}</h3>
 
-                                    <p className="text-sm">{formatDate(classRecord?.attendance_date)}</p>
+                                    <p className="text-sm">{formatDate(classRecord?.attendance_date || "")}</p>
                                 </div>
 
                                 {/* delete button */}
@@ -222,7 +229,7 @@ const AllClassAttendance = () => {
 
                                                 <button
                                                     disabled={buttonLoading}
-                                                onClick={() => handleAttendanceDelete(classRecord._id)} className="btn btn-xs md:btn-sm text-xs md:text-sm btn-error text-white">
+                                                    onClick={() => handleAttendanceDelete(classRecord._id)} className="btn btn-xs md:btn-sm text-xs md:text-sm btn-error text-white">
                                                     Delete <MdDeleteForever className="text-" />
                                                 </button>
                                             </div>
