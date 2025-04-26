@@ -11,7 +11,7 @@ const AllAssignedCourses = () => {
     const axiosSecure = useAxiosSecure();
 
     const { data: allAssignedCourses = [], isError, isPending, error, refetch } = useQuery({
-        queryKey: ["allAssignedCourses", user._id],
+        queryKey: ["allAssignedCourses"],
         queryFn: async () => {
             const res = await axiosSecure.get("/courseFacultyAssignments");
 

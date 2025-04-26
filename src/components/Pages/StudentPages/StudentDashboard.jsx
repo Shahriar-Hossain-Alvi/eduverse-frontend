@@ -17,7 +17,7 @@ const StudentDashboard = () => {
     const axiosSecure = useAxiosSecure();
 
     const { data: studentOverview = {}, isPending, isError, error } = useQuery({
-        queryKey: ["quickOverview"],
+        queryKey: ["quickOverview", user?._id],
         queryFn: async () => {
             const res = await axiosSecure(`/quickOverview/student/${user._id}`);
             if (res.data.success) return res.data.data

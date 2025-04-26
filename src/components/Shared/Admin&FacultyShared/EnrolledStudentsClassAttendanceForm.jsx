@@ -44,7 +44,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
 
     // fetch attendance data
     const { data: studentsAttendanceRecord = {}, isPending, isError, error, refetch } = useQuery({
-        queryKey: [],
+        queryKey: ["studentsAttendanceRecord", class_id],
         queryFn: async () => {
             const res = await axiosSecure.get(`/classAttendance/${class_id}`);
 

@@ -18,7 +18,7 @@ const Schedules = () => {
     const { user } = useAuth();
 
     const { data: allClassList = [], isError, error, isPending } = useQuery({
-        queryKey: ["allClassList"],
+        queryKey: ["allClassList", user?.user_role, user?._id],
         queryFn: async () => {
             const userRole = user?.user_role;
 

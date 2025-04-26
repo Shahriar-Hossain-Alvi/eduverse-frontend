@@ -23,7 +23,7 @@ const EditUserDetails = () => {
     // tanstack query
     const axiosSecure = useAxiosSecure();
     const { data: userDetails, isError, error, isPending, refetch } = useQuery({
-        queryKey: ["userDetails"],
+        queryKey: ["userDetails", id],
         queryFn: async () => {
             const res = await axiosSecure.get(`/users/${id}`);
             return res.data.data;

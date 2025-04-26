@@ -7,6 +7,8 @@ import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage
 import SectionHeading from "../../Utilities/SectionHeading";
 import ClassMaterialFormAndList from "../../Shared/CommonShared/ClassDetails/ClassMaterialFormAndList";
 
+
+
 const EnrolledCoursesClassDetails = () => {
     const { id } = useParams(); //class_id
     const axiosSecure = useAxiosSecure();
@@ -28,7 +30,7 @@ const EnrolledCoursesClassDetails = () => {
 
     // fetch attendance data
     const { data: studentsClassAttendanceRecord = {}, isPending: studentsAttendanceRecordIsPending, isError: studentsAttendanceRecordIsError, error: studentsAttendanceRecordError } = useQuery({
-        queryKey: [],
+        queryKey: ["studentsClassAttendanceRecord", id],
         queryFn: async () => {
             const res = await axiosSecure.get(`/classAttendance/${id}`);
 
@@ -60,14 +62,14 @@ const EnrolledCoursesClassDetails = () => {
                     <p className="font-medium">
                         <span className="underline mr-1">Date:</span>
 
-                        {format(new Date(scheduled_time), "MMMM d, yyyy")}
+                        {scheduled_time? format(new Date(scheduled_time), "MMMM d, yyyy") : "Loading..."}
                     </p>
 
 
                     <p className="font-medium">
                         <span className="underline mr-1">Time:</span>
 
-                        {format(new Date(scheduled_time), "hh:mm a")}
+                        {scheduled_time ? format(new Date(scheduled_time), "hh:mm a") : "Loading..."}
                     </p>
                 </div>
 

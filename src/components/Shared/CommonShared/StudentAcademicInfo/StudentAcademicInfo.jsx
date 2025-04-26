@@ -12,7 +12,7 @@ const StudentAcademicInfo = () => {
 
     // fetch grades
     const { data: studentGrades = [], isPending: studentGradesIsPending, isError: studentGradesIsError, error: studentGradesError } = useQuery({
-        queryKey: [],
+        queryKey: ["studentGrades", id],
         queryFn: async () => {
             const res = await axiosSecure.get(`/studentGrades/student/${id}`);
 

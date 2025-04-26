@@ -11,7 +11,7 @@ const SingleEnrolledCourseMaterials = ({ courseID }) => {
     const axiosSecure = useAxiosSecure();
 
     const { data: enrolledCoursesMaterials = [], isPending, isError, error } = useQuery({
-        queryKey: ["enrolledCoursesMaterials"],
+        queryKey: ["enrolledCoursesMaterials", course_id],
         queryFn: async () => {
             const res = await axiosSecure.get(`/courseMaterials/getMaterialByCourseId/${course_id}`);
 

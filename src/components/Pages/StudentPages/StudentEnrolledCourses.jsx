@@ -17,7 +17,7 @@ const StudentEnrolledCourses = () => {
     const axiosSecure = useAxiosSecure();
 
     const { data: singleStudentEnrolledCourses = [], isPending, isError, error } = useQuery({
-        queryKey: ["singleStudentEnrolledCourses"],
+        queryKey: ["singleStudentEnrolledCourses", user?._id],
         queryFn: async () => {
             const student_id = user._id;
             const res = await axiosSecure.get(`/courseStudentEnrollment/myEnrolledCourses/${student_id}`);

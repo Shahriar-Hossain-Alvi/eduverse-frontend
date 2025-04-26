@@ -39,7 +39,7 @@ const ClassScheduleFormAndList = ({ course_id, faculty, isCourseAssignmentActive
 
     // fetch all the classes of a course for a faculty
     const { data: classList = [], isPending, isError, error, refetch } = useQuery({
-        queryKey: ["classList"],
+        queryKey: ["classList", course_id],
         queryFn: async () => {
             const res = await axiosSecure.get(`/classes/courseId/${course_id}`);
 

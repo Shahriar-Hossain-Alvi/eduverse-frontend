@@ -10,16 +10,13 @@ import { Link } from "react-router";
 
 
 const FacultyDashboard = () => {
-  //todo:
-  // show total class+course materials shared number
-  // show 3 recently assigned courses list
 
   const { theme } = useTheme();
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
 
   const { data: facultyOverview = {}, isPending, isError, error } = useQuery({
-    queryKey: ["facultyOverview"],
+    queryKey: ["facultyOverview", user?._id],
     queryFn: async () => {
       const id = user._id
       const res = await axiosSecure.get(`/quickOverview/faculty/${id}`);
