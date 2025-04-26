@@ -143,11 +143,9 @@ const StudentGradeFormAndList = ({ course_id }) => {
     }
   }
 
-  console.log(existingGrades);
-
   return (
     <div className="mt-10 overflow-hidden">
-      <SectionHeading title="Student Grade Management" />
+      <SectionHeading title="Student Grades" />
       <Toaster />
 
 
@@ -187,10 +185,10 @@ const StudentGradeFormAndList = ({ course_id }) => {
                       <th>Percentage</th>
                       <th>Remarks</th>
                       <th>Graded By</th>
-                      <th>View</th>
                       {
                         user.user_role !== "student" && <th>Action</th>
                       }
+                      <th>View</th>
                     </tr>
                   </thead>
 
@@ -229,10 +227,6 @@ const StudentGradeFormAndList = ({ course_id }) => {
 
                         <td>{singleGrade.faculty_id.first_name} {singleGrade.faculty_id.last_name}</td>
 
-                        {/* profile view */}
-                        <td>
-                          <Link to={`/StudentAcademicInfo/${singleGrade.student_id._id}`} className="btn btn-success btn-sm text-white">Profile</Link>
-                        </td>
 
                         {/* action */}
                         {
@@ -263,7 +257,14 @@ const StudentGradeFormAndList = ({ course_id }) => {
                                   className="btn btn-xs md:btn-sm btn-error text-white"><MdCancel className="text-md" /></button>
                               </>
                             }
-                          </td>}
+                          </td>
+                        }
+
+
+                        {/* profile view */}
+                        <td>
+                          <Link to={`/${user?.user_role}/StudentAcademicInfo/${singleGrade.student_id._id}`} className="btn btn-success btn-sm text-white">Profile</Link>
+                        </td>
                       </tr>)}
                   </tbody>
                 </table>

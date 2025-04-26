@@ -430,7 +430,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                     <div>
                         <div className={`grid ${user.user_role === "admin" && "grid-cols-8"} ${user.user_role === "faculty" && "grid-cols-5"}  items-center gap-1`}>
 
-                            <h2 className={`${user.user_role === "admin" && "col-span-3"} ${user.user_role === "faculty" && "col-span-2"}  text-sm md:text-lg font-medium`}>Attendance of: {format(new Date(studentsAttendanceRecord.attendance_date), "MMMM d, yyyy")}</h2>
+                            <h2 className={`${user.user_role === "admin" && "col-span-3"} ${user.user_role === "faculty" && "col-span-2"}  text-sm md:text-lg font-medium`}>Attendance of: {studentsAttendanceRecord?.attendance_date? format(new Date(studentsAttendanceRecord?.attendance_date), "MMMM d, yyyy"): "Loading..."}</h2>
 
                             <h3 className={`${user.user_role === "admin" && "col-span-3"} ${user.user_role === "faculty" && "col-span-2"}  md:text-lg text-sm font-medium`}>Recorded By: {studentsAttendanceRecord?.created_by?.first_name || "Deleted"} {studentsAttendanceRecord?.created_by?.last_name || "user"}</h3>
 
@@ -471,7 +471,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                                 </thead>
                                 <tbody>
                                     {
-                                        studentsAttendanceRecord.attendance_record.map((singleRecord, index) => <tr key={singleRecord._id}>
+                                        studentsAttendanceRecord?.attendance_record?.map((singleRecord, index) => <tr key={singleRecord._id}>
                                             <th className="text-xs md:text-base">{index + 1}</th>
 
                                             <td className="text-xs md:text-base">{singleRecord.student_id.first_name} {singleRecord.student_id.last_name}</td>

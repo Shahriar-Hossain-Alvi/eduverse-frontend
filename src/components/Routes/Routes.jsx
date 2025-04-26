@@ -56,7 +56,7 @@ const router = createBrowserRouter(
 
             {/* Role-Based Protected Routes */}
 
-            {/* admin routes start */}
+            {/* ============ admin routes start ======= */}
             <Route path="admin" element={<AdminLayout />} errorElement={<ErrorPage />}
             >
                 <Route
@@ -87,7 +87,7 @@ const router = createBrowserRouter(
                 <Route
                     path="profile"
                     element={
-                        < PrivateRoute role="admin" >
+                        <PrivateRoute role="admin" >
                             <AdminProfile />
                         </PrivateRoute >
                     }
@@ -177,6 +177,15 @@ const router = createBrowserRouter(
                 />
 
                 <Route
+                    path="studentAcademicInfo/:id"
+                    element={
+                        <PrivateRoute role="admin">
+                            <StudentAcademicInfo />
+                        </PrivateRoute>
+                    }
+                />
+
+                <Route
                     path="addNewCourse"
                     element={
                         <PrivateRoute role="admin">
@@ -195,20 +204,20 @@ const router = createBrowserRouter(
 
 
             {/* =============== faculty routes ========= */}
-            <Route path="faculty" element={< FacultyLayout />} errorElement={< ErrorPage />}>
+            <Route path="faculty" element={<FacultyLayout />} errorElement={<ErrorPage />}>
 
                 {/* for auto redirects */}
                 <Route
                     index
                     element={
-                        < RoleBasedRedirect />
+                        <RoleBasedRedirect />
                     }
                 />
 
                 <Route
                     path="dashboard"
                     element={
-                        < PrivateRoute role="faculty" >
+                        <PrivateRoute role="faculty" >
                             <FacultyDashboard />
                         </PrivateRoute >
                     }
@@ -288,9 +297,19 @@ const router = createBrowserRouter(
 
 
                 <Route
+                    path="studentAcademicInfo/:id"
+                    element={
+                        <PrivateRoute role="faculty">
+                            <StudentAcademicInfo />
+                        </PrivateRoute>
+                    }
+                />
+
+
+                <Route
                     path="profile"
                     element={
-                        < PrivateRoute role="faculty" >
+                        <PrivateRoute role="faculty" >
                             <FacultyProfile />
                         </PrivateRoute >
                     }
@@ -301,12 +320,12 @@ const router = createBrowserRouter(
 
 
             {/* ============ student routes =========== */}
-            <Route path="student" element={< StudentLayout />} errorElement={< ErrorPage />}>
+            <Route path="student" element={<StudentLayout />} errorElement={<ErrorPage />}>
                 {/* for auto redirects */}
                 <Route
                     index
                     element={
-                        < RoleBasedRedirect />
+                        <RoleBasedRedirect />
                     }
                 />
 
@@ -314,7 +333,7 @@ const router = createBrowserRouter(
                 <Route
                     path="dashboard"
                     element={
-                        < PrivateRoute role="student" >
+                        <PrivateRoute role="student" >
                             <StudentDashboard />
                         </PrivateRoute >
                     }
@@ -382,7 +401,9 @@ const router = createBrowserRouter(
                 <Route
                     path="studentAcademicInfo/:id"
                     element={
-                        <StudentAcademicInfo />
+                        <PrivateRoute role="student">
+                            <StudentAcademicInfo />
+                        </PrivateRoute>
                     }
                 />
 
@@ -390,7 +411,7 @@ const router = createBrowserRouter(
                 <Route
                     path="profile"
                     element={
-                        < PrivateRoute role="student" >
+                        <PrivateRoute role="student" >
                             <StudentProfile />
                         </PrivateRoute >
                     }

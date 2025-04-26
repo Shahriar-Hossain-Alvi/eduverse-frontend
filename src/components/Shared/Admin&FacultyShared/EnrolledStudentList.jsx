@@ -5,10 +5,13 @@ import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage
 import { Link } from "react-router";
 import PropTypes from 'prop-types';
 import SectionHeading from "../../Utilities/SectionHeading";
+import useAuth from "../../Hooks/useAuth";
 
 
 const EnrolledStudentList = ({ course_id }) => {
     const axiosSecure = useAxiosSecure();
+    const {user} = useAuth();
+
 
     // fetch enrolled students using course id
     const { data: singleAssignedCourseEnrollmentList = [], isError, error, isPending } = useQuery({
@@ -50,7 +53,7 @@ const EnrolledStudentList = ({ course_id }) => {
                                 <th>{index + 1}</th>
                                 <td>{student.users_id.first_name} {student.users_id.last_name}</td>
                                 <td>{student.users_id.email}</td>
-                                <td><Link to={`/StudentAcademicInfo/${student.users_id._id}`} className="btn btn-success btn-sm text-white">Profile</Link></td>
+                                <td><Link to={`/${user?.user_role}/StudentAcademicInfo/${student.users_id._id}`} className="btn btn-success btn-sm text-white">Profile</Link></td>
                             </tr>
                         ))}
                     </tbody>

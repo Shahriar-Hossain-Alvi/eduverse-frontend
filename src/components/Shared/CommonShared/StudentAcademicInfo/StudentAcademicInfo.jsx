@@ -63,11 +63,15 @@ const StudentAcademicInfo = () => {
                 <input type="radio" name="my_tabs_2" role="tab" className="tab" aria-label="Grades" defaultChecked />
 
                 <div role="tabpanel" className="tab-content p-6 border-base-300 rounded-box overflow-hidden">
-                    <StudentGradesTab
-                        studentGrades={studentGrades} studentGradesIsPending={studentGradesIsPending}
-                        studentGradesIsError={studentGradesIsError}
-                        studentGradesError={studentGradesError}
-                    />
+                    {
+                        Array.isArray(studentGrades)
+                        &&
+                        <StudentGradesTab
+                            studentGrades={studentGrades} studentGradesIsPending={studentGradesIsPending}
+                            studentGradesIsError={studentGradesIsError}
+                            studentGradesError={studentGradesError}
+                        />
+                    }
                 </div>
 
 

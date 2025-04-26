@@ -23,7 +23,7 @@ const Schedules = () => {
             const userRole = user?.user_role;
 
             if (userRole === "faculty") {
-                const res = await axiosSecure.get(`/classes/allAssignedCourseClasses/${user._id}`);
+                const res = await axiosSecure.get(`/classes/allAssignedCourseClasses/${user?._id}`);
 
                 return res.data.data;
             }
@@ -35,14 +35,14 @@ const Schedules = () => {
             }
             
             if(userRole === "student"){
-                const res = await axiosSecure.get(`/classes/allEnrolledCourseClasses/${user._id}`);
+                const res = await axiosSecure.get(`/classes/allEnrolledCourseClasses/${user?._id}`);
     
                 return res.data.data;
             }
 
 
         },
-        enabled: !!user
+        enabled: !!user && !!user._id && !!user.user_role
     });
 
 
@@ -120,15 +120,15 @@ const Schedules = () => {
 
                                 {/* class details button */}
                                 {
-                                    user.user_role === "student" &&
+                                    user?.user_role === "student" &&
                                     <Link to={`/student/myEnrolledCourses/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-sm md:btn-md`}>Details</Link>
                                 }
                                 {
-                                    user.user_role === "faculty" &&
+                                    user?.user_role === "faculty" &&
                                     <Link to={`/faculty/myCourses/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-sm md:btn-md`}>Details</Link>
                                 }
                                 {
-                                    user.user_role === "admin" &&
+                                    user?.user_role === "admin" &&
                                     <Link to={`/admin/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-sm md:btn-md`}>Details</Link>
                                 }
                             </div>

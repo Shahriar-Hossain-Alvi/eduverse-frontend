@@ -165,7 +165,7 @@ const AssignedCoursesAllStudentList = () => {
 
 
                                                         <td>
-                                                            <Link to={`/StudentAcademicInfo/${record._id}`} className=" btn btn-success text-white btn-xs md:btn-sm">
+                                                            <Link to={`/${user?.user_role}/studentAcademicInfo/${record._id}`} className=" btn btn-success text-white btn-xs md:btn-sm">
                                                                 Profile
                                                             </Link>
                                                         </td>

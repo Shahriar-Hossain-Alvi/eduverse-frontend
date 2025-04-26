@@ -9,11 +9,11 @@ import { FaDownload } from "react-icons/fa";
 
 
 
-const StudentGradesTab = ({ studentGrades, studentGradesIsPending, studentGradesIsError, studentGradesError }) => {
+const StudentGradesTab = ({ studentGrades = [], studentGradesIsPending, studentGradesIsError, studentGradesError }) => {
 
 
 
-    // create attendance pdf
+    // create grades pdf
     const generatePDF = (gradesData) => {
 
         const doc = new jsPDF();
@@ -75,7 +75,6 @@ const StudentGradesTab = ({ studentGrades, studentGradesIsPending, studentGrades
 
     return (
         <div>
-
             {studentGradesIsError && <TanstackQueryErrorMessage errorMessage={studentGradesError.message} />}
 
             {
@@ -110,7 +109,7 @@ const StudentGradesTab = ({ studentGrades, studentGradesIsPending, studentGrades
                             </thead>
                             <tbody>
                                 {
-                                    studentGrades?.map((record, idx) =>
+                                    studentGrades.length > 0 && studentGrades?.map((record, idx) =>
                                         <tr
                                             className="hover"
                                             key={record?._id}>

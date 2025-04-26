@@ -38,11 +38,7 @@ const SingleAssignedCourseDetails = () => {
 
 
 
-    const { _id,
-        course_id, // oject
-        is_active,
-        users_id, // array
-    } = singleAssignedCourse;
+    const { _id, course_id, is_active, users_id } = singleAssignedCourse;
 
 
 

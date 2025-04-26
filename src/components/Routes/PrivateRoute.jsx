@@ -51,13 +51,13 @@ const PrivateRoute = ({ children, role }) => {
     if (loading || isVerifying || roleVerified === null) return <LoadingSpinner />;
 
     if (!user && !token) {
-        console.log("Go to sign in from private route line 46");
+        console.log("Go to sign in from private route line 54");
         //logout(); // newly added to check
         return <Navigate to="/signin" state={{ from: location }} />;
     }
 
     if (role && roleVerified === false) {
-        console.log("Go to sign in from private route line 52");
+        console.log("Go to sign in from private route line 60");
         //logout(); // newly added to check
         return <Navigate to="/signin" state={{ from: location }} />;
     }
