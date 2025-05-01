@@ -5,7 +5,7 @@ import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage
 import PropTypes from 'prop-types';
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaDownload, FaPlus, FaTrash } from "react-icons/fa";
+import { FaCalendarAlt, FaDownload, FaPlus, FaTrash } from "react-icons/fa";
 import useAuth from "../../Hooks/useAuth";
 import toast from "react-hot-toast";
 import { CgClose, CgSpinnerTwoAlt } from "react-icons/cg";
@@ -18,6 +18,7 @@ import { isEqual } from "lodash";
 import { handleError } from "../../Utilities/handleError";
 import jsPDF from "jspdf";
 import { autoTable } from 'jspdf-autotable'
+import { BsDatabaseFillAdd } from "react-icons/bs";
 
 
 
@@ -363,21 +364,21 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                             {/* student name */}
                             <label className="form-control w-full">
                                 <div className="label">
-                                    <span className="label-text">Name</span>
+                                    <span className="text-xs md:label-text">Name</span>
                                 </div>
-                                <input className="input input-bordered w-full" readOnly defaultValue={`${singleStudent.users_id.first_name} ${singleStudent.users_id.last_name}`} />
+                                <input className="input input-bordered text-xs md:text-base w-full" readOnly defaultValue={`${singleStudent.users_id.first_name} ${singleStudent.users_id.last_name}`} />
                             </label>
 
 
                             {/* select attendance */}
                             <label className="form-control w-full">
                                 <div className="label">
-                                    <span className="label-text">Select Attendance</span>
+                                    <span className="text-xs md:label-text">Select Attendance</span>
                                 </div>
                                 <div>
                                     <select defaultValue="absent"
                                         onChange={e => handleAttendanceChange(singleStudent.users_id._id, "is_present", e.target.value)}
-                                        className="select select-bordered w-full">
+                                        className="select select-bordered w-full text-xs md:text-bas">
                                         <option value="present" className="text-success font-bold">Present</option>
 
                                         <option value="absent" className="text-error font-bold">Absent</option>
@@ -393,12 +394,12 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                             {/* remarks */}
                             <label className="form-control w-full max-w-xs">
                                 <div className="label">
-                                    <span className="label-text">Remarks</span>
+                                    <span className="text-xs md:label-text">Remarks</span>
                                 </div>
                                 <div>
                                     <input type="text"
                                         onChange={e => handleAttendanceChange(singleStudent.users_id._id, "remarks", e.target.value)}
-                                        placeholder="Type here" className="input input-bordered w-full" />
+                                        placeholder="Type here" className="input input-bordered w-full text-xs md:text-bas" />
                                 </div>
                             </label>
                         </div>)}
@@ -410,7 +411,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                                     <CgSpinnerTwoAlt className="animate-spin" />
                                 </button>
                                 :
-                                <button type="submit" className="btn btn-success btn-wide mt-3 text-white">
+                                <button type="submit" className="btn btn-success btn-block md:btn-wide mt-3 text-white">
                                     Save
                                 </button>
                         }
@@ -430,9 +431,9 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                     <div>
                         <div className={`grid ${user.user_role === "admin" && "grid-cols-8"} ${user.user_role === "faculty" && "grid-cols-5"}  items-center gap-1`}>
 
-                            <h2 className={`${user.user_role === "admin" && "col-span-3"} ${user.user_role === "faculty" && "col-span-2"}  text-sm md:text-lg font-medium`}>Attendance of: {studentsAttendanceRecord?.attendance_date? format(new Date(studentsAttendanceRecord?.attendance_date), "MMMM d, yyyy"): "Loading..."}</h2>
+                            <h2 className={`${user.user_role === "admin" && "col-span-3"} ${user.user_role === "faculty" && "col-span-2"}  text-sm md:text-lg font-medium flex items-center gap-1`}><FaCalendarAlt />{studentsAttendanceRecord?.attendance_date ? format(new Date(studentsAttendanceRecord?.attendance_date), "MMMM d, yyyy") : "Loading..."}</h2>
 
-                            <h3 className={`${user.user_role === "admin" && "col-span-3"} ${user.user_role === "faculty" && "col-span-2"}  md:text-lg text-sm font-medium`}>Recorded By: {studentsAttendanceRecord?.created_by?.first_name || "Deleted"} {studentsAttendanceRecord?.created_by?.last_name || "user"}</h3>
+                            <h3 className={`${user.user_role === "admin" && "col-span-3"} ${user.user_role === "faculty" && "col-span-2"}  md:text-lg text-sm font-medium flex items-center gap-1`}><BsDatabaseFillAdd /> {studentsAttendanceRecord?.created_by?.first_name || "Deleted"} {studentsAttendanceRecord?.created_by?.last_name || "user"}</h3>
 
 
                             {/* delete button */}
@@ -445,7 +446,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                                     :
                                     user.user_role !== "student" &&
                                     <button onClick={() => handleAttendanceDelete()} className="btn btn-error text-xs md:text-base btn-sm text-white p-0">
-                                        Delete <FaTrash />
+                                        <FaTrash />
                                     </button>
                             }
 
@@ -453,7 +454,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                                 user.user_role === "admin"
                                 && <button
                                     onClick={() => generatePDF(studentsAttendanceRecord)}
-                                    className="btn btn-accent text-xs md:text-base btn-sm text-white p-0"><FaDownload /> PDF
+                                    className="btn btn-accent text-xs md:text-base btn-sm text-white p-0"><FaDownload />
                                 </button>}
                         </div>
 

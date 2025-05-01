@@ -315,7 +315,7 @@ const ClassMaterialFormAndList = ({ class_id }) => {
                         {/* title */}
                         <div className="grid grid-cols-6 gap-2">
                             <div className="label">
-                                <span className="label-text">Material Title: </span>
+                                <span className="label-text">Title: </span>
                             </div>
 
                             <div className="col-span-5">
@@ -336,7 +336,7 @@ const ClassMaterialFormAndList = ({ class_id }) => {
                         {/* description */}
                         <div className="grid grid-cols-6 gap-2">
                             <div className="label">
-                                <span className="label-text">Description: </span>
+                                <span className="label-text">Details: </span>
                             </div>
 
                             <div className="col-span-5">
@@ -346,7 +346,7 @@ const ClassMaterialFormAndList = ({ class_id }) => {
 
                                     {...register("ClassMaterialDescription", { required: "Material Description is required" })}
 
-                                    className="input input-bordered mb-2 w-full rounded-lg "
+                                    className="textarea textarea-bordered mb-2 w-full rounded-lg "
                                 />
 
                                 {errors.ClassMaterialDescription && <p className="text-error font-medium text-sm mb-2">{errors.ClassMaterialDescription.message}</p>}
@@ -358,7 +358,7 @@ const ClassMaterialFormAndList = ({ class_id }) => {
                         {/* File Type */}
                         <div className="grid grid-cols-6 gap-2">
                             <div className="label">
-                                <span className="label-text">Resource Type: </span>
+                                <span className="label-text">Type: </span>
                             </div>
                             <select
                                 {...register("fileType")}

@@ -3,7 +3,7 @@ import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSpinner from "../../../Utilities/LoadingSpinner";
 import SectionHeading from "../../../Utilities/SectionHeading";
-import { FaCalendarAlt, FaChalkboardTeacher, FaMedal } from "react-icons/fa";
+import { FaCalendarAlt, FaChalkboardTeacher, FaMedal, FaTrash } from "react-icons/fa";
 import { MdOutlineAirlineSeatReclineNormal } from "react-icons/md";
 import useAuth from "../../../Hooks/useAuth";
 import { LuBookOpenCheck } from "react-icons/lu";
@@ -235,9 +235,9 @@ const CourseDetails = () => {
 
                     {/* assign/remove faculty button */}
                     {
-                        user.user_role === "admin" && <button onClick={() => setShowFacultyAssignmentForm(!showFacultyAssignmentForm)} className={`btn btn-sm ${showFacultyAssignmentForm ? "btn-error" : "btn-success"} text-white`}>
+                        user.user_role === "admin" && <button onClick={() => setShowFacultyAssignmentForm(!showFacultyAssignmentForm)} className={`mt-1 btn btn-sm ${showFacultyAssignmentForm ? "btn-error" : "btn-success"} text-white text-xs md:text-sm lg:text-base`}>
                             {
-                                !showFacultyAssignmentForm ? <><RiUserAddFill /> Assign/Remove Faculty</> : <><IoMdClose /> Close</>
+                                !showFacultyAssignmentForm ? <><RiUserAddFill /> Assign/Remove</> : <><IoMdClose /> Close</>
                             }</button>
                     }
                 </div>
@@ -296,22 +296,22 @@ const CourseDetails = () => {
                     prerequisites.map(singlePrerequisiteCourse => <div className="flex justify-between items-center my-2 border p-2 rounded-md" key={singlePrerequisiteCourse._id}>
 
                         <div className="flex gap-3 items-center">
-                            <figure className="w-24 h-24">
+                            <figure className="w-32 h-24">
                                 <img className="w-full h-full" src={singlePrerequisiteCourse.cover_url} alt={singlePrerequisiteCourse.title} />
                             </figure>
 
                             <div className="space-y-1">
-                                <h2 className="text-xl">
+                                <h2 className="text-sm md:text-base lg::text-xl">
                                     <span className="font-medium">Title: </span> {singlePrerequisiteCourse.title}
                                 </h2>
 
 
-                                <h3 className="text-xl italic">
+                                <h3 className="text-sm md:text-base lg::text-xl italic">
                                     <span className="font-medium not-italic">Credits: </span> {singlePrerequisiteCourse.credits}
                                 </h3>
                             </div>
                         </div>
-                        <Link to={`/${user.user_role}/courses/${singlePrerequisiteCourse._id}`} className="btn btn-success text-white">View Details</Link>
+                        <Link to={`/${user.user_role}/courses/${singlePrerequisiteCourse._id}`} className="btn btn-sm md:btn-md btn-success text-white">Details</Link>
                     </div>
                     )}
             </div>
@@ -369,7 +369,7 @@ const CourseDetails = () => {
 
 
                     {/* delete course */}
-                    <button onClick={handleCourseDeleteButton} className="btn btn-error text-white mt-4">Delete This Course</button>
+                    <button onClick={handleCourseDeleteButton} className="btn btn-sm md:btn-md btn-error text-white mt-4"><FaTrash /> Delete This Course</button>
                 </div>
             }
 

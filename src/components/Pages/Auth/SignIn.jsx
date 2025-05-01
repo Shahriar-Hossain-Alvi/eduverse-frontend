@@ -85,6 +85,8 @@ const SignIn = () => {
                 </div>
 
                 <div className={`${themeStyles.background[theme]} rounded-lg w-full md:max-w-lg lg:max-w-xl mx-auto shadow-2xl`}>
+
+                    {/* login form */}
                     <form onSubmit={handleSubmit(handleLogin)} className="px-3 md:px-5 pt-5 mb-3 space-y-4">
 
                         {/* email */}
@@ -100,6 +102,7 @@ const SignIn = () => {
                             </div>
                         </div>
 
+                        {/* password */}
                         <div className="grid grid-cols-12">
                             <label className="label col-span-3 md:col-span-2">
                                 <span className="label-text">Password:</span>
@@ -108,11 +111,11 @@ const SignIn = () => {
                             <div className="col-span-9 md:col-span-10 relative">
                                 {
                                     showPassword ?
-                                        <button type="button" onClick={() => setShowPassword(false)} className="btn absolute right-3 btn-sm top-1/2 btn-ghost hover:bg-transparent -translate-y-1/2">
+                                        <button type="button" onClick={() => setShowPassword(false)} className="btn absolute right-3 btn-xs top-1/2 -translate-y-1/2">
                                             <FaEyeSlash />
                                         </button>
                                         :
-                                        <button type="button" onClick={() => setShowPassword(true)} className="btn absolute right-3 btn-sm top-1/2 btn-ghost hover:bg-transparent -translate-y-1/2">
+                                        <button type="button" onClick={() => setShowPassword(true)} className="btn absolute right-3 btn-xs top-1/2  -translate-y-1/2">
                                             <FaEye />
                                         </button>
                                 }
@@ -130,7 +133,8 @@ const SignIn = () => {
                                 }
                             </div>
                         </div>
-
+                        
+                        {/* login button */}
                         <div className="form-control">
                             {
                                 loading ?
@@ -146,8 +150,6 @@ const SignIn = () => {
 
                     <div className="px-7 pb-7 justify-between flex">
                         <Link to="/passwordReset" className="text-error font-medium hover:underline">Forgot Password?</Link>
-
-                        {/* <Link to="/signup" className="text-white font-medium hover:underline">Signup</Link> */}
                     </div>
                 </div>
             </div>

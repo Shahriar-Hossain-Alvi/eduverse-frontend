@@ -179,7 +179,7 @@ const CourseUpdateForm = ({ singleCourseDetails, refetch }) => {
     return (
         <div>
             <Toaster />
-            <button onClick={() => setIsEditing(!isEditing)} className={`btn text-white font-medium ${isEditing ? "btn-error" : "btn-success"}`}>
+            <button onClick={() => setIsEditing(!isEditing)} className={`btn btn-sm md:btn-md text-white font-medium ${isEditing ? "btn-error" : "btn-success"}`}>
                 {isEditing ?
                     <>
                         <GiCancel className='inline text-lg mr-1' />

@@ -181,7 +181,7 @@ const AssignFaculty = ({ assigned_faculty, courseId, setShowFacultyAssignmentFor
                             <span>{faculty.label}</span>
                             <button
                                 onClick={() => handleRemoveFaculty(faculty.value)}
-                                className="btn btn-sm btn-error text-white"
+                                className="btn btn-xs md:btn-sm btn-error text-white"
                             >
                                 <MdClose />
                             </button>
