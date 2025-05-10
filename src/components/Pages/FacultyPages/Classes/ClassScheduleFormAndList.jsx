@@ -262,12 +262,12 @@ const ClassScheduleFormAndList = ({ course_id, faculty, isCourseAssignmentActive
                 {/* form */}
                 {showScheduleForm && (
                     <div>
-                        <SectionHeading title="Add New Class Schedule" />
+                        <SectionHeading title="Create New Class Schedule" />
 
                         <form onSubmit={handleSubmit(handleScheduleSubmit)} className="mb-6 p-4 rounded-lg">
 
                             {/* class title */}
-                            <div className="grid grid-cols-6 gap-2">
+                            <div className="md:grid md:grid-cols-6 md:gap-2">
                                 <div className="label">
                                     <span className="label-text">Title: </span>
                                 </div>
@@ -288,7 +288,7 @@ const ClassScheduleFormAndList = ({ course_id, faculty, isCourseAssignmentActive
 
 
                             {/* class description */}
-                            <div className="grid grid-cols-6 gap-2">
+                            <div className="md:grid md:grid-cols-6 md:gap-2">
                                 <div className="label">
                                     <span className="label-text">Description: </span>
                                 </div>
@@ -307,7 +307,7 @@ const ClassScheduleFormAndList = ({ course_id, faculty, isCourseAssignmentActive
 
 
                             {/* class date */}
-                            <div className="grid grid-cols-6 gap-2
+                            <div className="md:grid md:grid-cols-6 md:gap-2
                     ">
                                 <div className="label">
                                     <span className="label-text">Date: </span>
@@ -329,7 +329,7 @@ const ClassScheduleFormAndList = ({ course_id, faculty, isCourseAssignmentActive
 
 
                             {/* class time */}
-                            <div className="grid grid-cols-6 gap-2">
+                            <div className="md:grid md:grid-cols-6 md:gap-2">
                                 <div className="label">
                                     <span className="label-text">Time: </span>
                                 </div>
@@ -348,7 +348,7 @@ const ClassScheduleFormAndList = ({ course_id, faculty, isCourseAssignmentActive
 
 
                             {/* class location */}
-                            <div className="grid grid-cols-6 gap-2">
+                            <div className="md:grid md:grid-cols-6 md:gap-2">
                                 <div className="label">
                                     <span className="label-text">Location: </span>
                                 </div>
