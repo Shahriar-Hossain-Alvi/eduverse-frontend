@@ -310,7 +310,7 @@ const CourseMaterialFormAndList = ({ course_id, isCourseAssignmentActive }) => {
                         <form onSubmit={handleSubmit(handleMaterialSubmit)} className="mb-6 p-4 rounded-lg">
 
                             {/* title */}
-                            <div className="grid grid-cols-6 gap-2">
+                            <div className="md:grid md:grid-cols-6 md:gap-2">
                                 <div className="label">
                                     <span className="label-text">Material Title: </span>
                                 </div>
@@ -331,7 +331,7 @@ const CourseMaterialFormAndList = ({ course_id, isCourseAssignmentActive }) => {
 
 
                             {/* description */}
-                            <div className="grid grid-cols-6 gap-2">
+                            <div className="md:grid md:grid-cols-6 md:gap-2">
                                 <div className="label">
                                     <span className="label-text">Description: </span>
                                 </div>
@@ -353,7 +353,7 @@ const CourseMaterialFormAndList = ({ course_id, isCourseAssignmentActive }) => {
 
 
                             {/* File Type */}
-                            <div className="grid grid-cols-6 gap-2">
+                            <div className="md:grid md:grid-cols-6 md:gap-2">
                                 <div className="label">
                                     <span className="label-text">Resource Type: </span>
                                 </div>
@@ -427,7 +427,7 @@ const CourseMaterialFormAndList = ({ course_id, isCourseAssignmentActive }) => {
                             <form onSubmit={handleSubmit(handleCourseMaterialUpdate)} className="mb-6 p-4 rounded-lg">
 
                                 {/* Course material title */}
-                                <div className="grid grid-cols-6 gap-2">
+                                <div className="md:grid md:grid-cols-6 md:gap-2">
                                     <div className="label">
                                         <span className="label-text">Title: </span>
                                     </div>
@@ -446,7 +446,7 @@ const CourseMaterialFormAndList = ({ course_id, isCourseAssignmentActive }) => {
 
 
                                 {/* course material description */}
-                                <div className="grid grid-cols-6 gap-2">
+                                <div className="md:grid md:grid-cols-6 md:gap-2">
                                     <div className="label">
                                         <span className="label-text">Description: </span>
                                     </div>
@@ -463,7 +463,7 @@ const CourseMaterialFormAndList = ({ course_id, isCourseAssignmentActive }) => {
 
 
                                 {/* File Type */}
-                                <div className="grid grid-cols-6 gap-2">
+                                <div className="md:grid md:grid-cols-6 md:gap-2">
                                     <div className="label">
                                         <span className="label-text">Resource Type: </span>
                                     </div>
