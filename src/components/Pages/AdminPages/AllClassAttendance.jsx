@@ -27,6 +27,7 @@ const AllClassAttendance = () => {
         }
     });
 
+    console.log(allClassAttendance);
 
     if (isPending) return <LoadingSpinner />
 
@@ -200,13 +201,17 @@ const AllClassAttendance = () => {
 
 
                                                         <td className="px-2 md:px-6 py-2 md:py-4">
-                                                            <span className={`badge ${getStatusBadge(record.is_present)}`}>
+                                                            <span className={`badge badge-sm md:badge-md ${getStatusBadge(record.is_present)}`}>
                                                                 {record.is_present}
                                                             </span>
                                                         </td>
 
                                                         <td className="px-2 md:px-6 py-2 md:py-4 text-sm text-center md:text-left">
                                                             {record.remarks || '-'}
+                                                        </td>
+
+                                                        <td className="px-2 md:px-6 py-2 md:py-4 text-sm text-center md:text-left">
+                                                            <Link to={`/admin/StudentAcademicInfo/${record?.student_id?._id}`} className="btn btn-xs md:btn-md btn-success text-white">Profile</Link>
                                                         </td>
                                                     </tr>
                                                 ))}
@@ -224,7 +229,7 @@ const AllClassAttendance = () => {
                                                 <Link
                                                     to={`/admin/classDetails/${classRecord.class_id._id}`}
                                                     className="btn btn-success text-xs md:text-sm btn-xs md:btn-sm text-white">
-                                                    View Class Details
+                                                    Class Details
                                                 </Link>
 
                                                 <button
@@ -236,7 +241,7 @@ const AllClassAttendance = () => {
 
 
 
-                                            <span>Created: {formatDate(classRecord.createdAt)}</span>
+                                            <span>Created At: {formatDate(classRecord?.createdAt) || ""}</span>
                                         </div>
                                     </div>
                                 </div>

@@ -176,7 +176,7 @@ const CourseDetails = () => {
                         <div className="flex items-center gap-2  text-lg">
                             <MdOutlineAirlineSeatReclineNormal className="h-5 w-5 text-green-600" />
                             <span className="font-medium">
-                                Total Available Seats :
+                            Available Seats :
                             </span>
                             {total_available_seats}
                         </div>
@@ -186,7 +186,7 @@ const CourseDetails = () => {
                         <div className="flex items-center gap-2  text-lg">
                             <FaCalendarAlt className="h-5 w-5 text-green-600" />
                             <span className="font-medium">
-                                Starts From :
+                                Starts :
                             </span>
                             {new Date(start_date).toLocaleDateString()}
                         </div>
