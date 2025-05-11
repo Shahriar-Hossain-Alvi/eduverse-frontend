@@ -2,16 +2,29 @@ import autoTable from "jspdf-autotable";
 import LoadingSpinner from "../../../Utilities/LoadingSpinner";
 import TanstackQueryErrorMessage from "../../../Utilities/TanstackQueryErrorMessage";
 import { format } from "date-fns";
-import PropTypes from 'prop-types';
 import jsPDF from "jspdf";
 import { FaDownload } from "react-icons/fa";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router";
 
 
 
 
-const StudentGradesTab = ({ studentGrades = [], studentGradesIsPending, studentGradesIsError, studentGradesError }) => {
+const StudentGradesTab = () => {
+    const { id } = useParams(); //student id
+    const axiosSecure = useAxiosSecure();
 
+    // fetch grades
+    const { data: studentGrades = [], isPending, isError, error } = useQuery({
+        queryKey: ["studentGrades", id],
+        queryFn: async () => {
+            const res = await axiosSecure.get(`/studentGrades/student/${id}`);
 
+            return res?.data?.data;
+        },
+        enabled: !!id
+    })
 
     // create grades pdf
     const generatePDF = (gradesData) => {
@@ -71,11 +84,11 @@ const StudentGradesTab = ({ studentGrades = [], studentGradesIsPending, studentG
     }
 
 
-    if (studentGradesIsPending) return <LoadingSpinner />
+    if (isPending) return <LoadingSpinner />
 
     return (
         <div>
-            {studentGradesIsError && <TanstackQueryErrorMessage errorMessage={studentGradesError.message} />}
+            {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
             {
                 <div className="flex justify-end">
@@ -140,12 +153,5 @@ const StudentGradesTab = ({ studentGrades = [], studentGradesIsPending, studentG
         </div>
     );
 };
-
-StudentGradesTab.propTypes = {
-    studentGrades: PropTypes.array,
-    studentGradesIsPending: PropTypes.bool,
-    studentGradesIsError: PropTypes.bool,
-    studentGradesError: PropTypes.func
-}
 
 export default StudentGradesTab;

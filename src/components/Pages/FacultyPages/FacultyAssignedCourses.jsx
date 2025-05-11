@@ -40,8 +40,6 @@ const FacultyAssignedCourses = () => {
                         :
                         <AssignedCoursesCard refetch={refetch} assignedCourses={singleFacultyAssignedCoursesData} />
                 }
-
-
             </div>
 
         </div>

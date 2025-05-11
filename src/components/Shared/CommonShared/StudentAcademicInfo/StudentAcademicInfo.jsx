@@ -3,25 +3,29 @@ import { useQuery } from "@tanstack/react-query"
 import SectionHeading from "../../../Utilities/SectionHeading";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import StudentGradesTab from "./StudentGradesTab";
+import StudentAttendanceTab from "./StudentAttendanceTab";
+import LoadingSpinner from "../../../Utilities/LoadingSpinner";
 
 
 
 const StudentAcademicInfo = () => {
-    const { id } = useParams();
+    const { id } = useParams(); //student id
     const axiosSecure = useAxiosSecure();
 
-    // fetch grades
-    const { data: studentGrades = [], isPending: studentGradesIsPending, isError: studentGradesIsError, error: studentGradesError } = useQuery({
-        queryKey: ["studentGrades", id],
+
+    //get public info of a user
+    const { data: studentInfo = {}, isPending, isError, error } = useQuery({
+        queryKey: ["studentInfo", id],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/studentGrades/student/${id}`);
+            const res = await axiosSecure.get(`/users/publicInfo/${id}`);
 
             return res.data.data;
         },
         enabled: !!id
-    })
+    });
 
-    const studentBasicInfo = studentGrades[0]?.student_id || "Deleted/Unavailable User";
+
+    if (isPending) return <LoadingSpinner />
 
 
 
@@ -47,9 +51,9 @@ const StudentAcademicInfo = () => {
 
 
                 <div className="text-sm md:text-xl">
-                    <h1 className="uppercase">{studentBasicInfo?.first_name || "Deleted"} {studentBasicInfo?.last_name || "User"}</h1>
-                    <h2>{studentBasicInfo?.email || "unavailable"}</h2>
-                    <h2>{studentBasicInfo?.phone || "unavailable"}</h2>
+                    <h1 className="uppercase">{studentInfo?.first_name || "Deleted"} {studentInfo?.last_name || "User"}</h1>
+                    <h2>{studentInfo?.email || "unavailable"}</h2>
+                    <h2>{studentInfo?.phone || "unavailable"}</h2>
                 </div>
             </div>
 
@@ -63,15 +67,7 @@ const StudentAcademicInfo = () => {
                 <input type="radio" name="my_tabs_2" role="tab" className="tab" aria-label="Grades" defaultChecked />
 
                 <div role="tabpanel" className="tab-content p-6 border-base-300 rounded-box overflow-hidden">
-                    {
-                        Array.isArray(studentGrades)
-                        &&
-                        <StudentGradesTab
-                            studentGrades={studentGrades} studentGradesIsPending={studentGradesIsPending}
-                            studentGradesIsError={studentGradesIsError}
-                            studentGradesError={studentGradesError}
-                        />
-                    }
+                    <StudentGradesTab />
                 </div>
 
 
@@ -83,8 +79,8 @@ const StudentAcademicInfo = () => {
                     className="tab"
                     aria-label="Attendance"
                 />
-                <div role="tabpanel" className="tab-content p-6 border-base-300 rounded-box">
-                    Tab 2: Attendance Table (download pdf)
+                <div role="tabpanel" className="tab-content p-6 border-base-300 rounded-box overflow-hidden">
+                    <StudentAttendanceTab />
                 </div>
             </div>
 
