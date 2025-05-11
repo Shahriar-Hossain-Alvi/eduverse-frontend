@@ -5,6 +5,7 @@ import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import StudentGradesTab from "./StudentGradesTab";
 import StudentAttendanceTab from "./StudentAttendanceTab";
 import LoadingSpinner from "../../../Utilities/LoadingSpinner";
+import TanstackQueryErrorMessage from "../../../Utilities/TanstackQueryErrorMessage";
 
 
 
@@ -36,6 +37,10 @@ const StudentAcademicInfo = () => {
 
             {/* student details */}
             <div className="flex border space-x-1 items-center p-3 rounded-lg mx-auto justify-center mb-10">
+                {
+                    isError && <TanstackQueryErrorMessage errorMessage={error?.message} />
+                }
+
                 <div className="text-sm md:text-xl font-medium">
                     <h1>Overview of</h1>
                     <h2>Email Address</h2>
