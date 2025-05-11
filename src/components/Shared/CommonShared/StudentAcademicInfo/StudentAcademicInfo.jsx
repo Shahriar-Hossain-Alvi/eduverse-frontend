@@ -80,7 +80,7 @@ const StudentAcademicInfo = () => {
                     aria-label="Attendance"
                 />
                 <div role="tabpanel" className="tab-content p-6 border-base-300 rounded-box overflow-hidden">
-                    <StudentAttendanceTab />
+                    <StudentAttendanceTab studentInfo={studentInfo} />
                 </div>
             </div>
 
