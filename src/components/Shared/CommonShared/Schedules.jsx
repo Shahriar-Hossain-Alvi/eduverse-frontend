@@ -6,9 +6,13 @@ import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage
 import LoadingSpinner from "../../Utilities/LoadingSpinner";
 import { Link } from "react-router";
 import themeStyles from "../../Utilities/themeStyles";
-import { BiError } from "react-icons/bi";
+import { BiError, BiSearch } from "react-icons/bi";
 import { format } from "date-fns";
 import useTheme from "../../Hooks/useTheme"
+import { FaCalendar, FaLocationDot } from "react-icons/fa6";
+import { IoMdPeople } from "react-icons/io";
+import { FaCaretRight, FaClock } from "react-icons/fa";
+import { useState } from "react";
 
 
 
@@ -16,27 +20,28 @@ const Schedules = () => {
     const axiosSecure = useAxiosSecure();
     const { theme } = useTheme();
     const { user } = useAuth();
+    const [searchedClassTitle, setSearchedClassTitle] = useState("");
 
     const { data: allClassList = [], isError, error, isPending } = useQuery({
-        queryKey: ["allClassList", user?.user_role, user?._id],
+        queryKey: ["allClassList", user?.user_role, user?._id, searchedClassTitle],
         queryFn: async () => {
             const userRole = user?.user_role;
 
             if (userRole === "faculty") {
-                const res = await axiosSecure.get(`/classes/allAssignedCourseClasses/${user?._id}`);
+                const res = await axiosSecure.get(`/classes/allAssignedCourseClasses/${user?._id}?search=${searchedClassTitle}`);
 
                 return res.data.data;
             }
 
             if (userRole === "admin") {
-                const res = await axiosSecure.get("/classes");
+                const res = await axiosSecure.get(`/classes?search=${searchedClassTitle}`);
 
                 return res.data.data;
             }
-            
-            if(userRole === "student"){
-                const res = await axiosSecure.get(`/classes/allEnrolledCourseClasses/${user?._id}`);
-    
+
+            if (userRole === "student") {
+                const res = await axiosSecure.get(`/classes/allEnrolledCourseClasses/${user?._id}?search=${searchedClassTitle}`);
+
                 return res.data.data;
             }
 
@@ -46,13 +51,29 @@ const Schedules = () => {
     });
 
 
+    const handleInputChange = (e) => {
+        setSearchedClassTitle(e.target.value);
+    }
 
-    if (isPending) return <LoadingSpinner />
 
 
     return (
         <div className="flex-1 p-3 md:p-8">
             <SectionHeading title="All Class Schedule" />
+
+            <div className="mb-5 flex gap-2">
+
+                <label className="input input-bordered flex items-center gap-2 w-full">
+                    <BiSearch />
+
+                    <input
+                    onChange={handleInputChange} 
+                    value={searchedClassTitle}
+                    type="text" className="grow" placeholder="Search" />
+                </label>
+
+                <button className="btn"><FaCalendar /> Today</button>
+            </div>
 
             {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
@@ -66,36 +87,33 @@ const Schedules = () => {
 
                 {allClassList.length === 0 && <p className="text-center text-error text-lg font-medium">Class Schedules are not added yet</p>}
 
-                <ul className="space-y-2">
+                <div className="space-y-2">
                     {allClassList.map((singleClass) => (
-                        <li key={singleClass._id} className={`${themeStyles.background[theme]} flex flex-col md:flex-row justify-between items-center border p-3 rounded`}>
+                        <div key={singleClass._id} className={`${themeStyles.background[theme]} border-2 p-3 rounded`}>
 
                             <div className="space-y-2 md:space-y-1">
                                 {/* title */}
-                                <h3 className="font-semibold">
-                                    <span className="underline mr-1">Title:</span> {singleClass.title}</h3>
+                                <h3 className="font-bold text-xl">
+                                    {singleClass.title}
+                                </h3>
 
                                 {/* description */}
-                                <p className="text-sm">{singleClass.description}</p>
+                                <p>{singleClass.description}</p>
 
 
                                 {/* time */}
-                                <p className="text-sm">
-                                    <span className="font-semibold underline">
-                                        Class Time:
-                                    </span>
+                                <p className="flex items-center gap-2">
+                                    <FaClock className="text-lg" />
 
-                                    <button className="badge badge-success text-white ml-2 rounded">
+                                    <span>
                                         {format(singleClass.scheduled_time, "yyyy-MM-dd, hh:mm a")}
-                                    </button>
+                                    </span>
                                 </p>
 
 
                                 {/* location */}
-                                <p className="text-sm">
-                                    <span className="mr-1 underline font-semibold">
-                                        Location:
-                                    </span>
+                                <p className="flex items-center gap-2">
+                                    <FaLocationDot className="text-lg" />
                                     {singleClass.location}
 
                                     {
@@ -106,35 +124,36 @@ const Schedules = () => {
 
 
                                 {/* faculty */}
-                                <div className='flex flex-wrap items-center gap-1'>
-                                    <h2 className="underline font-semibold mr-1">Faculties: </h2>
+                                <div className='flex flex-wrap items-center gap-2'>
+                                    <IoMdPeople className="text-xl" />
+
                                     {(singleClass.faculty_id).map(singleFaculty =>
-                                        <p key={singleFaculty._id} className='badge badge-outline'>{singleFaculty.first_name} {singleFaculty.last_name}</p>
+                                        <p key={singleFaculty._id} className='badge badge-ghost'>{singleFaculty.first_name} {singleFaculty.last_name}</p>
                                     )}
                                 </div>
                             </div>
 
 
-                            {/* edit and delete button */}
-                            <div className="flex md:block text-center items-center md:space-y-3 mt-4 md:mt-0 space-x-3 md:space-x-0">
+
+                            <div className="mt-4">
 
                                 {/* class details button */}
                                 {
                                     user?.user_role === "student" &&
-                                    <Link to={`/student/myEnrolledCourses/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-sm md:btn-md`}>Details</Link>
+                                    <Link to={`/student/myEnrolledCourses/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-block`}>Details <FaCaretRight className="text-lg" /> </Link>
                                 }
                                 {
                                     user?.user_role === "faculty" &&
-                                    <Link to={`/faculty/myCourses/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-sm md:btn-md`}>Details</Link>
+                                    <Link to={`/faculty/myCourses/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-block`}>Details <FaCaretRight className="text-lg" /> </Link>
                                 }
                                 {
                                     user?.user_role === "admin" &&
-                                    <Link to={`/admin/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-sm md:btn-md`}>Details</Link>
+                                    <Link to={`/admin/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-block`}>Details <FaCaretRight className="text-lg" /> </Link>
                                 }
                             </div>
-                        </li>
+                        </div>
                     ))}
-                </ul>
+                </div>
             </div>
         </div>
     );

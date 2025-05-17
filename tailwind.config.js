@@ -8,6 +8,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'geist': ["Geist", "sans-serif"],
+      },
       colors: {
         eduverse_student_primary_color: "#823159",
         eduverse_student_primary_color_lite: "#b1266b"

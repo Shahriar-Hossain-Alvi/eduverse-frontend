@@ -6,7 +6,7 @@ import Footer from "../Shared/CommonShared/Footer";
 const Main = () => {
 
     return (
-        <div className="font-inter">
+        <div className="font-geist">
             <ScrollRestoration />
             <Navbar />
             <div className="mx-auto w-full">
