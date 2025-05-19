@@ -10,7 +10,7 @@ import { BiError, BiSearch } from "react-icons/bi";
 import { format } from "date-fns";
 import useTheme from "../../Hooks/useTheme"
 import { FaCalendar, FaLocationDot } from "react-icons/fa6";
-import { IoMdPeople } from "react-icons/io";
+import { IoMdClose, IoMdPeople } from "react-icons/io";
 import { FaCaretRight, FaClock } from "react-icons/fa";
 import { useState } from "react";
 
@@ -21,26 +21,29 @@ const Schedules = () => {
     const { theme } = useTheme();
     const { user } = useAuth();
     const [searchedClassTitle, setSearchedClassTitle] = useState("");
+    const [clickedTodaysScheduleButton, setClickedTodaysScheduleButton] = useState(false);
+    const [dateQuery, setDateQuery] = useState(false);
+
 
     const { data: allClassList = [], isError, error, isPending } = useQuery({
-        queryKey: ["allClassList", user?.user_role, user?._id, searchedClassTitle],
+        queryKey: ["allClassList", user?.user_role, user?._id, searchedClassTitle, dateQuery],
         queryFn: async () => {
             const userRole = user?.user_role;
 
             if (userRole === "faculty") {
-                const res = await axiosSecure.get(`/classes/allAssignedCourseClasses/${user?._id}?search=${searchedClassTitle}`);
+                const res = await axiosSecure.get(`/classes/allAssignedCourseClasses/${user?._id}?search=${searchedClassTitle}&&todaysClass=${dateQuery}`);
 
                 return res.data.data;
             }
 
             if (userRole === "admin") {
-                const res = await axiosSecure.get(`/classes?search=${searchedClassTitle}`);
+                const res = await axiosSecure.get(`/classes?search=${searchedClassTitle}&&todaysClass=${dateQuery}`);
 
                 return res.data.data;
             }
 
             if (userRole === "student") {
-                const res = await axiosSecure.get(`/classes/allEnrolledCourseClasses/${user?._id}?search=${searchedClassTitle}`);
+                const res = await axiosSecure.get(`/classes/allEnrolledCourseClasses/${user?._id}?search=${searchedClassTitle}&&todaysClass=${dateQuery}`);
 
                 return res.data.data;
             }
@@ -51,10 +54,10 @@ const Schedules = () => {
     });
 
 
+    // input class title
     const handleInputChange = (e) => {
         setSearchedClassTitle(e.target.value);
     }
-
 
 
     return (
@@ -67,12 +70,23 @@ const Schedules = () => {
                     <BiSearch />
 
                     <input
-                    onChange={handleInputChange} 
-                    value={searchedClassTitle}
-                    type="text" className="grow" placeholder="Search" />
+                        disabled={clickedTodaysScheduleButton}
+                        onChange={handleInputChange}
+                        value={searchedClassTitle}
+                        type="text" className="grow" placeholder="Search" />
                 </label>
 
-                <button className="btn"><FaCalendar /> Today</button>
+                {
+                    clickedTodaysScheduleButton ?
+                        <button onClick={() => {
+                            setClickedTodaysScheduleButton(false);
+                            setDateQuery(false);
+                        }} className="btn btn-error text-white"><IoMdClose /> Clear Filter</button>
+                        :
+                        <button onClick={() => {
+                            setDateQuery(true);
+                            setClickedTodaysScheduleButton(true);
+                        }} className="btn"><FaCalendar /> Today</button>}
             </div>
 
             {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
@@ -85,7 +99,7 @@ const Schedules = () => {
                 {/* Error messages */}
                 {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
 
-                {allClassList.length === 0 && <p className="text-center text-error text-lg font-medium">Class Schedules are not added yet</p>}
+                {allClassList.length === 0 && <p className="text-center text-error text-lg font-medium">No Class Schedules were found</p>}
 
                 <div className="space-y-2">
                     {allClassList.map((singleClass) => (
