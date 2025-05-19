@@ -1,12 +1,13 @@
 import { Link, useLocation, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import useAuth from "../../Hooks/useAuth";
-import { TbFidgetSpinner } from "react-icons/tb";
+import { TbFidgetSpinner, TbLockPassword } from "react-icons/tb";
 import toast, { Toaster } from 'react-hot-toast';
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import useTheme from "../../Hooks/useTheme";
 import themeStyles from "../../Utilities/themeStyles";
+import { MdOutlineEmail } from "react-icons/md";
 
 
 
@@ -80,35 +81,36 @@ const SignIn = () => {
                     <Toaster />
                     <h1 className="text-5xl font-bold">Login</h1>
                     <p className="py-6 font-medium">
-                        Use you email and password to login.
+                        Sign in to your EduVerse account to continue your learning journey.
                     </p>
                 </div>
 
-                <div className={`${themeStyles.background[theme]} rounded-lg w-full md:max-w-lg lg:max-w-xl mx-auto shadow-2xl`}>
+                <div className={`${themeStyles?.background[theme]} border-0 rounded-lg w-full md:w-4/5 lg:w-3/5 mx-auto shadow-2xl`}>
 
                     {/* login form */}
                     <form onSubmit={handleSubmit(handleLogin)} className="px-3 md:px-5 pt-5 mb-3 space-y-4">
 
                         {/* email */}
-                        <div className="grid grid-cols-12">
-                            <label className="label col-span-3 md:col-span-2">
-                                <span className="label-text ">Email:</span>
+                        <div>
+                            <label className="label">
+                                <span className="label-text font-bold">Email:</span>
                             </label>
 
-                            <div className="col-span-9 md:col-span-10">
-                                <input type="email" placeholder="Enter your email" className="input w-full input-bordered"
+                            <div className="relative">
+                                <MdOutlineEmail className="absolute top-1/2 left-2 -translate-y-1/2 text-lg" />
+                                <input type="email" placeholder="you@example.com" className="input w-full input-bordered pl-7"
                                     {...register("email", { required: "Email Address is required" })} />
                                 {errors.email && <p className="text-error text-sm  pl-3 pt-1 animate-pulse">{errors.email.message}</p>}
                             </div>
                         </div>
 
                         {/* password */}
-                        <div className="grid grid-cols-12">
-                            <label className="label col-span-3 md:col-span-2">
-                                <span className="label-text">Password:</span>
+                        <div className="relative">
+                            <label className="label">
+                                <span className="label-text font-bold">Password:</span>
                             </label>
 
-                            <div className="col-span-9 md:col-span-10 relative">
+                            <div className="relative">
                                 {
                                     showPassword ?
                                         <button type="button" onClick={() => setShowPassword(false)} className="btn absolute right-3 btn-xs top-1/2 -translate-y-1/2">
@@ -120,9 +122,10 @@ const SignIn = () => {
                                         </button>
                                 }
 
+                                <TbLockPassword className="text-lg absolute top-1/2 left-2 -translate-y-1/2" />
                                 <input type={
                                     showPassword ? "text" :
-                                        "password"} placeholder="Enter your password" className="input  input-bordered w-full"
+                                        "password"} placeholder="********" className="input  input-bordered w-full pl-7"
                                     {...register("password", {
                                         required: "Password is required",
                                         minLength: { value: 6, message: "Password must be at least 6 character" }, maxLength: { value: 32, message: "Password must be within 32 character" },
@@ -143,7 +146,7 @@ const SignIn = () => {
                                     :
 
                                     <button type="submit"
-                                        disabled={logInLoading} className="btn btn-primary text-white ">Login</button>
+                                        disabled={logInLoading} className="btn btn-success text-white ">Login</button>
                             }
                         </div>
                     </form>
