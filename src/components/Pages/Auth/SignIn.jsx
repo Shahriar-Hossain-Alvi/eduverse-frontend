@@ -87,6 +87,8 @@ const SignIn = () => {
         }
     };
 
+
+
     // default account login function
     const handleDefaultLogin = async (type) => {
 
@@ -163,6 +165,8 @@ const SignIn = () => {
                     </p>
                 </div>
 
+
+                {/* login form */}
                 {
                     !loginToDefaultAccount &&
                     <div className={`${themeStyles?.background[theme]} border-0 rounded-lg w-full md:w-4/5 lg:w-3/5 mx-auto shadow-2xl`}>
@@ -231,10 +235,11 @@ const SignIn = () => {
                             </div>
                         </form>
 
-                        <div className="px-7 pb-7 justify-between flex">
-                            <Link to="/passwordReset" className="text-error font-medium hover:underline">Forgot Password?</Link>
+                        <div className="px-7 pb-7 flex justify-between">
 
-                            <p onClick={() => setLoginToDefaultAccount(true)} className="text-sm cursor-pointer hover:text-error">Login to Default Accounts?</p>
+                            <Link to="/passwordReset" className="text-error font-medium hover:underline text-sm">Forgot Password?</Link>
+
+                            <p onClick={() => setLoginToDefaultAccount(true)} className="text-sm cursor-pointer hover:text-success">Direct Login</p>
                         </div>
                     </div>
                 }
@@ -245,7 +250,7 @@ const SignIn = () => {
                     <div className={`${themeStyles?.background[theme]} border-0 rounded-lg w-3/5 mx-auto shadow-2xl p-5 text-center`}>
 
 
-                        <div className="space-x-5 mb-4">
+                        <div className="flex justify-center gap-3 flex-col md:flex-row mb-4">
                             <button
                                 onClick={() => handleDefaultLogin("student")}
                                 className="btn btn-outline"
