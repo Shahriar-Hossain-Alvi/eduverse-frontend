@@ -2,8 +2,8 @@ import axios from "axios";
 
 
 const axiosPublic = axios.create({
-    baseURL: "http://localhost:5000/api",
-    // baseURL: "https://eduverse-tc-web-wizards-backend.vercel.app/api",
+    // baseURL: "http://localhost:5000/api",
+    baseURL: "https://eduverse-tc-web-wizards-backend.vercel.app/api",
 })
 
 axiosPublic.interceptors.request.use((config) => {
