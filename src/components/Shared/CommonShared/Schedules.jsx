@@ -62,7 +62,7 @@ const Schedules = () => {
 
     return (
         <div className="flex-1 p-3 md:p-8">
-            <SectionHeading title="All Class Schedule" />
+            <SectionHeading title="Class Schedules" />
 
             <div className="mb-5 flex gap-2">
 

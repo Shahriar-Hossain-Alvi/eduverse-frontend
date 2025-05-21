@@ -87,12 +87,12 @@ const AssignedCoursesAllStudentList = () => {
                                     onClick={() => toggleExpand(idx)}
                                 >
                                     {/* title and image */}
-                                    <div className="grid md:grid-cols-10 items-center gap-2 md:col-span-4">
+                                    <div className="grid grid-cols-3 md:grid-cols-10 items-center gap-2 md:col-span-4">
                                         <img src={singleRecord.cover_url} alt={singleRecord.title}
                                             className="md:col-span-4 w-full object-fill"
                                         />
 
-                                        <div className="md:col-span-6">
+                                        <div className="col-spn-2 md:col-span-6">
                                             <h3 className="font-medium md:text-lg">{singleRecord?.title}</h3>
 
                                             <span>Duration: {formatDate(singleRecord.start_date)} - {formatDate(singleRecord.end_date)}</span>

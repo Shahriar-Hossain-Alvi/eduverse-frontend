@@ -14,6 +14,7 @@ const SingleClassDetails = () => {
     const { id } = useParams(); // class id
     const axiosSecure = useAxiosSecure();
 
+
     const { data: singleClassDetails = {}, isError, isPending, error } = useQuery({
         queryKey: ["singleClassDetails", id],
         queryFn: async () => {
@@ -28,14 +29,17 @@ const SingleClassDetails = () => {
     const { course_id, description, location, scheduled_time, title } = singleClassDetails;
 
 
+
+
     if (isPending) return <LoadingSpinner />
 
     return (
         <div className="flex-1 p-3 md:p-8 overflow-hidden">
             {/* error message */}
             {isError && <TanstackQueryErrorMessage errorMessage={error.message} />}
-            z
+
             <h1 className="text-center font-semibold text-3xl md:text-4xl mb-8 underline">CLASS DETAILS</h1>
+
 
             {/* title and description */}
             <SectionHeading title={`Title: ${title}`} />
@@ -64,6 +68,7 @@ const SingleClassDetails = () => {
 
                 <p className="text-lg w-2/5"><span className="font-medium underline">Location:</span> {location}</p>
             </div>
+
 
             <ClassMaterialFormAndList class_id={id} />
 
