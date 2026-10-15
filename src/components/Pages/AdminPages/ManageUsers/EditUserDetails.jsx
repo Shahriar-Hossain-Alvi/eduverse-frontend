@@ -10,10 +10,12 @@ import toast, { Toaster } from "react-hot-toast";
 import TanstackQueryErrorMessage from "../../../Utilities/TanstackQueryErrorMessage";
 import Swal from "sweetalert2";
 import { handleError } from "../../../Utilities/handleError";
+import useAuth from "../../../Hooks/useAuth";
 
 
 const EditUserDetails = () => {
     const { id } = useParams();
+    const { user } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
     const navigate = useNavigate();
 
@@ -29,6 +31,19 @@ const EditUserDetails = () => {
             return res.data.data;
         }
     });
+
+    const isSameUser = user?._id === userDetails?._id;
+
+    const canDeleteUser =
+        !isSameUser &&
+        (
+            user?.user_role === "super_admin" ||
+            (
+                user?.user_role === "admin" &&
+                userDetails?.user_role !== "admin" &&
+                userDetails?.user_role !== "super_admin"
+            )
+        );
 
     if (isPending) return <LoadingSpinner />
 
@@ -349,19 +364,25 @@ const EditUserDetails = () => {
             </form>
 
 
-            <div className="divider divider-error mt-10"></div>
-            <div className="divider divider-error">Danger Zone</div>
-            <div className="divider divider-error mb-10"></div>
+
 
             {/* Delete user button */}
-            <div className="mb-10">
-                <div className="flex gap-3">
-                    <h1 className="text-lg font-medium">Do you want to Delete This User?</h1>
-                    <button onClick={() => handleDeleteUser()} className="btn btn-sm text-white btn-error">
-                        Yes
-                    </button>
-                </div>
-            </div>
+            {
+                canDeleteUser &&
+                <>
+                    <div className="divider divider-error mt-10"></div>
+                    <div className="divider divider-error">Danger Zone</div>
+                    <div className="divider divider-error mb-10"></div>
+                    <div className="mb-10">
+                        <div className="flex gap-3">
+                            <h1 className="text-lg font-medium">Do you want to Delete This User?</h1>
+                            <button onClick={() => handleDeleteUser()} className="btn btn-sm text-white btn-error">
+                                Yes
+                            </button>
+                        </div>
+                    </div>
+                </>
+            }
         </div>
     );
 };

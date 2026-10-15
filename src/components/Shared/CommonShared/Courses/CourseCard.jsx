@@ -10,7 +10,7 @@ const CourseCard = ({ singleCourseDetails }) => {
 
     const { user } = useAuth();
 
-    const { _id, title, description, cover_url, assigned_faculty, credits, end_date, prerequisites, start_date, total_available_seats} = singleCourseDetails;
+    const { _id, title, description, cover_url, assigned_faculty, credits, end_date, prerequisites, start_date, total_available_seats } = singleCourseDetails;
 
     const current_date = new Date();
 
@@ -18,6 +18,10 @@ const CourseCard = ({ singleCourseDetails }) => {
     // Role-based theme colors
     const themeColors = {
         admin: {
+            bg: "bg-indigo-600",
+            button: "bg-indigo-500 hover:bg-indigo-600 border hover:border",
+        },
+        super_admin: {
             bg: "bg-indigo-600",
             button: "bg-indigo-500 hover:bg-indigo-600 border hover:border",
         },

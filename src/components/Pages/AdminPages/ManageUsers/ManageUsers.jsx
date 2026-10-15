@@ -41,6 +41,7 @@ const ManageUsers = () => {
                     <option value="student">Student</option>
                     <option value="faculty">Faculty</option>
                     <option value="admin">Admin</option>
+                    <option value="super_admin">Super Admin</option>
                 </select>
             </div>
 

@@ -36,7 +36,7 @@ const Schedules = () => {
                 return res.data.data;
             }
 
-            if (userRole === "admin") {
+            if (userRole === "admin" || userRole === "super_admin") {
                 const res = await axiosSecure.get(`/classes?search=${searchedClassTitle}&&todaysClass=${dateQuery}`);
 
                 return res.data.data;
@@ -161,7 +161,7 @@ const Schedules = () => {
                                     <Link to={`/faculty/myCourses/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-block`}>Details <FaCaretRight className="text-lg" /> </Link>
                                 }
                                 {
-                                    user?.user_role === "admin" &&
+                                    (user?.user_role === "admin" || user?.user_role === "super_admin") &&
                                     <Link to={`/admin/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-block`}>Details <FaCaretRight className="text-lg" /> </Link>
                                 }
                             </div>

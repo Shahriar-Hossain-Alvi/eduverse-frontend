@@ -4,8 +4,8 @@ import useAuth from "./useAuth";
 
 
 const axiosSecure = axios.create({
-    // baseURL: "http://localhost:5000/api",
-    baseURL: "https://eduverse-tc-web-wizards-backend.vercel.app/api",
+    baseURL: "http://localhost:4000/api",
+    // baseURL: "https://eduverse-tc-web-wizards-backend.vercel.app/api",
 });
 
 
@@ -58,7 +58,7 @@ const useAxiosSecure = () => {
             localStorage.removeItem("access-token")
             console.log(`logout user from axiosSecure for ${status}`);
             setLoading(false);
-            navigate('/signin', {replace: true});
+            navigate('/signin', { replace: true });
         }
 
         if (status === 403) {
@@ -66,7 +66,7 @@ const useAxiosSecure = () => {
             localStorage.removeItem("access-token")
             console.log(`logout user from axiosSecure for ${status}`);
             setLoading(false);
-            navigate('/signin', {replace: true});
+            navigate('/signin', { replace: true });
         }
 
 

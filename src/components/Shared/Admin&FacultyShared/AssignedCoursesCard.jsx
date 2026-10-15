@@ -67,7 +67,7 @@ const AssignedCoursesCard = ({ refetch, assignedCourses }) => {
                     // card
                     <div key={assignedCourse._id} className={`${themeStyles.background[theme]} overflow-hidden shadow-lg rounded-lg grid md:grid-cols-6 gap-3 p-3 relative`}>
 
-                        {user.user_role === "admin" && <button
+                        {(user.user_role === "admin" || user.user_role === "super_admin") && <button
                             disabled={buttonLoading}
                             onClick={() => deleteAssignedCourse(assignedCourse._id)}
                             className="btn btn-error text-white btn-sm absolute top-1 right-1 text-xs">
@@ -137,7 +137,7 @@ const AssignedCoursesCard = ({ refetch, assignedCourses }) => {
                                 }
 
                                 {
-                                    userRole === "admin" &&
+                                    (userRole === "admin" || userRole === "super_admin") &&
                                     <Link to={`/admin/assignedCourses/${assignedCourse._id}`} className={`btn border btn-block ${themeStyles.button[theme]}`}>View </Link>
                                 }
                             </div>

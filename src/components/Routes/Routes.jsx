@@ -69,7 +69,7 @@ const router = createBrowserRouter(
                 <Route
                     path="dashboard"
                     element={
-                        <PrivateRoute role="admin">
+                        <PrivateRoute role={["admin", "super_admin"]}>
                             <AdminDashboard />
                         </PrivateRoute>
                     }
@@ -78,7 +78,7 @@ const router = createBrowserRouter(
                 <Route
                     path="createAccounts"
                     element={
-                        <PrivateRoute role="admin">
+                        <PrivateRoute role={["admin", "super_admin"]}>
                             <CreateAccounts />
                         </PrivateRoute>
                     }
@@ -87,14 +87,14 @@ const router = createBrowserRouter(
                 <Route
                     path="profile"
                     element={
-                        <PrivateRoute role="admin" >
+                        <PrivateRoute role={["admin", "super_admin"]} >
                             <AdminProfile />
                         </PrivateRoute >
                     }
                 />
 
                 <Route path="users" element={
-                    <PrivateRoute role="admin">
+                    <PrivateRoute role={["admin", "super_admin"]}>
                         <ManageUsers />
                     </PrivateRoute>
                 } />
@@ -103,7 +103,7 @@ const router = createBrowserRouter(
                 <Route
                     path="users/:id"
                     element={
-                        <PrivateRoute role="admin">
+                        <PrivateRoute role={["admin", "super_admin"]}>
                             <EditUserDetails />
                         </PrivateRoute>
                     }
@@ -112,7 +112,7 @@ const router = createBrowserRouter(
                 <Route
                     path="courses"
                     element={
-                        <PrivateRoute role="admin">
+                        <PrivateRoute role={["admin", "super_admin"]}>
                             <Courses />
                         </PrivateRoute>
                     }
@@ -121,7 +121,7 @@ const router = createBrowserRouter(
                 <Route
                     path="courses/:id"
                     element={
-                        <PrivateRoute role="admin">
+                        <PrivateRoute role={["admin", "super_admin"]}>
                             <CourseDetails />
                         </PrivateRoute>
                     }
@@ -131,7 +131,7 @@ const router = createBrowserRouter(
                 <Route
                     path="assignedCourses"
                     element={
-                        <PrivateRoute role="admin">
+                        <PrivateRoute role={["admin", "super_admin"]}>
                             <AllAssignedCourses />
                         </PrivateRoute>
                     }
@@ -141,7 +141,7 @@ const router = createBrowserRouter(
                 <Route
                     path="assignedCourses/:id"
                     element={
-                        <PrivateRoute role="admin">
+                        <PrivateRoute role={["admin", "super_admin"]}>
                             <SingleAssignedCourseDetails />
                         </PrivateRoute>
                     }
@@ -151,7 +151,7 @@ const router = createBrowserRouter(
                 <Route
                     path="classDetails/:id"
                     element={
-                        <PrivateRoute role="admin">
+                        <PrivateRoute role={["admin", "super_admin"]}>
                             <SingleClassDetails />
                         </PrivateRoute>
                     }
@@ -160,7 +160,7 @@ const router = createBrowserRouter(
                 <Route
                     path="schedules"
                     element={
-                        <PrivateRoute role="admin">
+                        <PrivateRoute role={["admin", "super_admin"]}>
                             <Schedules />
                         </PrivateRoute>
                     }
@@ -170,7 +170,7 @@ const router = createBrowserRouter(
                 <Route
                     path="allClassAttendance"
                     element={
-                        <PrivateRoute role="admin">
+                        <PrivateRoute role={["admin", "super_admin"]}>
                             <AllClassAttendance />
                         </PrivateRoute>
                     }
@@ -179,7 +179,7 @@ const router = createBrowserRouter(
                 <Route
                     path="studentAcademicInfo/:id"
                     element={
-                        <PrivateRoute role="admin">
+                        <PrivateRoute role={["admin", "super_admin"]}>
                             <StudentAcademicInfo />
                         </PrivateRoute>
                     }
@@ -188,7 +188,7 @@ const router = createBrowserRouter(
                 <Route
                     path="addNewCourse"
                     element={
-                        <PrivateRoute role="admin">
+                        <PrivateRoute role={["admin", "super_admin"]}>
                             <CreateNewCourse />
                         </PrivateRoute>
                     }

@@ -17,7 +17,7 @@ const AllAssignedCourses = () => {
 
             return res.data.data;
         },
-        enabled: user.user_role === "admin"
+        enabled: user.user_role === "admin" || user.user_role === "super_admin"
     });
 
     if (isPending) return <LoadingSpinner />

@@ -153,7 +153,7 @@ const SingleAssignedCourseDetails = () => {
 
             {/* disable button */}
             {
-                user.user_role === "admin" &&
+                (user.user_role === "admin" || user.user_role === "super_admin") &&
                 <div className="mt-10">
                     <div className="divider divider-error">Danger Zone</div>
 

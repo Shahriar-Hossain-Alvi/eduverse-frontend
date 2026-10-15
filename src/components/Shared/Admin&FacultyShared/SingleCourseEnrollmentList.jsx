@@ -9,7 +9,7 @@ import TanstackQueryErrorMessage from "../../Utilities/TanstackQueryErrorMessage
 
 
 const SingleCourseEnrollmentList = ({ id }) => {
-    const {user} = useAuth();
+    const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
 
     const { data: singleCourseEnrollmentList = [], isError, error, isPending } = useQuery({
@@ -41,20 +41,20 @@ const SingleCourseEnrollmentList = ({ id }) => {
                             <th>No.</th>
                             <th>Name</th>
                             <th>Email</th>
-                            {user.user_role === "admin" && <th>Profile</th>}
+                            {(user.user_role === "admin" || user.user_role === "super_admin") && <th>Profile</th>}
                         </tr>
                     </thead>
                     <tbody>
                         {
                             singleCourseEnrollmentList.map((singleStudent, index) => (
                                 <tr key={singleStudent._id} className="hover border-gray-400">
-                                    <th>{index+1}</th>
+                                    <th>{index + 1}</th>
                                     <td>{singleStudent.users_id.first_name} {singleStudent.users_id.last_name}</td>
                                     <td>{singleStudent.users_id.email}</td>
                                     {
-                                        user.user_role === "admin" && <td>
-                                        <Link to={`/admin/users/${singleStudent.users_id._id}`} className="btn btn-sm btn-success text-white">View Profile</Link>
-                                    </td>
+                                        (user.user_role === "admin" || user.user_role === "super_admin") && <td>
+                                            <Link to={`/admin/users/${singleStudent.users_id._id}`} className="btn btn-sm btn-success text-white">View Profile</Link>
+                                        </td>
                                     }
                                 </tr>
                             ))

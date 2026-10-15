@@ -4,6 +4,9 @@ import PropTypes from 'prop-types';
 import LoadingSpinner from "../Utilities/LoadingSpinner";
 import { useEffect, useState } from "react";
 
+const hasRequiredRole = (userRole, role) =>
+    Array.isArray(role) ? role.includes(userRole) : userRole === role;
+
 const PrivateRoute = ({ children, role }) => {
     const { loading, user, fetchUserInfo, logout, roleVerified, setRoleVerified } = useAuth();
     const location = useLocation();
@@ -22,7 +25,7 @@ const PrivateRoute = ({ children, role }) => {
             if (!user) {
                 try {
                     const userData = await fetchUserInfo();
-                    if (userData && userData?.user_role === role) {
+                    if (userData && hasRequiredRole(userData.user_role, role)) {
                         setRoleVerified(true);
                     } else {
                         setRoleVerified(false);
@@ -36,7 +39,7 @@ const PrivateRoute = ({ children, role }) => {
                     setIsVerifying(false);
                 }
             }else{
-                setRoleVerified(user?.user_role === role);
+                setRoleVerified(hasRequiredRole(user?.user_role, role));
                 setIsVerifying(false);
             }
 
@@ -67,7 +70,10 @@ const PrivateRoute = ({ children, role }) => {
 
 PrivateRoute.propTypes = {
     children: PropTypes.any,
-    role: PropTypes.string
+    role: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.arrayOf(PropTypes.string)
+    ])
 }
 
 export default PrivateRoute;

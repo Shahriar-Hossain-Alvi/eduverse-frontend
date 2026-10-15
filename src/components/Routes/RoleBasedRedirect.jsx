@@ -39,7 +39,7 @@ const RoleBasedRedirect = () => {
 
   if (loading || (user && !role)) return <LoadingSpinner />;
 
-  if (!user)  {
+  if (!user) {
     console.log("Go to sign in from role based redirect line 43");
     return <Navigate to="/signin" />
   };
@@ -47,6 +47,8 @@ const RoleBasedRedirect = () => {
   // Redirect based on user role
   switch (role) {
     case "admin":
+      return <Navigate to="/admin/dashboard" />;
+    case "super_admin":
       return <Navigate to="/admin/dashboard" />;
     case "faculty":
       return <Navigate to="/faculty/dashboard" />;

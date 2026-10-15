@@ -55,7 +55,7 @@ const SignIn = () => {
         try {
             setLogInLoading(true);
             const loggedInUser = await login(email, password);
-
+            console.log(loggedInUser);
             if (loggedInUser) {
                 reset();
                 setLogInLoading(false);
@@ -169,7 +169,7 @@ const SignIn = () => {
                 {/* login form */}
                 {
                     !loginToDefaultAccount &&
-                    <div className={`${themeStyles?.background[theme]} border-0 rounded-lg w-full md:w-4/5 lg:w-3/5 mx-auto shadow-2xl`}>
+                    <div className={`${themeStyles.background[theme]} border-0 rounded-lg w-full md:w-4/5 lg:w-3/5 mx-auto shadow-2xl`}>
 
                         {/* login form */}
                         <form onSubmit={handleSubmit(handleLogin)} className="px-3 md:px-5 pt-5 mb-3 space-y-4">

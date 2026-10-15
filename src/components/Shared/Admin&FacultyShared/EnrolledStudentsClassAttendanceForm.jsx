@@ -429,11 +429,11 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
 
                 {(!isPending && Object.keys(studentsAttendanceRecord).length > 0) &&
                     <div>
-                        <div className={`grid ${user.user_role === "admin" && "grid-cols-8"} ${user.user_role === "faculty" && "grid-cols-5"}  items-center gap-1`}>
+                        <div className={`grid ${(user.user_role === "admin" || user.user_role === "super_admin") && "grid-cols-8"} ${user.user_role === "faculty" && "grid-cols-5"}  items-center gap-1`}>
 
-                            <h2 className={`${user.user_role === "admin" && "col-span-3"} ${user.user_role === "faculty" && "col-span-2"}  text-sm md:text-lg font-medium flex items-center gap-1`}><FaCalendarAlt />{studentsAttendanceRecord?.attendance_date ? format(new Date(studentsAttendanceRecord?.attendance_date), "MMMM d, yyyy") : "Loading..."}</h2>
+                            <h2 className={`${(user.user_role === "admin" || user.user_role === "super_admin") && "col-span-3"} ${user.user_role === "faculty" && "col-span-2"}  text-sm md:text-lg font-medium flex items-center gap-1`}><FaCalendarAlt />{studentsAttendanceRecord?.attendance_date ? format(new Date(studentsAttendanceRecord?.attendance_date), "MMMM d, yyyy") : "Loading..."}</h2>
 
-                            <h3 className={`${user.user_role === "admin" && "col-span-3"} ${user.user_role === "faculty" && "col-span-2"}  md:text-lg text-sm font-medium flex items-center gap-1`}><BsDatabaseFillAdd /> {studentsAttendanceRecord?.created_by?.first_name || "Deleted"} {studentsAttendanceRecord?.created_by?.last_name || "user"}</h3>
+                            <h3 className={`${(user.user_role === "admin" || user.user_role === "super_admin") && "col-span-3"} ${user.user_role === "faculty" && "col-span-2"}  md:text-lg text-sm font-medium flex items-center gap-1`}><BsDatabaseFillAdd /> {studentsAttendanceRecord?.created_by?.first_name || "Deleted"} {studentsAttendanceRecord?.created_by?.last_name || "user"}</h3>
 
 
                             {/* delete button */}
@@ -451,7 +451,7 @@ const EnrolledStudentsClassAttendanceForm = ({ course_id, class_id, scheduled_ti
                             }
 
                             {
-                                user.user_role === "admin"
+                                (user.user_role === "admin" || user.user_role === "super_admin")
                                 && <button
                                     onClick={() => generatePDF(studentsAttendanceRecord)}
                                     className="btn btn-accent text-xs md:text-base btn-sm text-white p-0"><FaDownload />

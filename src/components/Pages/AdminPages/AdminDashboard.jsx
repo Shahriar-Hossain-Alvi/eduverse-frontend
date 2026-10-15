@@ -11,15 +11,15 @@ import useAuth from "../../Hooks/useAuth";
 
 const AdminDashboard = () => {
     const { theme } = useTheme();
-    const {user} = useAuth();
+    const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
-    const { data: quickOverview={}, isPending, isError, error } = useQuery({
+    const { data: quickOverview = {}, isPending, isError, error } = useQuery({
         queryKey: ["quickOverview"],
         queryFn: async () => {
             const res = await axiosSecure("/quickOverview/admin");
             if (res.data.success) return res.data.data
         },
-        enabled: user?.user_role === "admin"
+        enabled: user?.user_role === "admin" || user?.user_role === "super_admin"
     })
 
 

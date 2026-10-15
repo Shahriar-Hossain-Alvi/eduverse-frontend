@@ -176,7 +176,7 @@ const CourseDetails = () => {
                         <div className="flex items-center gap-2  text-lg">
                             <MdOutlineAirlineSeatReclineNormal className="h-5 w-5 text-green-600" />
                             <span className="font-medium">
-                            Available Seats :
+                                Available Seats :
                             </span>
                             {total_available_seats}
                         </div>
@@ -235,7 +235,7 @@ const CourseDetails = () => {
 
                     {/* assign/remove faculty button */}
                     {
-                        user.user_role === "admin" && <button onClick={() => setShowFacultyAssignmentForm(!showFacultyAssignmentForm)} className={`mt-1 btn btn-sm ${showFacultyAssignmentForm ? "btn-error" : "btn-success"} text-white text-xs md:text-sm lg:text-base`}>
+                        (user.user_role === "admin" || user.user_role === "super_admin") && <button onClick={() => setShowFacultyAssignmentForm(!showFacultyAssignmentForm)} className={`mt-1 btn btn-sm ${showFacultyAssignmentForm ? "btn-error" : "btn-success"} text-white text-xs md:text-sm lg:text-base`}>
                             {
                                 !showFacultyAssignmentForm ? <><RiUserAddFill /> Assign/Remove</> : <><IoMdClose /> Close</>
                             }</button>

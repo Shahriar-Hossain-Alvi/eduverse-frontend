@@ -53,7 +53,7 @@ const UserTableRow = ({ singleUser, serialNo }) => {
 
             <td>
                 {
-                    user_role !== "admin" &&
+                    (user_role !== "admin" || user_role !== "super_admin") &&
                     < Link to={`/admin/users/${_id}`} className='btn btn-sm bg-indigo-700 hover:bg-indigo-600 text-white'>View</Link>
                 }
             </td>

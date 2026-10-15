@@ -594,7 +594,7 @@ const ClassScheduleFormAndList = ({ course_id, faculty, isCourseAssignmentActive
                                     <Link to={`/faculty/myCourses/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-sm md:btn-md`}>Details</Link>
                                 }
                                 {
-                                    user.user_role === "admin" &&
+                                    (user.user_role === "admin" || user.user_role === "super_admin") &&
                                     <Link to={`/admin/classDetails/${singleClass._id}`} className={`btn ${themeStyles.button[theme]} btn-sm md:btn-md`}>Details</Link>
                                 }
                             </div>
