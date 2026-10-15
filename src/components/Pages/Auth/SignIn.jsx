@@ -60,7 +60,7 @@ const SignIn = () => {
         try {
             setLogInLoading(true);
             const loggedInUser = await login(email, password);
-            console.log(loggedInUser);
+
             if (loggedInUser) {
                 reset();
                 setLogInLoading(false);

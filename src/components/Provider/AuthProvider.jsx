@@ -12,8 +12,6 @@ const AuthProvider = ({ children }) => {
     const axiosPublic = useAxiosPublic();
     const [roleVerified, setRoleVerified] = useState(null);
 
-    // console.log(user);
-
     // login user and save token in LS
     const login = async (email, password) => {
         try {

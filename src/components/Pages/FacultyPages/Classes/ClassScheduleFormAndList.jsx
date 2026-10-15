@@ -58,7 +58,6 @@ const ClassScheduleFormAndList = ({ course_id, faculty, isCourseAssignmentActive
         const title = data.classTitle;
         const description = data.classDescription;
         const location = data.classLocation;
-        console.log(location);
 
         const classScheduledDate = (data.classScheduledDate);
         const classScheduledTime = (data.classScheduledTime);

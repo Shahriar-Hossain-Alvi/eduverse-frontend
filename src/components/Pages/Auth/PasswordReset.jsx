@@ -97,8 +97,6 @@ const PasswordReset = () => {
             setButtonLoading(true);
             const res = await axiosPublic.post("/otp/updatePassword", { email, newPassword });
 
-            console.log(res);
-
             if (res.data.success) {
                 toast.success(res.data.message, {
                     duration: 1500,

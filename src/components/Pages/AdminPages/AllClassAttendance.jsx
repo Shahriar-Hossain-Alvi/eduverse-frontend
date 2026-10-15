@@ -27,8 +27,6 @@ const AllClassAttendance = () => {
         }
     });
 
-    console.log(allClassAttendance);
-
     if (isPending) return <LoadingSpinner />
 
 
@@ -75,7 +73,6 @@ const AllClassAttendance = () => {
 
     // delete attendance of a class
     const handleAttendanceDelete = async (id) => {
-        console.log(id);
         try {
             const swalResponse = await Swal.fire({
                 title: `Delete this attendance?`,
