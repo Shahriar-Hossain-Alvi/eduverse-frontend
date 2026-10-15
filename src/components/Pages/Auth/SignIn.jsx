@@ -35,6 +35,11 @@ const SignIn = () => {
         password: "12345678"
     }
 
+    const demoAdmin = {
+        email: "demo@admin.com",
+        password: "demo123456admin"
+    }
+
 
 
     // login function
@@ -104,6 +109,11 @@ const SignIn = () => {
         if (type === "faculty") {
             email = defaultFacultyData.email;
             password = defaultFacultyData.password;
+        }
+
+        if (type === "admin") {
+            email = demoAdmin.email;
+            password = demoAdmin.password;
         }
 
 
@@ -250,7 +260,7 @@ const SignIn = () => {
                     <div className={`${themeStyles?.background[theme]} border-0 rounded-lg w-3/5 mx-auto shadow-2xl p-5 text-center`}>
 
 
-                        <div className="flex justify-center gap-3 flex-col md:flex-row mb-4">
+                        <div className="flex justify-center gap-3 flex-col md:flex-row mb-4 flex-wrap">
                             <button
                                 onClick={() => handleDefaultLogin("student")}
                                 className="btn btn-outline"
@@ -265,6 +275,14 @@ const SignIn = () => {
                                 disabled={logInLoading}
                             >
                                 Faculty Account
+                            </button>
+
+                            <button
+                                onClick={() => handleDefaultLogin("admin")}
+                                className="btn btn-outline"
+                                disabled={logInLoading}
+                            >
+                                Admin Account
                             </button>
                         </div>
 
